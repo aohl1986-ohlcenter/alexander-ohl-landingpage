@@ -1,14 +1,15 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// Gleiche Konventionen wie pragma-code.de:
-// - trailingSlash: never + directory-Build (saubere URLs ohne .html)
-// - Sitemap ohne Trailing-Slashes, 404 ausgeschlossen
+// Gleiche URL-Konventionen wie pragma-code.de (keine Trailing-Slashes).
+// build.format 'file' statt 'directory': Cloudflare Pages liefert /en.html
+// direkt unter /en aus — beim directory-Format würde Pages /en per 308 auf
+// /en/ umleiten und damit den Canonicals widersprechen.
 export default defineConfig({
     site: 'https://www.alexander-ohl.com',
     trailingSlash: 'never',
     build: {
-        format: 'directory'
+        format: 'file'
     },
     integrations: [sitemap({
         filter: (page) => {

@@ -1,0 +1,11 @@
+# Cloudflare Pages Header-Regeln
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Statische Assets: 1 Jahr immutable cachen (Dateinamen sind stabil/versioniert)
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
