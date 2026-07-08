@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+	title="Datenschutzerklärung | Alexander Ohl"
+	description="Datenschutzerklärung von alexander-ohl.com: Informationen zur Verarbeitung personenbezogener Daten gemäß DSGVO."
+	ogType="website"
+>
+	<main class="legal">
+		<div class="pc-container">
+			<a class="back pc-mono" href="/">← Zurück zur Startseite</a>
+			<h1>Datenschutzerklärung</h1>
+
+			<h2>1. Verantwortlicher</h2>
+			<p>
+				Pragma Code LLC, 1 Building, Giorgi Leonidze Street / 2 Galaktion Tabidze St,
+				Tbilisi 0105, Georgien — vertreten durch Alexander Ohl.<br />
+				E-Mail: <a href="mailto:info@pragma-code.de">info@pragma-code.de</a>
+			</p>
+
+			<h2>2. Allgemeines zur Datenverarbeitung</h2>
+			<p>
+				Diese Website ist eine statische Informationsseite. Es werden <strong>keine Cookies</strong> gesetzt,
+				keine Tracking- oder Analyse-Tools eingesetzt und keine Kontaktformulare betrieben.
+				Eine Registrierung ist nicht möglich.
+			</p>
+
+			<h2>3. Server-Logfiles &amp; Content Delivery (Cloudflare)</h2>
+			<p>
+				Beim Aufruf dieser Website werden durch den Hosting-Anbieter und das vorgeschaltete
+				Content-Delivery-Netzwerk Cloudflare, Inc. (101 Townsend St, San Francisco, CA 94107, USA)
+				automatisch technische Zugriffsdaten verarbeitet (IP-Adresse, Datum und Uhrzeit des Zugriffs,
+				aufgerufene Seite, User-Agent). Diese Verarbeitung erfolgt auf Grundlage von
+				Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren und performanten
+				Betrieb der Website). Cloudflare ist nach dem EU-U.S. Data Privacy Framework zertifiziert.
+				Weitere Informationen: <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">cloudflare.com/privacypolicy</a>
+			</p>
+
+			<h2>4. Kontaktaufnahme per E-Mail</h2>
+			<p>
+				Wenn Sie per E-Mail Kontakt aufnehmen, werden Ihre Angaben (E-Mail-Adresse, Inhalt der
+				Nachricht) zur Bearbeitung der Anfrage verarbeitet (Art. 6 Abs. 1 lit. b DSGVO) und
+				gelöscht, sobald sie für die Bearbeitung nicht mehr erforderlich sind.
+			</p>
+
+			<h2>5. Ihre Rechte</h2>
+			<p>
+				Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO),
+				Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO),
+				Datenübertragbarkeit (Art. 20 DSGVO) sowie Widerspruch gegen die Verarbeitung
+				(Art. 21 DSGVO). Außerdem besteht ein Beschwerderecht bei einer
+				Datenschutz-Aufsichtsbehörde (Art. 77 DSGVO).
+			</p>
+
+			<h2>6. Externe Links</h2>
+			<p>
+				Diese Website verlinkt auf externe Angebote (z. B. LinkedIn, GitHub, pragma-code.de).
+				Beim Aufruf dieser Links gelten die Datenschutzbestimmungen der jeweiligen Anbieter.
+			</p>
+		</div>
+	</main>
+
+	<style>
+		.legal { padding: clamp(48px, 7vw, 90px) 0; }
+		.legal .pc-container { max-width: 760px; }
+		.back { display: inline-block; color: var(--pc-yellow); text-decoration: none; margin-bottom: 32px; }
+		h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 28px; }
+		h2 { font-size: 18px; font-weight: 800; margin: 32px 0 10px; }
+		p { color: var(--pc-fg-2); font-size: 15px; }
+		p a { color: var(--pc-yellow); text-decoration: none; border-bottom: 1px solid rgba(255,200,41,.35); }
+	</style>
+</Layout>

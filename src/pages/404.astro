@@ -1,0 +1,60 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+	title="404 — Seite nicht gefunden | Alexander Ohl"
+	description="Diese Seite existiert nicht."
+	ogType="website"
+	noindex
+>
+	<main class="nf">
+		<div class="term">
+			<div class="term-bar">
+				<span class="tdot red"></span><span class="tdot ylw"></span><span class="tdot grn"></span>
+				<span class="term-title pc-mono">alexander@ohl — zsh</span>
+			</div>
+			<pre class="term-body"><span class="p">alexander@ohl ~ % </span>cd {'{diese-seite}'}
+<span class="err">zsh: no such file or directory: 404</span>
+<span class="p">alexander@ohl ~ % </span><span class="cursor"></span></pre>
+		</div>
+		<h1>Seite nicht gefunden</h1>
+		<a class="btn-primary" href="/">Zur Startseite</a>
+	</main>
+
+	<style>
+		.nf {
+			min-height: 100vh; display: flex; flex-direction: column;
+			align-items: center; justify-content: center; gap: 28px; padding: 24px;
+		}
+		.term {
+			width: min(520px, 100%); background: var(--pc-navy-900);
+			border: 1px solid var(--pc-line-2); border-radius: var(--pc-r-lg);
+			box-shadow: var(--pc-shadow-card); overflow: hidden;
+		}
+		.term-bar {
+			display: flex; align-items: center; gap: 7px; padding: 12px 16px;
+			border-bottom: 1px solid var(--pc-line); background: rgba(255,255,255,0.02);
+		}
+		.tdot { width: 11px; height: 11px; border-radius: 50%; }
+		.tdot.red { background: #ff5f57; } .tdot.ylw { background: #febc2e; } .tdot.grn { background: #28c840; }
+		.term-title { margin-left: 8px; color: var(--pc-fg-3); }
+		.term-body {
+			padding: 20px; margin: 0; font-family: var(--pc-font-mono);
+			font-size: 13.5px; line-height: 1.9; white-space: pre-wrap;
+		}
+		.term-body .p { color: var(--pc-yellow); }
+		.term-body .err { color: #ff6b6b; }
+		.term-body .cursor {
+			display: inline-block; width: 8px; height: 15px; vertical-align: -2px;
+			background: var(--pc-green); animation: blink 1.1s steps(1) infinite;
+		}
+		@keyframes blink { 50% { opacity: 0; } }
+		h1 { font-size: clamp(22px, 3vw, 30px); font-weight: 800; }
+		.btn-primary {
+			background: var(--pc-yellow); color: var(--pc-navy-900); text-decoration: none;
+			font-weight: 800; padding: 13px 26px; border-radius: var(--pc-r-md);
+			box-shadow: var(--pc-shadow-yellow);
+		}
+	</style>
+</Layout>

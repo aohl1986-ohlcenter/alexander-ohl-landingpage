@@ -1,0 +1,28 @@
+# Alexander Ohl
+
+> Personal-Brand-Website von Alexander Ohl — Freelance IT-Consultant, Gründer von Pragma-Code.
+> KI-Automatisierungs-Engineer mit 15+ Jahren Erfahrung in Webentwicklung, SEO/GEO,
+> Automatisierung und E-Commerce. Remote im DACH-Raum tätig.
+
+## Profil
+
+- [Über Alexander Ohl (Deutsch)](https://www.alexander-ohl.com/): Werdegang, Expertise, Referenzen, Kontakt
+- [About Alexander Ohl (English)](https://www.alexander-ohl.com/en): Career, expertise, references, contact
+
+## Kernkompetenzen
+
+- KI-Automatisierung: RAG-Pipelines, n8n-Workflows, autonome KI-Agenten
+- Webentwicklung: React, Next.js, Astro, TypeScript, WordPress, headless CMS
+- SEO & GEO: technische SEO, Schema.org, Generative Engine Optimization (llms.txt, AI-Suche)
+- E-Commerce: WooCommerce, Shopify, JTL-Shop
+
+## Weiterführend
+
+- [Pragma-Code — IT-Beratung für den Mittelstand](https://www.pragma-code.de/)
+- [Alexander Ohl bei Pragma-Code](https://www.pragma-code.de/alexander-ohl)
+- [LinkedIn](https://www.linkedin.com/in/alexander-ohl/)
+
+## Kontakt
+
+- E-Mail: info@pragma-code.de
+- Projektanfrage: https://www.pragma-code.de/projektanfrage

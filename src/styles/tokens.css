@@ -1,0 +1,114 @@
+/* ============================================================
+   alexander-ohl.com · Design Tokens
+   ------------------------------------------------------------
+   Identisch zur Pragma-Code-Designsprache (--pc-* Scale),
+   damit Personal Brand und Firmenmarke visuell zusammengehören.
+   ============================================================ */
+
+:root {
+  /* --- Brand surfaces (navy scale) --- */
+  --pc-navy-900: #0a0e23;
+  --pc-navy-800: #0f1430;
+  --pc-navy-700: #161c3c;
+  --pc-navy-600: #1d2548;
+
+  /* --- Foreground --- */
+  --pc-fg:    #f4f4ec;
+  --pc-fg-2:  rgba(244, 244, 236, 0.66);
+  --pc-fg-3:  rgba(244, 244, 236, 0.42);
+
+  /* --- Lines / dividers --- */
+  --pc-line:    rgba(255, 255, 255, 0.08);
+  --pc-line-2:  rgba(255, 255, 255, 0.14);
+
+  /* --- Accents --- */
+  --pc-yellow:       #ffc829;
+  --pc-yellow-soft:  #ffd75a;
+  --pc-yellow-deep:  #e6a800;
+  --pc-green:        #4ade80;
+  --pc-blue:         #7aa7ff;
+  --pc-orange:       #ff9d2f;
+
+  /* --- Radii --- */
+  --pc-r-sm: 6px;
+  --pc-r-md: 10px;
+  --pc-r-lg: 14px;
+  --pc-r-xl: 18px;
+  --pc-r-pill: 999px;
+
+  /* --- Layout --- */
+  --pc-maxw:  1200px;
+  --pc-gutter: clamp(20px, 4vw, 56px);
+
+  /* --- Type --- */
+  --pc-font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --pc-font-mono: ui-monospace, 'SFMono-Regular', 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* --- Motion --- */
+  --pc-ease: cubic-bezier(.2, .8, .2, 1);
+  --pc-fast: 150ms;
+  --pc-base: 250ms;
+
+  /* --- Shadows --- */
+  --pc-shadow-card:    0 30px 80px rgba(0, 0, 0, 0.4);
+  --pc-shadow-yellow:  0 10px 30px rgba(255, 200, 41, 0.25);
+  --pc-shadow-yellow-hover: 0 16px 40px rgba(255, 200, 41, 0.35);
+}
+
+/* --- Minimal Reset --- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--pc-navy-800);
+  color: var(--pc-fg);
+  font-family: var(--pc-font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, picture, svg, video { display: block; max-width: 100%; }
+a { color: inherit; }
+button, input, textarea { font: inherit; }
+
+/* --- Utilities --- */
+.pc-mono {
+  font-family: var(--pc-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.pc-container {
+  max-width: var(--pc-maxw);
+  margin: 0 auto;
+  padding: 0 var(--pc-gutter);
+}
+
+/* --- Cross-document View Transitions (neu: MPA View Transition API) --- */
+@view-transition { navigation: auto; }
+
+/* --- Scroll-Reveal: rein CSS via animation-timeline (Scroll-driven Animations).
+       Browser ohne Support zeigen die Elemente einfach statisch — kein JS nötig. --- */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: pc-reveal both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+    @keyframes pc-reveal {
+      from { opacity: 0; transform: translateY(26px); }
+      to   { opacity: 1; transform: none; }
+    }
+  }
+}
+
+/* --- Fokus sichtbar (a11y) --- */
+:focus-visible {
+  outline: 2px solid var(--pc-yellow);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+::selection { background: var(--pc-yellow); color: var(--pc-navy-900); }
