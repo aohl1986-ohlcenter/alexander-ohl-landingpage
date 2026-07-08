@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+	title="Impressum | Alexander Ohl"
+	description="Impressum von alexander-ohl.com: Angaben gemäß § 5 TMG / § 18 MStV, Kontakt und Verantwortlicher."
+	ogType="website"
+>
+	<main class="legal">
+		<div class="pc-container">
+			<a class="back pc-mono" href="/">← Zurück zur Startseite</a>
+			<h1>Impressum</h1>
+
+			<h2>Angaben gemäß § 5 TMG / § 18 MStV</h2>
+			<p>
+				<strong>Pragma Code LLC</strong><br />
+				1 Building, Giorgi Leonidze Street / 2 Galaktion Tabidze St<br />
+				Tbilisi 0105, Georgien
+			</p>
+
+			<h2>Kontakt</h2>
+			<p>
+				E-Mail: <a href="mailto:info@pragma-code.de">info@pragma-code.de</a><br />
+				Web: <a href="https://www.pragma-code.de/" target="_blank" rel="noopener">www.pragma-code.de</a>
+			</p>
+
+			<h2>Verantwortlich für den Inhalt</h2>
+			<p>Alexander Ohl (Anschrift wie oben)</p>
+
+			<h2>Haftung für Inhalte</h2>
+			<p>
+				Die Inhalte dieser Seite wurden mit größter Sorgfalt erstellt. Für die Richtigkeit,
+				Vollständigkeit und Aktualität der Inhalte wird jedoch keine Gewähr übernommen.
+			</p>
+
+			<h2>Haftung für Links</h2>
+			<p>
+				Diese Website enthält Links zu externen Websites Dritter, auf deren Inhalte kein
+				Einfluss besteht. Für die Inhalte der verlinkten Seiten ist stets der jeweilige
+				Anbieter oder Betreiber der Seiten verantwortlich.
+			</p>
+
+			<h2>Urheberrecht</h2>
+			<p>
+				Die durch den Seitenbetreiber erstellten Inhalte und Werke auf dieser Website
+				unterliegen dem Urheberrecht. Vervielfältigung, Bearbeitung und Verbreitung außerhalb
+				der Grenzen des Urheberrechts bedürfen der schriftlichen Zustimmung.
+			</p>
+		</div>
+	</main>
+
+	<style>
+		.legal { padding: clamp(48px, 7vw, 90px) 0; max-width: 100%; }
+		.legal .pc-container { max-width: 760px; }
+		.back { display: inline-block; color: var(--pc-yellow); text-decoration: none; margin-bottom: 32px; }
+		h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 28px; }
+		h2 { font-size: 18px; font-weight: 800; margin: 32px 0 10px; }
+		p { color: var(--pc-fg-2); font-size: 15px; }
+		p a { color: var(--pc-yellow); text-decoration: none; border-bottom: 1px solid rgba(255,200,41,.35); }
+	</style>
+</Layout>

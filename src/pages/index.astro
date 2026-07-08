@@ -1,0 +1,609 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const stack = [
+	'React', 'Next.js', 'Astro', 'TypeScript', 'Node.js', 'Python', 'PHP',
+	'WordPress', 'WooCommerce', 'Shopify', 'JTL-Shop', 'n8n', 'RAG', 'KI-Agenten',
+	'Docker', 'Git', 'SEO', 'GEO', 'Schema.org', 'Cloudflare'
+];
+const ticker = [...stack, ...stack];
+
+const timeline: { year: string; role: string; org: string; text: string }[] = [
+	{ year: '2024', role: 'Gründer & IT-Generalist', org: 'Pragma-Code', text: 'IT-Beratung für den Mittelstand: KI-Automatisierung (RAG, n8n), Full-Stack-Webentwicklung, SEO und E-Commerce.' },
+	{ year: '2023', role: 'PPC Manager / User Acquisition', org: 'Next Choice Agency', text: 'Paid Media und datengetriebene Funnel-Optimierung. Mit Studio 360° Betreuung von Agenturkunden — u. a. des Alando in Osnabrück (Hotel, Bar & Event-Location).' },
+	{ year: '2020', role: 'Gründer Digitalagentur', org: 'Studio 360°', text: 'Internationale Digitalagentur für Web Development und Online-Marketing.' },
+	{ year: '2018', role: 'IT-Freelancer', org: 'Freiberuflich · Remote', text: 'Remote-Projekte in IT, Web, SEO und Online-Marketing für Kunden in Deutschland — bis zu sieben davon parallel betreut.' },
+	{ year: '2016', role: 'Gründer & Managing Director', org: 'OHLcenter EDV', text: 'Eigene Web- und IT-Agentur: Webgestaltung, Online-Marketing, SEO, Google- & Meta-Ads, CRM-Integration, Vertriebsautomatisierung.' },
+	{ year: '2013', role: 'Marketing Manager', org: 'Netrise Solution GmbH & Co. KG', text: 'Aufbau des Vertriebs, Im- und Export von Cisco-, HP- und Juniper-Systemen.' },
+	{ year: '2012', role: 'Systemadministrator', org: 'Jüdische Gemeinde Osnabrück K.d.ö.R.', text: 'Verantwortung für die gesamte IT-Infrastruktur: IT-Schulungsraum mit 20 PCs, Glasfaseranschluss, Mitgliederdatenbank, NAS-Server, flächendeckende Vernetzung.' },
+	{ year: '2010', role: 'Elektroniker für Automatisierungstechnik', org: 'EST GmbH', text: 'Aufbau und Inbetriebnahme von Automatisierungs- und Steuerungstechnik.' },
+	{ year: '2009', role: 'IT-Systemadministrator', org: 'KiKxxl GmbH', text: 'Betreuung und Wartung der IT-Systeme im laufenden Betrieb — erste berufliche Station.' },
+	{ year: '2005', role: 'Soldat auf Zeit (SaZ 4)', org: 'Deutsche Marine · Wilhelmshaven', text: 'Dienst an Bord der Fregatte „Bayern" (F217).' },
+];
+
+const education: { year: string; title: string; org: string }[] = [
+	{ year: '2013', title: 'Mechatronik-Studium', org: 'Hochschule Osnabrück' },
+	{ year: '2009', title: 'Abitur (2. Bildungsweg)', org: 'Abendgymnasium Sophie Scholl' },
+	{ year: '2004', title: 'Berufsfachschule Informatik', org: 'BBS Bersenbrück' },
+	{ year: '2004', title: 'Realschulabschluss', org: 'Realschule Neuenkirchen' },
+];
+
+const references: { url: string; host: string; name: string; meta: string; text: string }[] = [
+	{ url: 'https://www.imkerpur.de/', host: 'imkerpur.de', name: 'ImkerPur', meta: 'Online-Shop · Honig & Imkerei', text: 'JTL-Shop um SEO-optimierte Produkt- und Landingpages erweitert, Sichtbarkeit im organischen Suchkanal ausgebaut.' },
+	{ url: 'https://k-kbau.de/', host: 'k-kbau.de', name: 'K&K Bau GbR', meta: 'Bauunternehmen · Hoch-/Stahlbetonbau', text: 'Komplette Webpräsenz konzipiert, gebaut und anschließend SEO-optimiert.' },
+	{ url: 'https://www.alando-palais.de/', host: 'alando-palais.de', name: 'Alando Palais', meta: 'Hotel · Bar · Event-Location · Osnabrück', text: 'Aufwertung der Online-Präsenz in Zusammenarbeit mit der Agentur Next Choice — Google-Business-Profil und Reputationsmanagement.' },
+	{ url: 'https://www.kasinopark.com/', host: 'kasinopark.com', name: 'Kasinopark', meta: 'Gesellschaftshaus · Georgsmarienhütte', text: 'Mehrjährige Betreuung: Webentwicklung, Online-Präsenz, Online-Marketing und SEO.' },
+	{ url: 'https://shooting-solutions.de/', host: 'shooting-solutions.de', name: 'Shooting Solutions', meta: 'Schießsport & Training', text: 'Sechs Monate SEO-Sprint: Backlink-Aufbau, technisches SEO, Local SEO und redaktionelle Blogbeiträge.' },
+	{ url: 'https://yms-osnabrueck.de/', host: 'yms-osnabrueck.de', name: 'YMS Osnabrück', meta: 'Osnabrück', text: 'Über ein Jahr betreut: SEO, Sichtbarkeit, Google-Business-Profil und Social Media.' },
+];
+
+const personSchema = {
+	"@context": "https://schema.org",
+	"@type": "ProfilePage",
+	"name": "Alexander Ohl — Freelance IT-Consultant & KI-Automatisierungs-Engineer",
+	"url": "https://www.alexander-ohl.com/",
+	"inLanguage": "de",
+	"mainEntity": {
+		"@type": "Person",
+		"@id": "https://www.alexander-ohl.com/#person",
+		"name": "Alexander Ohl",
+		"jobTitle": "KI-Automatisierungs-Engineer & IT-Generalist",
+		"url": "https://www.alexander-ohl.com/",
+		"image": "https://www.alexander-ohl.com/assets/alexander-ohl-portrait.webp",
+		"email": "mailto:info@pragma-code.de",
+		"sameAs": [
+			"https://www.linkedin.com/in/alexander-ohl/",
+			"https://github.com/aohl1986-ohlcenter",
+			"https://www.pragma-code.de/alexander-ohl"
+		],
+		"worksFor": {
+			"@type": "Organization",
+			"name": "Pragma-Code",
+			"url": "https://www.pragma-code.de"
+		},
+		"knowsAbout": ["KI-Automatisierung", "Webentwicklung", "SEO", "Generative Engine Optimization", "E-Commerce", "React", "Next.js", "Astro", "n8n", "RAG"],
+		"knowsLanguage": ["de", "en", "ru"],
+		"alumniOf": [
+			{ "@type": "EducationalOrganization", "name": "Hochschule Osnabrück" },
+			{ "@type": "EducationalOrganization", "name": "Abendgymnasium Sophie Scholl" }
+		]
+	}
+};
+---
+
+<Layout
+	title="Alexander Ohl | Freelance IT-Consultant · KI & Webentwicklung"
+	description="Alexander Ohl — Freelance IT-Consultant und Gründer von Pragma-Code: 15+ Jahre Erfahrung in KI-Automatisierung, Webentwicklung, SEO/GEO und E-Commerce. Remote im DACH-Raum."
+>
+	<Fragment slot="head">
+		<link rel="preload" as="image" href="/assets/alexander-ohl-buero-1200.webp" fetchpriority="high" />
+		<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+	</Fragment>
+
+	<!-- HEADER -->
+	<header class="hd">
+		<div class="pc-container hd-inner">
+			<a class="hd-logo" href="/" aria-label="Alexander Ohl — Startseite">
+				<span class="prompt">alexander@ohl</span><span class="tilde">:~$</span><span class="caret" aria-hidden="true"></span>
+			</a>
+			<nav class="hd-nav" aria-label="Hauptnavigation">
+				<a href="#expertise">Expertise</a>
+				<a href="#werdegang">Werdegang</a>
+				<a href="#referenzen">Referenzen</a>
+				<a href="#kontakt" class="hd-cta">Kontakt</a>
+				<a href="/en" class="hd-lang" lang="en" aria-label="Switch to English">EN</a>
+			</nav>
+		</div>
+	</header>
+
+	<main>
+		<!-- HERO -->
+		<section class="hero">
+			<div class="hero-bg" aria-hidden="true"></div>
+			<div class="pc-container hero-inner">
+				<div class="hero-copy">
+					<div class="eyebrow pc-mono"><span class="bar"></span>Freelance IT-Consultant · DACH · Remote</div>
+					<h1>
+						Alexander Ohl<br />
+						<span class="yellow">— Ich baue Systeme, die für Sie arbeiten.</span>
+					</h1>
+					<p class="lede">
+						Gründer von <a href="https://www.pragma-code.de/" target="_blank" rel="noopener">Pragma-Code</a> mit
+						<strong>15+ Jahren Erfahrung</strong>: KI-Automatisierung, moderne Webentwicklung,
+						SEO &amp; GEO und E-Commerce — vom Konzept bis zum messbaren Ergebnis.
+					</p>
+					<div class="hero-tags">
+						<span class="tag"><span class="dot"></span>KI-Automatisierung</span>
+						<span class="tag"><span class="dot"></span>Webentwicklung</span>
+						<span class="tag"><span class="dot"></span>SEO &amp; GEO</span>
+						<span class="tag"><span class="dot"></span>E-Commerce</span>
+					</div>
+					<div class="hero-ctas">
+						<a class="btn-primary" href="#kontakt">Projekt anfragen</a>
+						<a class="btn-ghost" href="https://www.linkedin.com/in/alexander-ohl/" target="_blank" rel="noopener">LinkedIn ↗</a>
+					</div>
+				</div>
+
+				<!-- Terminal card -->
+				<div class="term" role="img" aria-label="Terminal: whoami — Alexander Ohl, IT-Generalist und KI-Engineer, verfügbar für Projekte">
+					<div class="term-bar">
+						<span class="tdot red"></span><span class="tdot ylw"></span><span class="tdot grn"></span>
+						<span class="term-title pc-mono">alexander@ohl — zsh</span>
+					</div>
+					<pre class="term-body" id="term-body" aria-hidden="true"></pre>
+				</div>
+			</div>
+		</section>
+
+		<!-- PHOTO BANNER -->
+		<section class="photo reveal">
+			<div class="pc-container">
+				<figure class="photo-frame">
+					<img
+						src="/assets/alexander-ohl-buero-1200.webp"
+						srcset="/assets/alexander-ohl-buero-800.webp 800w, /assets/alexander-ohl-buero-1200.webp 1200w, /assets/alexander-ohl-buero-1600.webp 1600w"
+						sizes="(max-width: 1200px) 100vw, 1104px"
+						alt="Alexander Ohl im Büro von Pragma Code"
+						width="1634" height="640"
+						fetchpriority="high"
+					/>
+					<figcaption class="photo-strip">
+						<span class="live"><span class="live-dot"></span>Verfügbar für Projekte</span>
+						<span class="photo-meta">Alexander Ohl · Gründer, Pragma-Code</span>
+						<span class="photo-meta">DACH · Remote</span>
+					</figcaption>
+				</figure>
+			</div>
+		</section>
+
+		<!-- STATS -->
+		<section class="stats reveal" aria-label="Kennzahlen">
+			<div class="pc-container stats-inner">
+				<div class="stat"><div class="num">15<span>+</span></div><div class="lab">Jahre Erfahrung</div></div>
+				<div class="stat"><div class="num">40<span>+</span></div><div class="lab">Begleitete Projekte</div></div>
+				<div class="stat"><div class="num">3</div><div class="lab">Sprachen fließend</div></div>
+				<div class="stat"><div class="num">&lt;24<span>h</span></div><div class="lab">Antwortzeit</div></div>
+			</div>
+		</section>
+
+		<!-- TECH TICKER -->
+		<div class="ticker" aria-hidden="true">
+			<div class="ticker-track">
+				{ticker.map(t => <span class="ticker-item">{t}</span>)}
+			</div>
+		</div>
+
+		<!-- EXPERTISE -->
+		<section class="sec" id="expertise">
+			<div class="pc-container">
+				<div class="sec-eyebrow pc-mono">01 — Expertise</div>
+				<h2 class="sec-title">Womit ich Unternehmen weiterbringe</h2>
+				<div class="cards">
+					<article class="card reveal">
+						<div class="card-icon" aria-hidden="true">⚙︎</div>
+						<h3>KI-Automatisierung</h3>
+						<p>RAG-Pipelines, n8n-Workflows und autonome KI-Agenten, die Routineprozesse übernehmen — sicher in bestehende Systeme integriert.</p>
+						<div class="card-chips"><span>RAG</span><span>n8n</span><span>Agenten</span></div>
+					</article>
+					<article class="card reveal">
+						<div class="card-icon" aria-hidden="true">&lt;/&gt;</div>
+						<h3>Webentwicklung</h3>
+						<p>Schnelle, wartbare Websites und Anwendungen mit React, Next.js und Astro — Performance und Core Web Vitals inklusive.</p>
+						<div class="card-chips"><span>React</span><span>Next.js</span><span>Astro</span></div>
+					</article>
+					<article class="card reveal">
+						<div class="card-icon" aria-hidden="true">▲</div>
+						<h3>SEO &amp; GEO</h3>
+						<p>Technische SEO plus Generative Engine Optimization: strukturierte Daten, llms.txt und Inhalte, die auch KI-Suchen zitieren.</p>
+						<div class="card-chips"><span>Schema.org</span><span>llms.txt</span><span>AI Search</span></div>
+					</article>
+					<article class="card reveal">
+						<div class="card-icon" aria-hidden="true">◆</div>
+						<h3>E-Commerce</h3>
+						<p>Shops, die verkaufen: WooCommerce, Shopify und JTL — von der Produktseite bis zur Conversion-Optimierung.</p>
+						<div class="card-chips"><span>WooCommerce</span><span>Shopify</span><span>JTL</span></div>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<!-- WERDEGANG -->
+		<section class="sec sec-alt" id="werdegang">
+			<div class="pc-container">
+				<div class="sec-eyebrow pc-mono">02 — Werdegang</div>
+				<h2 class="sec-title">Vom Maschinenraum zur KI</h2>
+				<p class="sec-lede">Von der Fregatte „Bayern" über Systemadministration und Agenturarbeit zum selbstständigen IT-Generalisten — jede Station hat das Systemverständnis geschärft, das heute in jedes Projekt fließt.</p>
+				<ol class="tl">
+					{timeline.map(item => (
+						<li class="tl-item reveal">
+							<div class="tl-year pc-mono">{item.year}</div>
+							<div class="tl-body">
+								<h3>{item.role}</h3>
+								<div class="tl-org">{item.org}</div>
+								<p>{item.text}</p>
+							</div>
+						</li>
+					))}
+				</ol>
+				<div class="edu reveal">
+					<div class="edu-label pc-mono">Ausbildung</div>
+					<div class="edu-chips">
+						{education.map(e => (
+							<span class="edu-chip"><strong>{e.year}</strong> {e.title} · {e.org}</span>
+						))}
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- REFERENZEN -->
+		<section class="sec" id="referenzen">
+			<div class="pc-container">
+				<div class="sec-eyebrow pc-mono">03 — Referenzen</div>
+				<h2 class="sec-title">Ausgewählte Projekte</h2>
+				<div class="refs">
+					{references.map(r => (
+						<a class="ref reveal" href={r.url} target="_blank" rel="noopener">
+							<div class="ref-host pc-mono">{r.host} ↗</div>
+							<h3>{r.name}</h3>
+							<div class="ref-meta">{r.meta}</div>
+							<p>{r.text}</p>
+						</a>
+					))}
+				</div>
+				<p class="refs-more">Ausführliche Fallstudien mit Zahlen und Vorgehen: <a href="https://www.pragma-code.de/" target="_blank" rel="noopener">pragma-code.de</a></p>
+			</div>
+		</section>
+
+		<!-- KONTAKT -->
+		<section class="sec sec-alt" id="kontakt">
+			<div class="pc-container">
+				<div class="contact reveal">
+					<div class="sec-eyebrow pc-mono">04 — Kontakt</div>
+					<h2 class="sec-title">Lassen Sie uns sprechen.</h2>
+					<p class="sec-lede">Kurze Frage, konkretes Projekt oder erst einmal unverbindlich sondieren — ich antworte in der Regel innerhalb von 24 Stunden.</p>
+					<div class="contact-actions">
+						<a class="btn-primary" href="mailto:info@pragma-code.de">info@pragma-code.de</a>
+						<a class="btn-ghost" href="https://www.pragma-code.de/projektanfrage" target="_blank" rel="noopener">Projektanfrage bei Pragma-Code ↗</a>
+						<a class="btn-ghost" href="https://www.linkedin.com/in/alexander-ohl/" target="_blank" rel="noopener">LinkedIn ↗</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- FOOTER -->
+	<footer class="ft">
+		<div class="pc-container ft-inner">
+			<div class="ft-brand pc-mono">© {new Date().getFullYear()} Alexander Ohl · alexander-ohl.com</div>
+			<nav class="ft-nav" aria-label="Rechtliches">
+				<a href="/impressum">Impressum</a>
+				<a href="/datenschutz">Datenschutz</a>
+				<a href="https://www.pragma-code.de/" target="_blank" rel="noopener">Pragma-Code ↗</a>
+				<a href="/en" lang="en">English</a>
+			</nav>
+		</div>
+	</footer>
+
+	<script>
+		// Terminal-Typing im Hero — respektiert prefers-reduced-motion.
+		const lines = [
+			{ cmd: 'whoami', out: 'Alexander Ohl — IT-Generalist & KI-Engineer' },
+			{ cmd: 'cat stack.txt', out: 'Web · SEO/GEO · KI-Automatisierung · E-Commerce' },
+			{ cmd: './verfuegbarkeit.sh', out: '● verfügbar für Projekte — DACH · Remote' }
+		];
+		const el = document.getElementById('term-body');
+		const PROMPT = 'alexander@ohl ~ % ';
+		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		function renderStatic() {
+			if (!el) return;
+			el.innerHTML = lines.map(l =>
+				`<span class="p">${PROMPT}</span>${l.cmd}\n<span class="o">${l.out}</span>`
+			).join('\n') + `\n<span class="p">${PROMPT}</span><span class="cursor"></span>`;
+		}
+
+		async function type() {
+			if (!el) return;
+			const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+			let html = '';
+			for (const l of lines) {
+				html += `<span class="p">${PROMPT}</span>`;
+				for (const ch of l.cmd) {
+					html += ch === '<' ? '&lt;' : ch;
+					el.innerHTML = html + '<span class="cursor"></span>';
+					await sleep(38 + Math.random() * 45);
+				}
+				await sleep(260);
+				html += `\n<span class="o">${l.out}</span>\n`;
+				el.innerHTML = html + '<span class="cursor"></span>';
+				await sleep(420);
+			}
+			html += `<span class="p">${PROMPT}</span>`;
+			el.innerHTML = html + '<span class="cursor"></span>';
+		}
+
+		if (reduced) { renderStatic(); } else { type(); }
+
+		// WebMCP: Profil-Tool für KI-Browser registrieren (Progressive Enhancement)
+		if (typeof navigator !== 'undefined' && 'modelContext' in navigator) {
+			(navigator as any).modelContext.registerTool({
+				name: 'getProfile',
+				description: 'Liefert Profil, Kompetenzen und Kontaktdaten von Alexander Ohl (Freelance IT-Consultant).',
+				parameters: { type: 'object', properties: {} },
+				execute: async () => ({
+					status: 'success',
+					name: 'Alexander Ohl',
+					role: 'Freelance IT-Consultant · KI-Automatisierungs-Engineer',
+					skills: ['KI-Automatisierung (RAG, n8n, Agenten)', 'Webentwicklung (React, Next.js, Astro)', 'SEO & GEO', 'E-Commerce'],
+					area: 'DACH · Remote',
+					contact: 'info@pragma-code.de',
+					company: 'https://www.pragma-code.de'
+				})
+			});
+		}
+	</script>
+
+	<style>
+		/* ===== Header ===== */
+		.hd {
+			position: sticky; top: 0; z-index: 50;
+			background: rgba(15, 20, 48, 0.82);
+			backdrop-filter: blur(12px);
+			-webkit-backdrop-filter: blur(12px);
+			border-bottom: 1px solid var(--pc-line);
+		}
+		.hd-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+		.hd-logo {
+			font-family: var(--pc-font-mono); font-size: 15px; font-weight: 600;
+			text-decoration: none; display: flex; align-items: center; gap: 1px;
+		}
+		.hd-logo .prompt { color: var(--pc-yellow); }
+		.hd-logo .tilde { color: var(--pc-fg-2); }
+		.hd-logo .caret {
+			width: 8px; height: 16px; margin-left: 5px; background: var(--pc-green);
+			animation: blink 1.2s steps(1) infinite;
+		}
+		@keyframes blink { 50% { opacity: 0; } }
+		.hd-nav { display: flex; align-items: center; gap: clamp(14px, 2.5vw, 28px); }
+		.hd-nav a {
+			text-decoration: none; font-size: 14px; font-weight: 600; color: var(--pc-fg-2);
+			transition: color var(--pc-fast) var(--pc-ease);
+		}
+		.hd-nav a:hover { color: var(--pc-fg); }
+		.hd-cta {
+			color: var(--pc-navy-900) !important; background: var(--pc-yellow);
+			padding: 8px 16px; border-radius: var(--pc-r-pill);
+		}
+		.hd-cta:hover { background: var(--pc-yellow-soft); }
+		.hd-lang {
+			border: 1px solid var(--pc-line-2); padding: 6px 10px; border-radius: var(--pc-r-sm);
+			font-family: var(--pc-font-mono); font-size: 12px !important;
+		}
+		/* Mobile: nur CTA + Sprachschalter, Anker-Links ausblenden */
+		@media (max-width: 680px) {
+			.hd-nav a:not(.hd-cta):not(.hd-lang) { display: none; }
+			.hd-logo { font-size: 13.5px; }
+		}
+
+		/* ===== Hero ===== */
+		.hero { position: relative; overflow: hidden; padding: clamp(56px, 9vw, 110px) 0; }
+		.hero-bg {
+			position: absolute; inset: 0; pointer-events: none;
+			background:
+				radial-gradient(ellipse 60% 50% at 75% 20%, rgba(255, 200, 41, 0.07), transparent 60%),
+				radial-gradient(ellipse 50% 60% at 15% 85%, rgba(122, 167, 255, 0.06), transparent 60%),
+				linear-gradient(var(--pc-line) 1px, transparent 1px),
+				linear-gradient(90deg, var(--pc-line) 1px, transparent 1px);
+			background-size: auto, auto, 56px 56px, 56px 56px;
+			mask-image: radial-gradient(ellipse 90% 90% at 50% 40%, black 40%, transparent 100%);
+		}
+		.hero-inner {
+			position: relative; display: grid; gap: clamp(32px, 5vw, 64px);
+			grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); align-items: center;
+		}
+		@media (max-width: 900px) { .hero-inner { grid-template-columns: 1fr; } }
+		.eyebrow { display: flex; align-items: center; gap: 10px; color: var(--pc-yellow); margin-bottom: 20px; }
+		.eyebrow .bar { width: 28px; height: 2px; background: var(--pc-yellow); }
+		h1 {
+			font-size: clamp(34px, 5.4vw, 60px); line-height: 1.08; font-weight: 800;
+			letter-spacing: -0.02em; margin-bottom: 22px;
+		}
+		h1 .yellow { color: var(--pc-yellow); }
+		.lede { font-size: clamp(16px, 1.6vw, 19px); color: var(--pc-fg-2); max-width: 56ch; margin-bottom: 26px; }
+		.lede a { color: var(--pc-yellow); text-decoration: none; border-bottom: 1px solid rgba(255,200,41,.35); }
+		.hero-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+		.tag {
+			display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px;
+			border: 1px solid var(--pc-line-2); border-radius: var(--pc-r-pill);
+			font-size: 13px; font-weight: 600; color: var(--pc-fg-2); background: rgba(255,255,255,0.02);
+		}
+		.tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pc-yellow); }
+		.hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; }
+		.btn-primary {
+			background: var(--pc-yellow); color: var(--pc-navy-900); text-decoration: none;
+			font-weight: 800; padding: 14px 26px; border-radius: var(--pc-r-md);
+			box-shadow: var(--pc-shadow-yellow);
+			transition: transform var(--pc-fast) var(--pc-ease), box-shadow var(--pc-fast) var(--pc-ease), background var(--pc-fast) var(--pc-ease);
+		}
+		.btn-primary:hover { background: var(--pc-yellow-soft); transform: translateY(-2px); box-shadow: var(--pc-shadow-yellow-hover); }
+		.btn-ghost {
+			border: 1px solid var(--pc-line-2); color: var(--pc-fg); text-decoration: none;
+			font-weight: 700; padding: 14px 22px; border-radius: var(--pc-r-md);
+			transition: border-color var(--pc-fast) var(--pc-ease), background var(--pc-fast) var(--pc-ease);
+		}
+		.btn-ghost:hover { border-color: var(--pc-yellow); background: rgba(255, 200, 41, 0.06); }
+
+		/* Terminal */
+		.term {
+			background: var(--pc-navy-900); border: 1px solid var(--pc-line-2);
+			border-radius: var(--pc-r-lg); box-shadow: var(--pc-shadow-card); overflow: hidden;
+		}
+		.term-bar {
+			display: flex; align-items: center; gap: 7px; padding: 12px 16px;
+			border-bottom: 1px solid var(--pc-line); background: rgba(255,255,255,0.02);
+		}
+		.tdot { width: 11px; height: 11px; border-radius: 50%; }
+		.tdot.red { background: #ff5f57; } .tdot.ylw { background: #febc2e; } .tdot.grn { background: #28c840; }
+		.term-title { margin-left: 8px; color: var(--pc-fg-3); }
+		.term-body {
+			padding: 20px; margin: 0; font-family: var(--pc-font-mono); font-size: 13.5px;
+			line-height: 1.85; white-space: pre-wrap; word-break: break-word;
+			min-height: 216px; color: var(--pc-fg);
+		}
+		.term-body :global(.p) { color: var(--pc-yellow); }
+		.term-body :global(.o) { color: var(--pc-fg-2); }
+		.term-body :global(.cursor) {
+			display: inline-block; width: 8px; height: 15px; vertical-align: -2px;
+			background: var(--pc-green); animation: blink 1.1s steps(1) infinite;
+		}
+
+		/* ===== Photo banner ===== */
+		.photo { padding: clamp(10px, 2vw, 24px) 0 0; }
+		.photo-frame {
+			border: 1px solid var(--pc-line-2); border-radius: var(--pc-r-xl);
+			overflow: hidden; box-shadow: var(--pc-shadow-card);
+		}
+		.photo-frame img { width: 100%; height: auto; }
+		.photo-strip {
+			display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px;
+			padding: 14px 22px; background: var(--pc-navy-900); border-top: 1px solid var(--pc-line);
+			font-size: 13px; color: var(--pc-fg-2);
+		}
+		.live { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--pc-green); }
+		.live-dot {
+			width: 8px; height: 8px; border-radius: 50%; background: var(--pc-green);
+			box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); animation: pulse 2s infinite;
+		}
+		@keyframes pulse {
+			0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+			70% { box-shadow: 0 0 0 9px rgba(74, 222, 128, 0); }
+			100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+		}
+		.photo-meta:last-child { margin-left: auto; }
+
+		/* ===== Stats ===== */
+		.stats { padding: clamp(36px, 5vw, 60px) 0 0; }
+		.stats-inner {
+			display: grid; grid-template-columns: repeat(4, 1fr);
+			border: 1px solid var(--pc-line-2); border-radius: var(--pc-r-lg);
+			background: var(--pc-navy-700); overflow: hidden;
+		}
+		@media (max-width: 720px) { .stats-inner { grid-template-columns: repeat(2, 1fr); } }
+		.stat { padding: clamp(18px, 3vw, 30px); border-right: 1px solid var(--pc-line); }
+		.stat:last-child { border-right: none; }
+		@media (max-width: 720px) {
+			.stat:nth-child(2) { border-right: none; }
+			.stat:nth-child(-n+2) { border-bottom: 1px solid var(--pc-line); }
+		}
+		.num { font-size: clamp(30px, 4vw, 44px); font-weight: 800; letter-spacing: -0.02em; }
+		.num span { color: var(--pc-yellow); }
+		.lab { font-size: 13px; color: var(--pc-fg-2); margin-top: 4px; }
+
+		/* ===== Ticker ===== */
+		.ticker {
+			margin-top: clamp(40px, 6vw, 72px); border-block: 1px solid var(--pc-line);
+			overflow: hidden; background: var(--pc-navy-900); padding: 14px 0;
+		}
+		.ticker-track { display: flex; gap: 40px; width: max-content; animation: scroll 48s linear infinite; }
+		@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+		@keyframes scroll { to { transform: translateX(-50%); } }
+		.ticker-item {
+			font-family: var(--pc-font-mono); font-size: 12.5px; letter-spacing: 0.08em;
+			text-transform: uppercase; color: var(--pc-fg-3); white-space: nowrap;
+		}
+		.ticker-item::after { content: '·'; margin-left: 40px; color: var(--pc-yellow); }
+
+		/* ===== Sections ===== */
+		.sec { padding: clamp(64px, 9vw, 120px) 0; }
+		.sec-alt { background: var(--pc-navy-900); border-block: 1px solid var(--pc-line); }
+		.sec-eyebrow { color: var(--pc-yellow); margin-bottom: 14px; }
+		.sec-title {
+			font-size: clamp(26px, 3.6vw, 40px); font-weight: 800; letter-spacing: -0.02em;
+			margin-bottom: 18px;
+		}
+		.sec-lede { color: var(--pc-fg-2); max-width: 68ch; margin-bottom: clamp(28px, 4vw, 48px); }
+
+		/* Expertise cards */
+		.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: clamp(28px, 4vw, 44px); }
+		.card {
+			background: var(--pc-navy-700); border: 1px solid var(--pc-line);
+			border-radius: var(--pc-r-lg); padding: 26px;
+			transition: transform var(--pc-base) var(--pc-ease), border-color var(--pc-base) var(--pc-ease);
+		}
+		.card:hover { transform: translateY(-4px); border-color: rgba(255, 200, 41, 0.4); }
+		.card-icon {
+			font-family: var(--pc-font-mono); font-size: 20px; font-weight: 700; color: var(--pc-yellow);
+			width: 46px; height: 46px; display: grid; place-items: center;
+			background: rgba(255, 200, 41, 0.08); border: 1px solid rgba(255, 200, 41, 0.25);
+			border-radius: var(--pc-r-md); margin-bottom: 18px;
+		}
+		.card h3 { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+		.card p { font-size: 14.5px; color: var(--pc-fg-2); margin-bottom: 16px; }
+		.card-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+		.card-chips span {
+			font-family: var(--pc-font-mono); font-size: 11px; padding: 4px 10px;
+			border: 1px solid var(--pc-line-2); border-radius: var(--pc-r-pill); color: var(--pc-fg-3);
+		}
+
+		/* Timeline */
+		.tl { list-style: none; padding: 0; position: relative; max-width: 760px; }
+		.tl::before {
+			content: ''; position: absolute; left: 74px; top: 8px; bottom: 8px; width: 2px;
+			background: linear-gradient(to bottom, var(--pc-yellow), rgba(255, 200, 41, 0.08));
+		}
+		.tl-item { display: grid; grid-template-columns: 56px 1fr; gap: 36px; padding: 0 0 34px; position: relative; }
+		.tl-item::before {
+			content: ''; position: absolute; left: 69px; top: 7px; width: 12px; height: 12px;
+			border-radius: 50%; background: var(--pc-navy-800); border: 2px solid var(--pc-yellow);
+		}
+		.tl-year { color: var(--pc-yellow); font-size: 13px !important; padding-top: 5px; text-align: right; }
+		.tl-body h3 { font-size: 17px; font-weight: 800; }
+		.tl-org { font-size: 13px; color: var(--pc-yellow-soft); font-weight: 600; margin: 2px 0 8px; }
+		.tl-body p { font-size: 14.5px; color: var(--pc-fg-2); max-width: 62ch; }
+		@media (max-width: 560px) {
+			.tl::before { left: 5px; }
+			.tl-item { grid-template-columns: 1fr; gap: 6px; padding-left: 28px; }
+			.tl-item::before { left: 0; }
+			.tl-year { text-align: left; padding-top: 0; }
+		}
+
+		/* Education */
+		.edu { margin-top: clamp(28px, 4vw, 44px); border-top: 1px solid var(--pc-line); padding-top: 28px; }
+		.edu-label { color: var(--pc-fg-3); margin-bottom: 14px; }
+		.edu-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+		.edu-chip {
+			font-size: 13px; color: var(--pc-fg-2); padding: 8px 14px;
+			border: 1px solid var(--pc-line-2); border-radius: var(--pc-r-pill); background: rgba(255,255,255,0.02);
+		}
+		.edu-chip strong { color: var(--pc-yellow); font-family: var(--pc-font-mono); font-weight: 600; margin-right: 4px; }
+
+		/* References */
+		.refs { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: clamp(28px, 4vw, 44px); }
+		.ref {
+			display: block; text-decoration: none; background: var(--pc-navy-700);
+			border: 1px solid var(--pc-line); border-radius: var(--pc-r-lg); padding: 24px;
+			transition: transform var(--pc-base) var(--pc-ease), border-color var(--pc-base) var(--pc-ease);
+		}
+		.ref:hover { transform: translateY(-4px); border-color: rgba(255, 200, 41, 0.4); }
+		.ref-host { color: var(--pc-green); margin-bottom: 12px; }
+		.ref h3 { font-size: 17px; font-weight: 800; margin-bottom: 2px; }
+		.ref-meta { font-size: 12.5px; color: var(--pc-fg-3); margin-bottom: 10px; }
+		.ref p { font-size: 14px; color: var(--pc-fg-2); }
+		.refs-more { margin-top: 28px; font-size: 14px; color: var(--pc-fg-2); }
+		.refs-more a { color: var(--pc-yellow); text-decoration: none; border-bottom: 1px solid rgba(255,200,41,.35); }
+
+		/* Contact */
+		.contact { text-align: center; max-width: 720px; margin: 0 auto; }
+		.contact .sec-lede { margin-inline: auto; }
+		.contact-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+
+		/* Footer */
+		.ft { border-top: 1px solid var(--pc-line); padding: 28px 0; background: var(--pc-navy-900); }
+		.ft-inner { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; justify-content: space-between; }
+		.ft-brand { color: var(--pc-fg-3); }
+		.ft-nav { display: flex; flex-wrap: wrap; gap: 20px; }
+		.ft-nav a { font-size: 13px; color: var(--pc-fg-2); text-decoration: none; }
+		.ft-nav a:hover { color: var(--pc-fg); }
+	</style>
+</Layout>

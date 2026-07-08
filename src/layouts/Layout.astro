@@ -1,0 +1,110 @@
+---
+import '../styles/tokens.css';
+
+// Manrope Variable Font (400–800) — selbst gehostet, @font-face inline
+// (kein render-blockierender Stylesheet-Request), woff2 preloaded.
+const fontFaceCss = `
+/* latin-ext */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url(/assets/fonts/manrope-var-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url(/assets/fonts/manrope-var-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}`;
+
+export interface Props {
+	title: string;
+	description: string;
+	ogImage?: string;
+	ogType?: string;
+	noindex?: boolean;
+}
+
+const {
+	title,
+	description,
+	ogImage = '/assets/alexander-ohl-og.jpg',
+	ogType = 'profile',
+	noindex = false
+} = Astro.props;
+
+const siteRoot = 'https://www.alexander-ohl.com';
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const canonical = pathname === '/' ? siteRoot : `${siteRoot}${pathname}`;
+
+const isEn = pathname === '/en' || pathname.startsWith('/en/');
+const lang = isEn ? 'en' : 'de';
+
+// hreflang DE ↔ EN: nur die Startseite existiert zweisprachig,
+// die Rechtsseiten sind DE-only.
+const hasTranslation = pathname === '/' || pathname === '/en';
+const hrefDe = siteRoot;
+const hrefEn = `${siteRoot}/en`;
+
+const ogImageAbs = new URL(ogImage, siteRoot).toString();
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<meta name="theme-color" content="#0f1430" />
+		<meta name="generator" content={Astro.generator} />
+
+		<!-- SEO -->
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="author" content="Alexander Ohl" />
+		<link rel="canonical" href={canonical} />
+		<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+
+		{hasTranslation && (
+			<>
+				<link rel="alternate" hreflang="de" href={hrefDe} />
+				<link rel="alternate" hreflang="en" href={hrefEn} />
+				<link rel="alternate" hreflang="x-default" href={hrefDe} />
+			</>
+		)}
+
+		<!-- Open Graph -->
+		<meta property="og:type" content={ogType} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={ogImageAbs} />
+		<meta property="og:locale" content={isEn ? 'en_US' : 'de_DE'} />
+
+		<!-- Twitter / X -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImageAbs} />
+
+		<!-- Fonts: preload + @font-face inline -->
+		<link rel="preload" href="/assets/fonts/manrope-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+		<style set:html={fontFaceCss}></style>
+
+		<!-- Speculation Rules API: Folge-Seiten im Hintergrund vorrendern -->
+		<script type="speculationrules" set:html={JSON.stringify({
+			prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }]
+		})} />
+
+		<slot name="head" />
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
