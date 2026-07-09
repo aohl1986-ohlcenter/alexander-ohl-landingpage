@@ -1,24 +1,51 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-const stack = [
-	'React', 'Next.js', 'Astro', 'TypeScript', 'Node.js', 'Python', 'PHP',
-	'WordPress', 'WooCommerce', 'Shopify', 'JTL-Shop', 'n8n', 'RAG', 'KI-Agenten',
-	'Docker', 'Git', 'SEO', 'GEO', 'Schema.org', 'Cloudflare'
+// Tech-Stack: mit offiziellen Herstellerseiten verlinkt (Konzepte ohne URL bleiben Text).
+const stack: { label: string; url?: string }[] = [
+	{ label: 'React', url: 'https://react.dev/' },
+	{ label: 'Next.js', url: 'https://nextjs.org/' },
+	{ label: 'Astro', url: 'https://astro.build/' },
+	{ label: 'TypeScript', url: 'https://www.typescriptlang.org/' },
+	{ label: 'Node.js', url: 'https://nodejs.org/' },
+	{ label: 'Python', url: 'https://www.python.org/' },
+	{ label: 'PHP', url: 'https://www.php.net/' },
+	{ label: 'WordPress', url: 'https://wordpress.org/' },
+	{ label: 'WooCommerce', url: 'https://woocommerce.com/' },
+	{ label: 'Shopify', url: 'https://www.shopify.com/' },
+	{ label: 'JTL-Shop', url: 'https://www.jtl-software.de/' },
+	{ label: 'n8n', url: 'https://n8n.io/' },
+	{ label: 'RAG' },
+	{ label: 'KI-Agenten' },
+	{ label: 'Docker', url: 'https://www.docker.com/' },
+	{ label: 'Git', url: 'https://git-scm.com/' },
+	{ label: 'SEO' },
+	{ label: 'GEO' },
+	{ label: 'Schema.org', url: 'https://schema.org/' },
+	{ label: 'Cloudflare', url: 'https://www.cloudflare.com/' },
 ];
 const ticker = [...stack, ...stack];
 
-const timeline: { year: string; role: string; org: string; text: string }[] = [
-	{ year: '2024', role: 'Gründer & IT-Generalist', org: 'Pragma-Code', text: 'IT-Beratung für den Mittelstand: KI-Automatisierung (RAG, n8n), Full-Stack-Webentwicklung, SEO und E-Commerce.' },
-	{ year: '2023', role: 'PPC Manager / User Acquisition', org: 'Next Choice Agency', text: 'Paid Media und datengetriebene Funnel-Optimierung. Mit Studio 360° Betreuung von Agenturkunden — u. a. des Alando in Osnabrück (Hotel, Bar & Event-Location).' },
+// Pragma-Code-Leistungsseiten, passend zu den vier Expertise-Feldern.
+const services: { label: string; url: string }[] = [
+	{ label: 'KI-Automatisierung', url: 'https://www.pragma-code.de/ki-automatisierung' },
+	{ label: 'Webentwicklung', url: 'https://www.pragma-code.de/webentwicklung' },
+	{ label: 'SEO & GEO', url: 'https://www.pragma-code.de/seo-content' },
+	{ label: 'E-Commerce', url: 'https://www.pragma-code.de/e-commerce' },
+];
+
+// orgUrl: Firmenwebseite der jeweiligen Station (Vertrauens-/E-E-A-T-Signal).
+const timeline: { year: string; role: string; org: string; orgUrl?: string; text: string }[] = [
+	{ year: '2024', role: 'Gründer & IT-Generalist', org: 'Pragma-Code', orgUrl: 'https://www.pragma-code.de/', text: 'IT-Beratung für den Mittelstand: KI-Automatisierung (RAG, n8n), Full-Stack-Webentwicklung, SEO und E-Commerce.' },
+	{ year: '2023', role: 'PPC Manager / User Acquisition', org: 'Next Choice Agency', orgUrl: 'https://next-choice.de/', text: 'Paid Media und datengetriebene Funnel-Optimierung. Mit Studio 360° Betreuung von Agenturkunden — u. a. des Alando in Osnabrück (Hotel, Bar & Event-Location).' },
 	{ year: '2020', role: 'Gründer Digitalagentur', org: 'Studio 360°', text: 'Internationale Digitalagentur für Web Development und Online-Marketing.' },
 	{ year: '2018', role: 'IT-Freelancer', org: 'Freiberuflich · Remote', text: 'Remote-Projekte in IT, Web, SEO und Online-Marketing für Kunden in Deutschland — bis zu sieben davon parallel betreut.' },
 	{ year: '2016', role: 'Gründer & Managing Director', org: 'OHLcenter EDV', text: 'Eigene Web- und IT-Agentur: Webgestaltung, Online-Marketing, SEO, Google- & Meta-Ads, CRM-Integration, Vertriebsautomatisierung.' },
 	{ year: '2013', role: 'Marketing Manager', org: 'Netrise Solution GmbH & Co. KG', text: 'Aufbau des Vertriebs, Im- und Export von Cisco-, HP- und Juniper-Systemen.' },
-	{ year: '2012', role: 'Systemadministrator', org: 'Jüdische Gemeinde Osnabrück K.d.ö.R.', text: 'Verantwortung für die gesamte IT-Infrastruktur: IT-Schulungsraum mit 20 PCs, Glasfaseranschluss, Mitgliederdatenbank, NAS-Server, flächendeckende Vernetzung.' },
-	{ year: '2010', role: 'Elektroniker für Automatisierungstechnik', org: 'EST GmbH', text: 'Aufbau und Inbetriebnahme von Automatisierungs- und Steuerungstechnik.' },
-	{ year: '2009', role: 'IT-Systemadministrator', org: 'KiKxxl GmbH', text: 'Betreuung und Wartung der IT-Systeme im laufenden Betrieb — erste berufliche Station.' },
-	{ year: '2005', role: 'Soldat auf Zeit (SaZ 4)', org: 'Deutsche Marine · Wilhelmshaven', text: 'Dienst an Bord der Fregatte „Bayern" (F217).' },
+	{ year: '2012', role: 'Systemadministrator', org: 'Jüdische Gemeinde Osnabrück K.d.ö.R.', orgUrl: 'https://jg-osnabrueck.de/', text: 'Verantwortung für die gesamte IT-Infrastruktur: IT-Schulungsraum mit 20 PCs, Glasfaseranschluss, Mitgliederdatenbank, NAS-Server, flächendeckende Vernetzung.' },
+	{ year: '2010', role: 'Elektroniker für Automatisierungstechnik', org: 'EST GmbH', orgUrl: 'https://est.de/', text: 'Aufbau und Inbetriebnahme von Automatisierungs- und Steuerungstechnik.' },
+	{ year: '2009', role: 'IT-Systemadministrator', org: 'KiKxxl GmbH', orgUrl: 'https://kikxxl.de/', text: 'Betreuung und Wartung der IT-Systeme im laufenden Betrieb — erste berufliche Station.' },
+	{ year: '2005', role: 'Soldat auf Zeit (SaZ 4)', org: 'Deutsche Marine · Wilhelmshaven', orgUrl: 'https://www.bundeswehr.de/de/organisation/marine', text: 'Dienst an Bord der Fregatte „Bayern" (F217).' },
 ];
 
 const education: { year: string; title: string; org: string }[] = [
@@ -113,10 +140,9 @@ const personSchema = {
 						SEO &amp; GEO und E-Commerce — vom Konzept bis zum messbaren Ergebnis.
 					</p>
 					<div class="hero-tags">
-						<span class="tag"><span class="dot"></span>KI-Automatisierung</span>
-						<span class="tag"><span class="dot"></span>Webentwicklung</span>
-						<span class="tag"><span class="dot"></span>SEO &amp; GEO</span>
-						<span class="tag"><span class="dot"></span>E-Commerce</span>
+						{services.map(s => (
+							<a class="tag" href={s.url} target="_blank" rel="noopener noreferrer" title={`${s.label} bei Pragma-Code`}><span class="dot"></span>{s.label}</a>
+						))}
 					</div>
 					<div class="hero-ctas">
 						<a class="btn-primary" href="#kontakt">Projekt anfragen</a>
@@ -169,7 +195,10 @@ const personSchema = {
 		<!-- TECH TICKER -->
 		<div class="ticker" aria-hidden="true">
 			<div class="ticker-track">
-				{ticker.map(t => <span class="ticker-item">{t}</span>)}
+				{ticker.map(t => t.url
+					? <a class="ticker-item" href={t.url} target="_blank" rel="noopener noreferrer" tabindex="-1">{t.label}</a>
+					: <span class="ticker-item">{t.label}</span>
+				)}
 			</div>
 		</div>
 
@@ -184,24 +213,28 @@ const personSchema = {
 						<h3>KI-Automatisierung</h3>
 						<p>RAG-Pipelines, n8n-Workflows und autonome KI-Agenten, die Routineprozesse übernehmen — sicher in bestehende Systeme integriert.</p>
 						<div class="card-chips"><span>RAG</span><span>n8n</span><span>Agenten</span></div>
+						<a class="card-cta" href="https://www.pragma-code.de/ki-automatisierung" target="_blank" rel="noopener noreferrer">Zur Leistung bei Pragma-Code <span aria-hidden="true">↗</span></a>
 					</article>
 					<article class="card reveal">
 						<div class="card-icon" aria-hidden="true">&lt;/&gt;</div>
 						<h3>Webentwicklung</h3>
 						<p>Schnelle, wartbare Websites und Anwendungen mit React, Next.js und Astro — Performance und Core Web Vitals inklusive.</p>
 						<div class="card-chips"><span>React</span><span>Next.js</span><span>Astro</span></div>
+						<a class="card-cta" href="https://www.pragma-code.de/webentwicklung" target="_blank" rel="noopener noreferrer">Zur Leistung bei Pragma-Code <span aria-hidden="true">↗</span></a>
 					</article>
 					<article class="card reveal">
 						<div class="card-icon" aria-hidden="true">▲</div>
 						<h3>SEO &amp; GEO</h3>
 						<p>Technische SEO plus Generative Engine Optimization: strukturierte Daten, llms.txt und Inhalte, die auch KI-Suchen zitieren.</p>
 						<div class="card-chips"><span>Schema.org</span><span>llms.txt</span><span>AI Search</span></div>
+						<a class="card-cta" href="https://www.pragma-code.de/seo-content" target="_blank" rel="noopener noreferrer">Zur Leistung bei Pragma-Code <span aria-hidden="true">↗</span></a>
 					</article>
 					<article class="card reveal">
 						<div class="card-icon" aria-hidden="true">◆</div>
 						<h3>E-Commerce</h3>
 						<p>Shops, die verkaufen: WooCommerce, Shopify und JTL — von der Produktseite bis zur Conversion-Optimierung.</p>
 						<div class="card-chips"><span>WooCommerce</span><span>Shopify</span><span>JTL</span></div>
+						<a class="card-cta" href="https://www.pragma-code.de/e-commerce" target="_blank" rel="noopener noreferrer">Zur Leistung bei Pragma-Code <span aria-hidden="true">↗</span></a>
 					</article>
 				</div>
 			</div>
@@ -218,8 +251,10 @@ const personSchema = {
 						<li class="tl-item reveal">
 							<div class="tl-year pc-mono">{item.year}</div>
 							<div class="tl-body">
+								{item.orgUrl
+									? <a class="tl-org" href={item.orgUrl} target="_blank" rel="noopener noreferrer">{item.org} <span aria-hidden="true">↗</span></a>
+									: <span class="tl-org">{item.org}</span>}
 								<h3>{item.role}</h3>
-								<div class="tl-org">{item.org}</div>
 								<p>{item.text}</p>
 							</div>
 						</li>
@@ -430,7 +465,10 @@ const personSchema = {
 			display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px;
 			border: 1px solid var(--pc-line-2); border-radius: var(--pc-r-pill);
 			font-size: 13px; font-weight: 600; color: var(--pc-fg-2); background: rgba(255,255,255,0.02);
+			text-decoration: none;
+			transition: border-color var(--pc-fast) var(--pc-ease), color var(--pc-fast) var(--pc-ease);
 		}
+		.tag:hover { border-color: var(--pc-yellow); color: var(--pc-fg); }
 		.tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pc-yellow); }
 		.hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; }
 		.btn-primary {
@@ -524,7 +562,10 @@ const personSchema = {
 		.ticker-item {
 			font-family: var(--pc-font-mono); font-size: 12.5px; letter-spacing: 0.08em;
 			text-transform: uppercase; color: var(--pc-fg-3); white-space: nowrap;
+			text-decoration: none;
 		}
+		a.ticker-item { transition: color var(--pc-fast) var(--pc-ease); }
+		a.ticker-item:hover { color: var(--pc-yellow); }
 		.ticker-item::after { content: '·'; margin-left: 40px; color: var(--pc-yellow); }
 
 		/* ===== Sections ===== */
@@ -558,6 +599,12 @@ const personSchema = {
 			font-family: var(--pc-font-mono); font-size: 11px; padding: 4px 10px;
 			border: 1px solid var(--pc-line-2); border-radius: var(--pc-r-pill); color: var(--pc-fg-3);
 		}
+		.card-cta {
+			display: inline-flex; align-items: center; gap: 6px; margin-top: 18px;
+			font-size: 13px; font-weight: 700; color: var(--pc-yellow); text-decoration: none;
+			transition: gap var(--pc-fast) var(--pc-ease);
+		}
+		.card-cta:hover { gap: 10px; }
 
 		/* Timeline */
 		.tl { list-style: none; padding: 0; position: relative; max-width: 760px; }
@@ -571,9 +618,16 @@ const personSchema = {
 			border-radius: 50%; background: var(--pc-navy-800); border: 2px solid var(--pc-yellow);
 		}
 		.tl-year { color: var(--pc-yellow); font-size: 13px !important; padding-top: 5px; text-align: right; }
+		/* Firmen-Button — mono/uppercase wie die Über-mich-Seite, im Body über dem Titel */
+		.tl-org {
+			display: inline-block; font-family: var(--pc-font-mono);
+			font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+			color: var(--pc-fg-3); font-weight: 500; margin-bottom: 8px; text-decoration: none;
+		}
+		a.tl-org { transition: color var(--pc-fast) var(--pc-ease); }
+		a.tl-org:hover { color: var(--pc-yellow); }
 		.tl-body h3 { font-size: 17px; font-weight: 800; }
-		.tl-org { font-size: 13px; color: var(--pc-yellow-soft); font-weight: 600; margin: 2px 0 8px; }
-		.tl-body p { font-size: 14.5px; color: var(--pc-fg-2); max-width: 62ch; }
+		.tl-body p { font-size: 14.5px; color: var(--pc-fg-2); max-width: 62ch; margin-top: 4px; }
 		@media (max-width: 560px) {
 			.tl::before { left: 5px; }
 			.tl-item { grid-template-columns: 1fr; gap: 6px; padding-left: 28px; }
