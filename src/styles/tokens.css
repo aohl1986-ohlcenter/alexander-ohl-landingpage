@@ -15,7 +15,8 @@
   /* --- Foreground --- */
   --pc-fg:    #f4f4ec;
   --pc-fg-2:  rgba(244, 244, 236, 0.66);
-  --pc-fg-3:  rgba(244, 244, 236, 0.42);
+  /* 0.42 → 0.58: Lighthouse-Kontrast (WCAG AA, ≥4.5:1 auch auf navy-900) */
+  --pc-fg-3:  rgba(244, 244, 236, 0.58);
 
   /* --- Lines / dividers --- */
   --pc-line:    rgba(255, 255, 255, 0.08);

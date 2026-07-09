@@ -274,11 +274,23 @@ const personSchema = {
 
 	<!-- FOOTER -->
 	<footer class="ft">
+		<div class="pc-container ft-social-row">
+			<div class="ft-status"><span class="live-dot"></span>Alle Systeme funktional</div>
+			<nav class="ft-social" aria-label="Profile">
+				<a href="https://www.linkedin.com/in/alexander-ohl/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+				<a href="https://www.xing.com/profile/AlexanderOhl_PragmaCode" target="_blank" rel="noopener noreferrer">Xing</a>
+				<a href="https://github.com/aohl1986-ohlcenter" target="_blank" rel="noopener noreferrer">GitHub</a>
+				<a href="https://g.dev/alexanderohl" target="_blank" rel="noopener noreferrer">g.dev</a>
+				<a href="https://www.provenexpert.com/pragma-code-llc/" target="_blank" rel="noopener noreferrer">ProvenExpert</a>
+				<a href="https://www.behance.net/alexander-ohl" target="_blank" rel="noopener noreferrer">Behance</a>
+			</nav>
+		</div>
 		<div class="pc-container ft-inner">
 			<div class="ft-brand pc-mono">© {new Date().getFullYear()} Alexander Ohl · alexander-ohl.com</div>
 			<nav class="ft-nav" aria-label="Rechtliches">
 				<a href="/impressum">Impressum</a>
 				<a href="/datenschutz">Datenschutz</a>
+				<a href="https://www.pragma-code.de/blog" target="_blank" rel="noopener">Blog ↗</a>
 				<a href="https://www.pragma-code.de/" target="_blank" rel="noopener">Pragma-Code ↗</a>
 				<a href="/en" lang="en">English</a>
 			</nav>
@@ -599,9 +611,28 @@ const personSchema = {
 		.contact-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 
 		/* Footer */
-		.ft { border-top: 1px solid var(--pc-line); padding: 28px 0; background: var(--pc-navy-900); }
+		.ft { border-top: 1px solid var(--pc-line); padding: 24px 0 28px; background: var(--pc-navy-900); }
+		.ft-social-row {
+			display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center;
+			justify-content: space-between; padding-bottom: 20px; margin-bottom: 20px;
+			border-bottom: 1px solid var(--pc-line);
+		}
+		.ft-status {
+			display: inline-flex; align-items: center; gap: 9px;
+			font-size: 13px; font-weight: 700; color: var(--pc-green);
+			padding: 8px 16px; border: 1px solid rgba(74, 222, 128, 0.25);
+			border-radius: var(--pc-r-pill); background: rgba(74, 222, 128, 0.06);
+		}
+		.ft-social { display: flex; flex-wrap: wrap; gap: 8px; }
+		.ft-social a {
+			font-family: var(--pc-font-mono); font-size: 12px; text-decoration: none;
+			color: var(--pc-fg-2); padding: 7px 13px; border: 1px solid var(--pc-line-2);
+			border-radius: var(--pc-r-pill);
+			transition: border-color var(--pc-fast) var(--pc-ease), color var(--pc-fast) var(--pc-ease);
+		}
+		.ft-social a:hover { border-color: var(--pc-yellow); color: var(--pc-yellow); }
 		.ft-inner { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; justify-content: space-between; }
-		.ft-brand { color: var(--pc-fg-3); }
+		.ft-brand { color: var(--pc-fg-2); }
 		.ft-nav { display: flex; flex-wrap: wrap; gap: 20px; }
 		.ft-nav a { font-size: 13px; color: var(--pc-fg-2); text-decoration: none; }
 		.ft-nav a:hover { color: var(--pc-fg); }
