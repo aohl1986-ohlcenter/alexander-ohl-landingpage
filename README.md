@@ -1,4 +1,4 @@
-![Alexander Ohl in Büro von Pragma Code](./banner.jpeg)
+![Alexander Ohl in Büro von Pragma Code](./banner.webp)
 
 # alexander-ohl.com — Personal Brand Landingpage
 
