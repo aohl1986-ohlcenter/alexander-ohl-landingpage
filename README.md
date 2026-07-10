@@ -8,7 +8,7 @@ Umgesetzt mit dem Pragma-Code-Design-System — dunkel, terminal-inspiriert, auf
 
 ## Tech-Stack
 
-- **Astro 5** — Static-Site-Generator mit Island Architecture
+- **Astro 7** (zuvor Astro 5) — Static-Site-Generator mit Island Architecture
 - **TypeScript / CSS3** — Custom Design-System (Pragma-Code-Design), kein Tailwind
 - **Cloudflare Pages** — Hosting mit Edge-CDN
 - **Manrope** — Variable-Font, self-hosted (kein Google-Fonts-Roundtrip)
