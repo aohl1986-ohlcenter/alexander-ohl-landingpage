@@ -1,4 +1,7 @@
+![Alexander Ohl in Büro von Pragma Code](./banner.jpeg)
+
 # alexander-ohl.com — Personal Brand Landingpage
+
 
 Hochperformante Personal-Branding- und Entity-SEO-Landingpage für **Alexander Ohl** (Freelance IT-Consultant · KI-Automatisierung & Webentwicklung · Gründer von [Pragma-Code](https://www.pragma-code.de)).
 
