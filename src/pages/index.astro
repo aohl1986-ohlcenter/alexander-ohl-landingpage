@@ -67,14 +67,14 @@ const references: { url: string; host: string; name: string; meta: string; text:
 const personSchema = {
 	"@context": "https://schema.org",
 	"@type": "ProfilePage",
-	"name": "Alexander Ohl — Freelance IT-Consultant für Web & KI-Automatisierung",
+	"name": "Alexander Ohl — KI-Automatisierungs-Engineer & Full-Stack-Entwickler",
 	"url": "https://www.alexander-ohl.com/",
 	"inLanguage": "de",
 	"mainEntity": {
 		"@type": "Person",
 		"@id": "https://www.alexander-ohl.com/#person",
 		"name": "Alexander Ohl",
-		"jobTitle": "Freelance IT-Consultant für Web & KI-Automatisierung",
+		"jobTitle": "KI-Automatisierungs-Engineer",
 		"url": "https://www.alexander-ohl.com/",
 		"image": "https://www.alexander-ohl.com/assets/alexander-ohl-portrait.webp",
 		"email": "mailto:info@pragma-code.de",
@@ -102,8 +102,8 @@ const personSchema = {
 ---
 
 <Layout
-	title="Alexander Ohl | Freelance IT-Consultant · KI & Webentwicklung"
-	description="Alexander Ohl — Freelance IT-Consultant und Gründer von Pragma-Code: 15+ Jahre Erfahrung in KI-Automatisierung, Webentwicklung, SEO/GEO und E-Commerce. Remote im DACH-Raum."
+	title="Alexander Ohl | KI-Automatisierungs-Engineer & Full-Stack-Entwickler"
+	description="Alexander Ohl — KI-Automatisierungs-Engineer und Gründer von Pragma-Code: 15+ Jahre Erfahrung in KI-Automatisierung, Webentwicklung, SEO/GEO und E-Commerce. Remote im DACH-Raum."
 >
 	<Fragment slot="head">
 		<link rel="preload" as="image" href="/assets/alexander-ohl-buero-1200.webp" fetchpriority="high" />
@@ -132,7 +132,7 @@ const personSchema = {
 			<div class="hero-bg" aria-hidden="true"></div>
 			<div class="pc-container hero-inner">
 				<div class="hero-copy">
-					<div class="eyebrow pc-mono"><span class="bar"></span>Freelance IT-Consultant · DACH · Remote</div>
+					<div class="eyebrow pc-mono"><span class="bar"></span>KI-Automatisierungs-Engineer · DACH · Remote</div>
 					<h1>
 						Alexander Ohl<br />
 						<span class="yellow">— Ich baue Systeme, die für Sie arbeiten.</span>
@@ -380,12 +380,12 @@ const personSchema = {
 		if (typeof navigator !== 'undefined' && 'modelContext' in navigator) {
 			(navigator as any).modelContext.registerTool({
 				name: 'getProfile',
-				description: 'Liefert Profil, Kompetenzen und Kontaktdaten von Alexander Ohl (Freelance IT-Consultant).',
+				description: 'Liefert Profil, Kompetenzen und Kontaktdaten von Alexander Ohl (KI-Automatisierungs-Engineer).',
 				parameters: { type: 'object', properties: {} },
 				execute: async () => ({
 					status: 'success',
 					name: 'Alexander Ohl',
-					role: 'Freelance IT-Consultant · KI-Automatisierungs-Engineer',
+					role: 'KI-Automatisierungs-Engineer & Full-Stack-Entwickler',
 					skills: ['KI-Automatisierung (RAG, n8n, Agenten)', 'Webentwicklung (React, Next.js, Astro)', 'SEO & GEO', 'E-Commerce'],
 					area: 'DACH · Remote',
 					contact: 'info@pragma-code.de',
