@@ -1,7 +1,7 @@
 # Alexander Ohl
 
-> Personal-Brand-Website von Alexander Ohl — Freelance IT-Consultant, Gründer von Pragma-Code.
-> KI-Automatisierungs-Engineer mit 15+ Jahren Erfahrung in Webentwicklung, SEO/GEO,
+> Personal-Brand-Website von Alexander Ohl — KI-Automatisierungs-Engineer & Full-Stack-Entwickler,
+> Gründer von Pragma-Code. 15+ Jahre Erfahrung in Webentwicklung, SEO/GEO,
 > Automatisierung und E-Commerce. Remote im DACH-Raum tätig.
 
 ## Profil
@@ -20,7 +20,22 @@
 
 - [Pragma-Code — IT-Beratung für den Mittelstand](https://www.pragma-code.de/)
 - [Alexander Ohl bei Pragma-Code](https://www.pragma-code.de/alexander-ohl)
+
+## Profile im Netz
+
 - [LinkedIn](https://www.linkedin.com/in/alexander-ohl/)
+- [Xing](https://www.xing.com/profile/AlexanderOhl_PragmaCode)
+- [GitHub](https://github.com/aohl1986-ohlcenter)
+- [Google Dev (g.dev)](https://g.dev/alexanderohl)
+- [Gulp](https://www.gulp.de/gulp2/g/spezialisten/profil/alexander.ohl)
+- [Facebook](https://www.facebook.com/alexander.ohl1986/)
+- [Instagram](https://www.instagram.com/alexander.ohl)
+- [Pinterest](https://de.pinterest.com/alexander_ohl_/)
+- [YouTube](https://www.youtube.com/channel/UCcnYJ9p6KOQML5FaYyzl2uQ)
+- [Behance](https://www.behance.net/alexander-ohl)
+- [VK](https://vk.com/ohlcenter)
+- [WinFuture](https://winfuture.de/mywf/174860/)
+- [Taplink](https://taplink.cc/alexander.ohl)
 
 ## Kontakt
 
