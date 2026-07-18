@@ -64,12 +64,15 @@ const references: { url: string; host: string; name: string; meta: string; text:
 	{ url: 'https://yms-osnabrueck.de/', host: 'yms-osnabrueck.de', name: 'YMS Osnabrück', meta: 'Osnabrück', text: 'Supported for over a year: SEO, visibility, Google Business Profile and social media.' },
 ];
 
+const buildDate = new Date().toISOString().slice(0, 10);
 const personSchema = {
 	"@context": "https://schema.org",
 	"@type": "ProfilePage",
 	"name": "Alexander Ohl — AI Automation Engineer & Full-Stack Developer",
 	"url": "https://www.alexander-ohl.com/en",
 	"inLanguage": "en",
+	"dateCreated": "2026-07-09",
+	"dateModified": buildDate,
 	"mainEntity": {
 		"@type": "Person",
 		"@id": "https://www.alexander-ohl.com/#person",
