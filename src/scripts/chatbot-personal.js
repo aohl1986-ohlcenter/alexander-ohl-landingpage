@@ -319,6 +319,8 @@ function initChatbot() {
   const win = document.getElementById('chatbot-window');
   const closeBtn = document.getElementById('chatbot-close');
   const minimizeBtn = document.getElementById('chatbot-minimize');
+  const themeToggleBtn = document.getElementById('chatbot-theme-toggle');
+  const themeIcon = document.getElementById('chatbot-theme-icon');
   const form = document.getElementById('chatbot-form');
   const input = document.getElementById('chatbot-input');
   const messages = document.getElementById('chatbot-messages');
@@ -326,6 +328,32 @@ function initChatbot() {
 
   if (!win || !form || !input || !messages || !quickReplies) return;
   if (!trigger && !window.__chatbotStandaloneMode) return;
+
+  // Theme Toggle Handler
+  function updateThemeIcon(theme) {
+    if (themeIcon) {
+      themeIcon.className = theme === 'light' ? 'ph ph-moon' : 'ph ph-sun';
+    }
+  }
+
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  updateThemeIcon(currentTheme);
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      const nextTheme = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('theme', nextTheme);
+      updateThemeIcon(nextTheme);
+
+      // Ensure Light Mode CSS is loaded if toggling to light
+      if (nextTheme === 'light' && typeof window.__ensureLightCss === 'function') {
+        window.__ensureLightCss();
+      }
+    });
+  }
 
   const isEn = window.location.pathname === '/en' || window.location.pathname.startsWith('/en/');
   const lang = isEn ? 'en' : 'de';
