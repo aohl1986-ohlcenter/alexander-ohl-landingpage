@@ -1,0 +1,58 @@
+name: Build & Deploy to Cloudflare Pages
+
+# Baut die Astro-Site und lädt dist/ per Wrangler Direct Upload zum
+# Cloudflare-Pages-Projekt "alexander-ohl" hoch.
+# Läuft bei jedem Push auf master sowie manuell (workflow_dispatch).
+#
+# Voraussetzung — zwei Repo-Secrets:
+#   CLOUDFLARE_API_TOKEN   API-Token mit der Berechtigung "Cloudflare Pages: Edit"
+#                          (Account-Scope). NICHT der Zone-Cache-Purge-Token von
+#                          pragma-code.de — der hat den falschen Scope.
+#   CLOUDFLARE_ACCOUNT_ID  Account-ID aus dem Cloudflare-Dashboard.
+#
+# Das Pages-Projekt hat KEINE Git-Integration (Git Provider: No), deshalb der
+# Direct Upload. Der README-Satz "jeder Push triggert einen Build" stimmte bis
+# zu diesem Workflow nicht.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Verhindert, dass sich zwei Deploys überholen.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Node einrichten
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      # npm ci statt npm install: baut exakt gegen package-lock.json.
+      - name: Dependencies installieren
+        run: npm ci
+
+      - name: Astro-Build
+        run: npm run build
+
+      - name: Deploy zu Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy dist
+            --project-name=alexander-ohl
+            --branch=${{ github.ref_name }}

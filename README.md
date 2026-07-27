@@ -78,4 +78,20 @@ npm run preview    # Preview des Production-Builds
 
 ## Deployment
 
-Automatisch via **Cloudflare Pages** — jeder Push auf `master` triggert einen neuen Build.
+Automatisch via **GitHub Actions** (`.github/workflows/deploy.yml`) — jeder Push auf
+`master` baut die Site und lädt `dist/` per Wrangler Direct Upload zum
+Cloudflare-Pages-Projekt `alexander-ohl` hoch.
+
+Das Pages-Projekt hat bewusst **keine** Git-Integration; der Workflow ist der einzige
+automatische Deploy-Weg. Er braucht zwei Repo-Secrets:
+
+| Secret | Inhalt |
+|---|---|
+| `CLOUDFLARE_API_TOKEN` | API-Token mit Berechtigung **Cloudflare Pages: Edit** |
+| `CLOUDFLARE_ACCOUNT_ID` | Account-ID aus dem Cloudflare-Dashboard |
+
+Manueller Deploy (setzt lokal eingeloggtes Wrangler voraus):
+
+```bash
+npm run build && npx wrangler pages deploy dist --project-name=alexander-ohl
+```
