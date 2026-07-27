@@ -506,7 +506,15 @@ function initChatbot() {
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    handleUserMessage(input.value);
+    const val = input.value ? input.value.trim() : '';
+    if (!val) {
+      const emptyHint = lang === 'de'
+        ? 'Bitte geben Sie eine Frage ein oder wählen Sie ein Thema aus.'
+        : 'Please enter a question or select a topic above.';
+      addMessage(emptyHint, 'bot');
+      return;
+    }
+    handleUserMessage(val);
     input.value = '';
   });
 

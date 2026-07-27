@@ -22,3 +22,17 @@
 {"message":"src/pages/assistent.astro","label":"watch","level":"info"}
 {"message":"[200] / 23ms","label":null,"level":"info"}
 {"message":"[200] /assistent 2ms","label":null,"level":"info"}
+{"message":"[200] /assistent 39ms","label":null,"level":"info"}
+{"message":"[200] /assistent 2ms","label":null,"level":"info"}
+{"message":"src/components/Chatbot.astro","label":"watch","level":"info"}
+{"message":"[200] /assistent 20ms","label":null,"level":"info"}
+{"message":"[200] /assistent 2ms","label":null,"level":"info"}
+{"message":"[200] / 93ms","label":null,"level":"info"}
+{"message":"src/scripts/chatbot-personal.js","label":"watch","level":"info"}
+{"message":"[200] /assistent 2ms","label":null,"level":"info"}
+{"message":"[200] / 1ms","label":null,"level":"info"}
+{"message":"[200] /assistent 0ms","label":null,"level":"info"}
+{"message":"src/pages/assistent.astro","label":"watch","level":"info"}
+{"message":"[200] / 6ms","label":null,"level":"info"}
+{"message":"[200] /assistent 3ms","label":null,"level":"info"}
+{"message":"[200] /assistent 3ms","label":null,"level":"info"}
