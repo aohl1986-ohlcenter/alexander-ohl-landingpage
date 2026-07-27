@@ -54,6 +54,17 @@ const langConfig = {
 const t = langConfig[currentLang];
 ---
 
+<!-- Critical Stylesheet & Anti-FOUC Guard -->
+<link rel="stylesheet" href={`/styles/chatbot.css?v=${chatbotCssHash}`} id="chatbot-css" />
+<style is:inline>
+  #chatbot-window:not(.active) {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+</style>
+
 <!-- Trigger Button -->
 <a class="floating-chat-btn" href={chatHref} aria-label={chatLabel} id="chatbot-trigger">
   <i class="ph ph-chat-centered-text" id="chatbot-trigger-icon"></i>
