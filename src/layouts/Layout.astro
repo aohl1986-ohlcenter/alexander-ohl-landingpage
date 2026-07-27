@@ -1,5 +1,6 @@
 ---
 import '../styles/tokens.css';
+import Chatbot from '../components/Chatbot.astro';
 
 // Manrope Variable Font (400–800) — selbst gehostet, @font-face inline
 // (kein render-blockierender Stylesheet-Request), woff2 preloaded.
@@ -97,6 +98,10 @@ const ogImageAbs = new URL(ogImage, siteRoot).toString();
 		<link rel="preload" href="/assets/fonts/manrope-var-latin.woff2" as="font" type="font/woff2" crossorigin />
 		<style set:html={fontFaceCss}></style>
 
+		<!-- Phosphor Icons -->
+		<link rel="preload" href="/assets/phosphor/phosphor.css?v=75527284" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+		<noscript><link rel="stylesheet" href="/assets/phosphor/phosphor.css?v=75527284" /></noscript>
+
 		<!-- Speculation Rules API: Folge-Seiten im Hintergrund vorrendern -->
 		<script type="speculationrules" set:html={JSON.stringify({
 			prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }]
@@ -106,5 +111,6 @@ const ogImageAbs = new URL(ogImage, siteRoot).toString();
 	</head>
 	<body>
 		<slot />
+		<Chatbot />
 	</body>
 </html>

@@ -1,0 +1,177 @@
+---
+// src/components/Chatbot.astro — Personal Branding Chatbot Widget
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+
+const { chatHref = '/assistent', chatLabel = 'Alexander Ohl KI-Assistent' } = Astro.props;
+
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const chatbotCssPath = path.join(projectRoot, 'public/styles/chatbot.css');
+let chatbotCssHash = '1';
+if (fs.existsSync(chatbotCssPath)) {
+  const cssContent = fs.readFileSync(chatbotCssPath, 'utf-8');
+  chatbotCssHash = createHash('md5').update(cssContent).digest('hex').slice(0, 8);
+}
+
+const isEn = Astro.url.pathname.startsWith('/en');
+const currentLang = isEn ? 'en' : 'de';
+
+const langConfig = {
+  de: {
+    title: 'Alexander Ohl',
+    subtitle: 'KI-Assistent & Personal Guide',
+    status: 'Online',
+    placeholder: 'Frage an Alexander stellen...',
+    send: 'Senden',
+    welcome: 'Guten Tag! 👋 Ich bin der KI-Assistent von Alexander Ohl. Fragen Sie mich gerne zu seinem Werdegang, seinen Skills oder Projekten!',
+    quickReplies: [
+      { text: 'Werdegang', label: '📜 Werdegang' },
+      { text: 'Skills & Stack', label: '⚡ Skills' },
+      { text: 'Über Pragma-Code', label: '🏢 Pragma-Code' },
+      { text: 'Preise & Tarife', label: '💰 Preise' },
+      { text: 'book_appointment', label: '📅 Termin buchen' }
+    ]
+  },
+  en: {
+    title: 'Alexander Ohl',
+    subtitle: 'AI Assistant & Personal Guide',
+    status: 'Online',
+    placeholder: 'Ask Alexander a question...',
+    send: 'Send',
+    welcome: 'Good day! 👋 I am Alexander Ohl\'s AI Assistant. Feel free to ask about his background, skills, or projects!',
+    quickReplies: [
+      { text: 'Career Timeline', label: '📜 Career' },
+      { text: 'Skills & Stack', label: '⚡ Skills' },
+      { text: 'About Pragma-Code', label: '🏢 Pragma-Code' },
+      { text: 'Prices & Retainers', label: '💰 Pricing' },
+      { text: 'book_appointment', label: '📅 Book Call' }
+    ]
+  }
+};
+
+const t = langConfig[currentLang];
+---
+
+<!-- Trigger Button -->
+<a class="floating-chat-btn" href={chatHref} aria-label={chatLabel} id="chatbot-trigger">
+  <i class="ph ph-chat-centered-text" id="chatbot-trigger-icon"></i>
+</a>
+
+<!-- Chatbot Window -->
+<div class="chatbot-window" id="chatbot-window" inert data-css-hash={chatbotCssHash}>
+  <!-- Header -->
+  <div class="chatbot-header">
+    <div class="chatbot-profile">
+      <div class="chatbot-avatar-container">
+        <img src="/assets/alexander-ohl-portrait.webp" alt="Alexander Ohl" class="chatbot-avatar" width="42" height="42" loading="lazy" />
+        <span class="chatbot-status-dot"></span>
+      </div>
+      <div class="chatbot-info">
+        <h2 class="chatbot-title">{t.title}</h2>
+        <p class="chatbot-subtitle">
+          {t.subtitle} 
+          <span class="chatbot-status-text">• {t.status}</span>
+        </p>
+      </div>
+    </div>
+    <div class="chatbot-actions">
+      <button class="chatbot-action-btn" id="chatbot-minimize" aria-label="Minimize">
+        <i class="ph ph-minus"></i>
+      </button>
+      <button class="chatbot-action-btn" id="chatbot-close" aria-label="Close">
+        <i class="ph ph-x"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages List -->
+  <div class="chatbot-messages" id="chatbot-messages">
+    <div class="chat-message bot fade-in">
+      <div class="chat-bubble">
+        {t.welcome}
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Replies -->
+  <div class="chatbot-quick-replies" id="chatbot-quick-replies">
+    {t.quickReplies.map(qr => (
+      <button class="qr-chip" data-query={qr.text}>{qr.label}</button>
+    ))}
+  </div>
+
+  <!-- Input Form -->
+  <form class="chatbot-input-container" id="chatbot-form" onsubmit="return false;">
+    <input 
+      type="text" 
+      id="chatbot-input" 
+      placeholder={t.placeholder} 
+      aria-label={t.placeholder} 
+      autocomplete="off" 
+      required
+    />
+    <button type="submit" id="chatbot-send" aria-label={t.send}>
+      <i class="ph ph-paper-plane-right"></i>
+    </button>
+  </form>
+</div>
+
+<script>
+  let booted = false;
+  let ready = false;
+
+  function ensureChatbotCss() {
+    if (document.getElementById('chatbot-css')) return;
+    const win = document.getElementById('chatbot-window');
+    const hash = win ? win.getAttribute('data-css-hash') || '1' : '1';
+    const l = document.createElement('link');
+    l.id = 'chatbot-css';
+    l.rel = 'stylesheet';
+    l.href = `/styles/chatbot.css?v=${hash}`;
+    document.head.appendChild(l);
+  }
+
+  async function bootChatbot() {
+    if (booted) return;
+    booted = true;
+    ensureChatbotCss();
+    const { initChatbot } = await import('../scripts/chatbot-personal.js');
+    initChatbot();
+    ready = true;
+  }
+
+  function scheduleChatbot() {
+    const trigger = document.getElementById('chatbot-trigger');
+    if (trigger) {
+      trigger.addEventListener('pointerenter', bootChatbot, { once: true });
+      trigger.addEventListener('focus', bootChatbot, { once: true });
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!ready) {
+          window.__chatbotOpenRequested = true;
+          bootChatbot();
+        }
+      });
+    }
+
+    const warm = () => {
+      if ('requestIdleCallback' in window) requestIdleCallback(bootChatbot, { timeout: 4000 });
+      else setTimeout(bootChatbot, 1500);
+    };
+
+    if (document.readyState === 'complete') {
+      setTimeout(warm, 3000);
+    } else {
+      window.addEventListener('load', () => setTimeout(warm, 3000), { once: true });
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => { booted = false; ready = false; scheduleChatbot(); });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleChatbot);
+  } else {
+    scheduleChatbot();
+  }
+</script>
