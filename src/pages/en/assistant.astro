@@ -88,6 +88,15 @@
     onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link rel="stylesheet" href="/assets/phosphor/phosphor.css?v=75527284" /></noscript>
 
+  <!-- Globaler Reset: bewusst NICHT im scoped <style> unten. Astro haengt scoped
+       Styles ans Head-Ende und wuerde den Reset (als [data-astro-cid]-Selektor
+       mit Klassen-Spezifitaet) NACH chatbot.css setzen -> alle Paddings des
+       Chatfensters waeren platt. Als is:inline bleibt er hier stehen und hat
+       Spezifitaet 0. -->
+  <style is:inline>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  </style>
+
   <!-- Chatbot Stylesheet -->
   <link rel="stylesheet" href="/styles/chatbot.css" id="chatbot-css" />
 
@@ -100,7 +109,6 @@
       src: url(/assets/fonts/manrope-var-latin.woff2) format('woff2');
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --sa-bg:       #0f1430;
