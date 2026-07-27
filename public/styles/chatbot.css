@@ -69,15 +69,19 @@
   position: relative;
   width: 42px;
   height: 42px;
+  flex-shrink: 0;
+  aspect-ratio: 1 / 1;
 }
 
 .chatbot-avatar {
-  width: 100%;
-  height: 100%;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #ffc829;
   background: #1d2548;
+  flex-shrink: 0;
+  aspect-ratio: 1 / 1;
 }
 
 [data-theme="light"] .chatbot-avatar {
