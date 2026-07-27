@@ -89,6 +89,9 @@
     onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link rel="stylesheet" href="/assets/phosphor/phosphor.css?v=75527284" /></noscript>
 
+  <!-- Chatbot Stylesheet -->
+  <link rel="stylesheet" href="/styles/chatbot.css" id="chatbot-css" />
+
   <style>
     @font-face {
       font-family: 'Manrope';
@@ -324,17 +327,6 @@
       <a href="/datenschutz">Datenschutz</a>
     </footer>
   </div>
-
-  <script>
-    (function() {
-      if (document.getElementById('chatbot-css')) return;
-      var l = document.createElement('link');
-      l.id = 'chatbot-css';
-      l.rel = 'stylesheet';
-      l.href = '/styles/chatbot.css';
-      document.head.appendChild(l);
-    })();
-  </script>
 
   <script>
     import { initChatbot } from '../scripts/chatbot-personal.js';
