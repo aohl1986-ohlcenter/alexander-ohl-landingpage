@@ -4,10 +4,12 @@
 > Gründer von Pragma-Code. 15+ Jahre Erfahrung in Webentwicklung, SEO/GEO,
 > Automatisierung und E-Commerce. Remote im DACH-Raum tätig.
 
-## Profil
+## Profil & Chatbot
 
 - [Über Alexander Ohl (Deutsch)](https://www.alexander-ohl.com/): Werdegang, Expertise, Referenzen, Kontakt
 - [About Alexander Ohl (English)](https://www.alexander-ohl.com/en): Career, expertise, references, contact
+- [KI-Assistent Chat (Deutsch)](https://www.alexander-ohl.com/assistent): Interaktiver Direkt-Chat zu Werdegang, Skills & Pragma-Code
+- [AI Assistant Chat (English)](https://www.alexander-ohl.com/en/assistant): Interactive direct chat about career, skills & Pragma-Code
 
 ## Kernkompetenzen
 
@@ -20,6 +22,7 @@
 
 - [Pragma-Code — IT-Beratung für den Mittelstand](https://www.pragma-code.de/)
 - [Alexander Ohl bei Pragma-Code](https://www.pragma-code.de/alexander-ohl)
+- [Pragma-Code Pakete & Preise](https://www.pragma-code.de/pakete-preise)
 
 ## Profile im Netz
 
@@ -40,4 +43,5 @@
 ## Kontakt
 
 - E-Mail: info@pragma-code.de
+- Discovery Call (Calendly): https://calendly.com/pragma-code-info/discovery-call
 - Projektanfrage: https://www.pragma-code.de/projektanfrage

@@ -1,0 +1,342 @@
+---
+// src/pages/assistent.astro — Standalone KI-Assistent für Alexander Ohl
+// Link-fähige Chatbot-Seite ohne Header/Footer für Personal Branding.
+---
+<!DOCTYPE html>
+<html lang="de" data-theme="auto">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script>
+    (function() {
+      var stored = localStorage.getItem('theme');
+      var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
+  <!-- SEO -->
+  <title>KI-Assistent | Alexander Ohl — Werdegang, Skills & Personal Guide</title>
+  <meta name="description" content="Direkter Chat mit dem KI-Assistenten von Alexander Ohl: Fragen zu Werdegang, Berufserfahrung, Tech-Stack, Projekten und Pragma-Code. Sofortige Antworten." />
+  <meta name="keywords" content="Alexander Ohl Chat, KI-Assistent, Werdegang, Erfahrung, Skills, Full-Stack, KI-Automatisierung, Pragma-Code" />
+  <meta name="author" content="Alexander Ohl" />
+  <link rel="canonical" href="https://www.alexander-ohl.com/assistent" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Hreflang DE ↔ EN -->
+  <link rel="alternate" hreflang="de" href="https://www.alexander-ohl.com/assistent" />
+  <link rel="alternate" hreflang="en" href="https://www.alexander-ohl.com/en/assistant" />
+  <link rel="alternate" hreflang="x-default" href="https://www.alexander-ohl.com/assistent" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="https://www.alexander-ohl.com/assistent" />
+  <meta property="og:title" content="Alexander Ohl — KI-Assistent" />
+  <meta property="og:description" content="Fragen zu Werdegang, Skills, Projekten & Pragma-Code direkt im Chat." />
+  <meta property="og:image" content="https://www.alexander-ohl.com/assets/og-assistent-de.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="de_DE" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://www.alexander-ohl.com/assistent" />
+  <meta name="twitter:title" content="Alexander Ohl — KI-Assistent" />
+  <meta name="twitter:description" content="Fragen zu Werdegang, Skills, Projekten & Pragma-Code direkt im Chat." />
+  <meta name="twitter:image" content="https://www.alexander-ohl.com/assets/og-assistent-de.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfilePage",
+        "@id": "https://www.alexander-ohl.com/assistent",
+        "url": "https://www.alexander-ohl.com/assistent",
+        "name": "Alexander Ohl — KI-Assistent",
+        "description": "Interaktiver Chatbot zu Werdegang, Fachwissen und Dienstleistungen von Alexander Ohl.",
+        "inLanguage": "de",
+        "mainEntity": {
+          "@type": "Person",
+          "name": "Alexander Ohl",
+          "jobTitle": "KI-Automatisierungs-Engineer",
+          "url": "https://www.alexander-ohl.com/"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Alexander Ohl KI-Assistent",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "url": "https://www.alexander-ohl.com/assistent",
+        "provider": {
+          "@type": "Person",
+          "name": "Alexander Ohl"
+        }
+      }
+    ]
+  }</script>
+
+  <!-- Manrope font -->
+  <link rel="preload" href="/assets/fonts/manrope-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+  <!-- Phosphor Icons -->
+  <link rel="preload" href="/assets/phosphor/phosphor.css?v=75527284" as="style"
+    onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="/assets/phosphor/phosphor.css?v=75527284" /></noscript>
+
+  <style>
+    @font-face {
+      font-family: 'Manrope';
+      font-style: normal;
+      font-weight: 400 800;
+      font-display: swap;
+      src: url(/assets/fonts/manrope-var-latin.woff2) format('woff2');
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sa-bg:       #0f1430;
+      --sa-bg-2:     #161c3c;
+      --sa-fg:       #f4f4ec;
+      --sa-fg-muted: rgba(244, 244, 236, 0.6);
+      --sa-yellow:   #ffc829;
+      --sa-border:   rgba(255, 255, 255, 0.1);
+    }
+    [data-theme="light"] {
+      --sa-bg:       #f4f4f8;
+      --sa-bg-2:     #ffffff;
+      --sa-fg:       #0f1430;
+      --sa-fg-muted: #555570;
+      --sa-border:   rgba(15, 20, 48, 0.1);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+      background: var(--sa-bg);
+      color: var(--sa-fg);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .sa-wrapper {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sa-topbar {
+      width: 100%;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--sa-border);
+      background: var(--sa-bg-2);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .sa-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-family: ui-monospace, monospace;
+      font-size: 14px;
+      color: var(--sa-fg);
+    }
+
+    .sa-prompt { color: var(--sa-yellow); font-weight: 700; }
+
+    .sa-badge {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--sa-yellow);
+      background: rgba(255,200,41,0.12);
+      border: 1px solid rgba(255,200,41,0.25);
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+
+    .sa-lang-link {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--sa-fg-muted);
+      text-decoration: none;
+      padding: 4px 10px;
+      border: 1px solid var(--sa-border);
+      border-radius: 8px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .sa-lang-link:hover {
+      color: var(--sa-yellow);
+      border-color: rgba(255,200,41,0.4);
+    }
+
+    .sa-chat-area {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .chatbot-window {
+      position: relative !important;
+      bottom: auto !important;
+      right: auto !important;
+      width: min(500px, 100%) !important;
+      height: min(680px, calc(100dvh - 130px)) !important;
+      border-radius: 20px !important;
+      margin: 0 auto;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      transition: none !important;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4) !important;
+    }
+
+    #chatbot-trigger { display: none !important; }
+
+    .sa-footer {
+      width: 100%;
+      text-align: center;
+      padding: 12px 20px;
+      font-size: 12px;
+      color: var(--sa-fg-muted);
+      border-top: 1px solid var(--sa-border);
+      flex-shrink: 0;
+    }
+    .sa-footer a {
+      color: var(--sa-yellow);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .sa-footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 540px) {
+      .sa-chat-area { padding: 0; }
+      .chatbot-window {
+        border-radius: 0 !important;
+        height: calc(100dvh - 105px) !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sa-wrapper">
+    <header class="sa-topbar" role="banner">
+      <a href="/" class="sa-logo" aria-label="Alexander Ohl Startseite">
+        <span><span class="sa-prompt">alexander@ohl</span>:~$</span>
+        <span class="sa-badge">KI-Assistent</span>
+      </a>
+      <div>
+        <a href="/en/assistant" class="sa-lang-link" lang="en" hreflang="en">EN</a>
+      </div>
+    </header>
+
+    <main class="sa-chat-area" id="main-content" aria-label="Alexander Ohl KI-Assistent Chat">
+      <div class="chatbot-window active" id="chatbot-window">
+        <!-- Header -->
+        <div class="chatbot-header">
+          <div class="chatbot-profile">
+            <div class="chatbot-avatar-container">
+              <img src="/assets/alexander-ohl-portrait.webp" alt="Alexander Ohl" class="chatbot-avatar" width="42" height="42" loading="eager" />
+              <span class="chatbot-status-dot"></span>
+            </div>
+            <div class="chatbot-info">
+              <h1 class="chatbot-title">Alexander Ohl</h1>
+              <p class="chatbot-subtitle">
+                KI-Assistent & Personal Guide
+                <span class="chatbot-status-text">• Online</span>
+              </p>
+            </div>
+          </div>
+          <div class="chatbot-actions">
+            <a href="/" class="chatbot-action-btn" aria-label="Zur Website" title="alexander-ohl.com" style="text-decoration:none;">
+              <i class="ph ph-house"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chatbot-messages" id="chatbot-messages">
+          <div class="chat-message bot fade-in">
+            <div class="chat-bubble">
+              Guten Tag! 👋 Ich bin der KI-Assistent von Alexander Ohl. Fragen Sie mich gerne zu seinem Werdegang, seinen Skills oder Projekten!
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Replies -->
+        <div class="chatbot-quick-replies" id="chatbot-quick-replies">
+          <button class="qr-chip" data-query="Werdegang">📜 Werdegang</button>
+          <button class="qr-chip" data-query="Skills & Stack">⚡ Skills</button>
+          <button class="qr-chip" data-query="Über Pragma-Code">🏢 Pragma-Code</button>
+          <button class="qr-chip" data-query="Preise & Tarife">💰 Preise</button>
+          <button class="qr-chip" data-query="book_appointment">📅 Termin buchen</button>
+        </div>
+
+        <!-- Input -->
+        <form class="chatbot-input-container" id="chatbot-form" onsubmit="return false;">
+          <input type="text" id="chatbot-input" placeholder="Frage an Alexander stellen..."
+            aria-label="Frage an Alexander stellen" autocomplete="off" required />
+          <button type="submit" id="chatbot-send" aria-label="Senden">
+            <i class="ph ph-paper-plane-right"></i>
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <footer class="sa-footer">
+      <a href="https://www.alexander-ohl.com" target="_blank" rel="noopener">www.alexander-ohl.com</a>
+      &nbsp;·&nbsp; KI-Assistent & Personal Guide &nbsp;·&nbsp;
+      <a href="/datenschutz">Datenschutz</a>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      if (document.getElementById('chatbot-css')) return;
+      var l = document.createElement('link');
+      l.id = 'chatbot-css';
+      l.rel = 'stylesheet';
+      l.href = '/styles/chatbot.css';
+      document.head.appendChild(l);
+    })();
+  </script>
+
+  <script>
+    import { initChatbot } from '../scripts/chatbot-personal.js';
+
+    window.__chatbotStandaloneMode = true;
+
+    function boot() {
+      initChatbot();
+      const hour = new Date().getHours();
+      const greeting = hour < 12 ? 'Guten Morgen' : hour < 18 ? 'Guten Tag' : 'Guten Abend';
+      const bubble = document.querySelector('#chatbot-messages .chat-bubble');
+      if (bubble) {
+        bubble.textContent = `${greeting}! 👋 Ich bin der KI-Assistent von Alexander Ohl. Fragen Sie mich gerne zu seinem Werdegang, seinen Skills oder Projekten!`;
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  </script>
+</body>
+</html>
