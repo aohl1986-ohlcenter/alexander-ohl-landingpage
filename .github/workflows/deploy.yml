@@ -48,7 +48,9 @@ jobs:
         run: npm run build
 
       - name: Deploy zu Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        # v4 laeuft auf node24 (v3 war node20 -> Deprecation-Warnung im Runner)
+        # und installiert Wrangler 4 statt 3.90. Inputs unveraendert.
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

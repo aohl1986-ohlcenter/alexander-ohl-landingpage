@@ -74,12 +74,12 @@ const topics = [
     ],
     de: `👋 Ich bin <b>Alexander Ohl</b> — KI-Automatisierungs-Engineer, Full-Stack-Entwickler und Gründer von <b>Pragma-Code</b>.<br/><br/>
 Seit über <b>15 Jahren</b> entwickle ich digitale Systeme und verknüpfe modernste Softwarearchitekturen mit praxistauglicher KI-Automatisierung für mittelständische Unternehmen im DACH-Raum.<br/><br/>
-📍 <b>Stationen:</b> Marine-Soldat (Fregatte Bayern) → Mechatronik-Studium → Systemadministration → Agenturgründung → KI-Automatisierungs-Engineer & Gründer von Pragma-Code.<br/><br/>
+📍 <b>Stationen:</b> Marine-Soldat (Fregatte Bayern) → Systemadministration → Automatisierungstechnik → Marketing & PPC → Agenturgründung → KI-Automatisierungs-Engineer & Gründer von Pragma-Code.<br/><br/>
 🔗 <a href="#werdegang">Werdegang ansehen</a> | <a href="#expertise">Expertise & Skills</a> | <a href="https://www.pragma-code.de/alexander-ohl" target="_blank" rel="noopener">Pragma-Code Profil</a>`,
     en: `👋 I am <b>Alexander Ohl</b> — AI Automation Engineer, Full-Stack Developer, and founder of <b>Pragma-Code</b>.<br/><br/>
 For over <b>15 years</b>, I have been building digital systems, combining state-of-the-art software architectures with pragmatic AI automation for SMEs across the DACH region.<br/><br/>
-📍 <b>Background:</b> Navy serviceman (Frigate Bayern) → Mechatronics studies → System Administration → Agency Founder → AI Automation Engineer & Founder of Pragma-Code.<br/><br/>
-🔗 <a href="#werdegang">View Career Timeline</a> | <a href="#expertise">Expertise & Skills</a> | <a href="https://www.pragma-code.de/alexander-ohl" target="_blank" rel="noopener">Pragma-Code Profile</a>`
+📍 <b>Background:</b> Navy serviceman (Frigate Bayern) → System Administration → Automation Engineering → Marketing & PPC → Agency Founder → AI Automation Engineer & Founder of Pragma-Code.<br/><br/>
+🔗 <a href="#career">View Career Timeline</a> | <a href="#expertise">Expertise & Skills</a> | <a href="https://www.pragma-code.de/alexander-ohl" target="_blank" rel="noopener">Pragma-Code Profile</a>`
   },
   {
     id: 'werdegang',
@@ -111,7 +111,7 @@ For over <b>15 years</b>, I have been building digital systems, combining state-
 • <b>2010–2012:</b> Electronics Technician for Automation at EST GmbH<br/>
 • <b>2009–2010:</b> IT System Administrator at KiKxxl GmbH<br/>
 • <b>2005–2009:</b> Navy Serviceman aboard frigate "Bayern" (F217)<br/><br/>
-🔗 <a href="#werdegang">View full timeline on page</a>`
+🔗 <a href="#career">View full timeline on page</a>`
   },
   {
     id: 'ausbildung',
@@ -120,13 +120,13 @@ For over <b>15 years</b>, I have been building digital systems, combining state-
       'informatik', 'osnabrueck', 'bersenbrueck', 'sophie scholl', 'education', 'degree', 'university'
     ],
     de: `🎓 <b>Schul- & Hochschulausbildung:</b><br/><br/>
-• <b>2013:</b> Mechatronik-Studium an der Hochschule Osnabrück<br/>
+• <b>2013:</b> Mechatronik an der Hochschule Osnabrück (Studium abgebrochen)<br/>
 • <b>2009:</b> Abitur über den 2. Bildungsweg am Abendgymnasium Sophie Scholl<br/>
 • <b>2004:</b> Berufsfachschule Informatik an der BBS Bersenbrück<br/>
 • <b>2004:</b> Realschulabschluss an der Realschule Neuenkirchen<br/><br/>
 Die Kombination aus Mechatronik, Informatik und jahrelanger Praxiserfahrung prägt Alexanders pragmatischen IT-Ingenieurs-Ansatz.`,
-    en: `🎓 <b>Education & Degrees:</b><br/><br/>
-• <b>2013:</b> Mechatronics Studies at Osnabrück University of Applied Sciences<br/>
+    en: `🎓 <b>Education:</b><br/><br/>
+• <b>2013:</b> Mechatronics at Osnabrück University of Applied Sciences (studies discontinued)<br/>
 • <b>2009:</b> Abitur (Evening Grammar School Sophie Scholl)<br/>
 • <b>2004:</b> Vocational College for Computer Science at BBS Bersenbrück<br/>
 • <b>2004:</b> Secondary School Certificate (Realschule Neuenkirchen)<br/><br/>
@@ -169,7 +169,7 @@ The synergy of mechatronics, computer science, and engineering experience forms 
     en: `📁 <b>Selected Client Projects & Case Studies:</b><br/><br/>
 • <b>ImkerPur (imkerpur.de):</b> JTL-Shop expansion & organic SEO<br/>
 • <b>K&K Bau GbR (k-kbau.de):</b> Full website design, build & SEO<br/>
-• <b>Alando Palais (alando-palais.de):</b> Online presence & reputation management<br/>
+• <b>Alando Palais (alando-palais.de):</b> Google Business & reputation (in cooperation with Next Choice)<br/>
 • <b>Kasinopark (kasinopark.com):</b> Multi-year web development & SEO care<br/>
 • <b>Shooting Solutions (shooting-solutions.de):</b> 6-month SEO sprint<br/>
 • <b>YMS Osnabrück (yms-osnabrueck.de):</b> Local SEO & social media<br/><br/>
@@ -183,56 +183,66 @@ The synergy of mechatronics, computer science, and engineering experience forms 
     ],
     de: `🏢 <b>Über Alexanders Agentur Pragma-Code:</b><br/><br/>
 Alexander Ohl führt <b>Pragma-Code</b> als spezialisiertes IT-Consulting & Entwicklungs-Unternehmen für den DACH-Raum.<br/><br/>
-<b>Vier Kernsäulen:</b><br/>
-1. <b>KI & Automatisierung</b> (n8n Workflows, RAG, KI-Sprint ab 2.900 €)<br/>
+<b>Drei Kernsäulen:</b><br/>
+1. <b>KI & Automatisierung</b> (n8n-Workflows, RAG, KI-Sprint ab 690 €)<br/>
 2. <b>Sichtbarkeit (SEO & GEO)</b> (Google-Ranking, KI-Sichtbarkeits-Monitoring ab 149 €/Monat)<br/>
-3. <b>Webentwicklung</b> (Astro, Next.js, Headless WordPress/TYPO3 Migrationen)<br/>
-4. <b>E-Commerce & Shops</b> (Shopify, WooCommerce, Schnittstellen)<br/><br/>
-💡 Alle Beratungsprojekte sind <b>BAFA-förderfähig</b> (bis zu 80 % staatlicher Zuschuss).<br/><br/>
+3. <b>Web & E-Commerce</b> (Astro, Next.js, WordPress-/TYPO3-Migrationen, Shopify, WooCommerce)<br/><br/>
+💡 Pragma-Code unterstützt KMU bei der Beantragung staatlicher <b>BAFA-Beratungszuschüsse</b> (50–80 % Förderquote).<br/><br/>
 🔗 <a href="https://www.pragma-code.de" target="_blank" rel="noopener">www.pragma-code.de besuchen</a> | <a href="https://www.pragma-code.de/pakete-preise" target="_blank" rel="noopener">Pakete & Preise von Pragma-Code</a>`,
     en: `🏢 <b>About Alexander's Agency Pragma-Code:</b><br/><br/>
 Alexander Ohl operates <b>Pragma-Code</b> as a specialized IT consulting & engineering consultancy for the DACH region.<br/><br/>
-<b>Four Core Pillars:</b><br/>
-1. <b>AI & Automation</b> (n8n workflows, RAG, AI Sprint from €2,900)<br/>
+<b>Three Core Pillars:</b><br/>
+1. <b>AI & Automation</b> (n8n workflows, RAG, AI Sprint from €690)<br/>
 2. <b>Visibility (SEO & GEO)</b> (Google ranking, AI Visibility Monitoring from €149/mo)<br/>
-3. <b>Web Development</b> (Astro, Next.js, Headless WordPress/TYPO3 migrations)<br/>
-4. <b>E-Commerce & Shops</b> (Shopify, WooCommerce, ERP integrations)<br/><br/>
-💡 All consulting projects qualify for <b>BAFA funding</b> (up to 80% government subsidy).<br/><br/>
+3. <b>Web & E-Commerce</b> (Astro, Next.js, WordPress/TYPO3 migrations, Shopify, WooCommerce)<br/><br/>
+💡 Pragma-Code supports SMEs in applying for German <b>BAFA consulting grants</b> (50–80% funding rate).<br/><br/>
 🔗 <a href="https://www.pragma-code.de/en" target="_blank" rel="noopener">Visit www.pragma-code.de</a> | <a href="https://www.pragma-code.de/en/packages-pricing" target="_blank" rel="noopener">Pragma-Code Packages & Pricing</a>`
   },
   {
     id: 'preise-pakete',
     keywords: [
       'preise', 'kosten', 'pakete', 'retainer', 'tarif', 'tarife', 'festpreis', 'bafa',
-      'foerderung', 'zuschuss', 'stundensatz', 'budget', 'pricing', 'packages', 'rates'
+      'foerderung', 'zuschuss', 'stundensatz', 'budget', 'pricing', 'packages', 'rates',
+      'prototyp', 'prototype', 'pflichtenheft', 'wartung', 'care', 'maintenance',
+      'ki sprint', 'ai sprint', 'prozess check', 'audit', 'bfsg', 'migration', 'was kostet'
     ],
     de: `💰 <b>Preise & Betreuungstarife bei Pragma-Code:</b><br/><br/>
 <b>📦 Monatliche Umsetzungstarife</b> (6 Mt. Laufzeit, 2 Mt. gratis bei Jahreszahlung):<br/>
 • <b>Web & Technik</b> — 390 €/Monat (bis 4 h)<br/>
 • <b>SEO & Content</b> — 890 €/Monat (bis 8 h) ⭐ Beliebt<br/>
 • <b>Automatisierung</b> — 590 €/Monat (bis 6 h)<br/>
-• <b>E-Commerce</b> — 690 €/Monat (bis 6 h)<br/><br/>
+• <b>E-Commerce</b> — 690 €/Monat (bis 6 h)<br/>
+• <b>Care-Only</b> (nur Wartung & Uptime) — ab 190 €/Monat (3 Mt.)<br/><br/>
 <b>⚡ Einmal-Festpreise:</b><br/>
-• Website-Tiefenanalyse — 490 €<br/>
+• Website-Tiefenanalyse — ab 490 €<br/>
+• Der Prozess-Check — 690 € (wird beim Sprint angerechnet)<br/>
 • BFSG-Compliance-Check — 950 €<br/>
 • AI Visibility Audit — 1.200 €<br/>
 • Der KI-Sprint (n8n) — 2.900 €<br/>
-• WP / TYPO3 Migration — ab 3.500 €<br/><br/>
-💡 Staatliche <b>BAFA-Förderung</b> (50–80 % Zuschuss für KMU).<br/><br/>
+• WP / TYPO3 Migration — ab 3.500 €<br/>
+• Fokus-Prototyp (statt Pflichtenheft) — 4.900 €<br/>
+• Automation Scale — ab 5.900 €<br/>
+• Erweiterter Prototyp — 7.500 €<br/><br/>
+💡 <b>BAFA-Beratungszuschüsse</b> für KMU (50–80 % Förderquote) — Pragma-Code unterstützt bei der Beantragung.<br/><br/>
 🔗 <a href="https://www.pragma-code.de/pakete-preise" target="_blank" rel="noopener">Vollständige Preisliste ansehen</a>`,
     en: `💰 <b>Pricing & Retainer Plans at Pragma-Code:</b><br/><br/>
 <b>📦 Monthly Retainer Plans</b> (6-mo minimum; 2 months free with annual billing):<br/>
 • <b>Web & Tech</b> — €390/mo (up to 4 h)<br/>
 • <b>SEO & Content</b> — €890/mo (up to 8 h) ⭐ Popular<br/>
 • <b>Automation</b> — €590/mo (up to 6 h)<br/>
-• <b>E-Commerce</b> — €690/mo (up to 6 h)<br/><br/>
+• <b>E-Commerce</b> — €690/mo (up to 6 h)<br/>
+• <b>Care-Only</b> (maintenance & uptime only) — from €190/mo (3-mo minimum)<br/><br/>
 <b>⚡ Fixed-Price Packages:</b><br/>
-• Website Deep Dive Analysis — €490<br/>
+• Website Deep Dive Analysis — from €490<br/>
+• The Process Check — €690 (credited towards the Sprint)<br/>
 • BFSG Accessibility Check — €950<br/>
 • AI Visibility Audit — €1,200<br/>
 • The AI Sprint (n8n) — €2,900<br/>
-• WP / TYPO3 Migration — from €3,500<br/><br/>
-💡 <b>BAFA Grants available</b> (50–80% government subsidy for SMEs).<br/><br/>
+• WP / TYPO3 Migration — from €3,500<br/>
+• Focus Prototype (instead of a spec document) — €4,900<br/>
+• Automation Scale — from €5,900<br/>
+• Extended Prototype — €7,500<br/><br/>
+💡 <b>BAFA consulting grants</b> for German SMEs (50–80% funding rate) — Pragma-Code assists with the application.<br/><br/>
 🔗 <a href="https://www.pragma-code.de/en/packages-pricing" target="_blank" rel="noopener">View complete pricing page</a>`
   },
   {
@@ -263,9 +273,9 @@ Would you like to discuss a project, automation, or potential collaboration?<br/
       'oesterreich', 'schweiz', 'vor ort', 'location', 'remote work'
     ],
     de: `📍 <b>Standort & Arbeitsweise:</b><br/><br/>
-Alexander Ohl arbeitet zu **100 % remote** mit Kunden in ganz Deutschland, Österreich und der Schweiz (DACH-Raum). Persönliche Termine vor Ort in der Region Osnabrück/Münsterland oder per Video-Call sind jederzeit möglich.`,
+Alexander Ohl arbeitet zu <b>100 % remote</b> mit Kunden in ganz Deutschland, Österreich und der Schweiz (DACH-Raum). Persönliche Termine vor Ort in der Region Osnabrück/Münsterland oder per Video-Call sind jederzeit möglich.`,
     en: `📍 <b>Location & Remote Work:</b><br/><br/>
-Alexander Ohl works **100% remotely** with clients across Germany, Austria, and Switzerland (DACH region). On-site meetings in Osnabrück or video calls are arranged flexibly.`
+Alexander Ohl works <b>100% remotely</b> with clients across Germany, Austria, and Switzerland (DACH region). On-site meetings in Osnabrück or video calls are arranged flexibly.`
   }
 ];
 
@@ -440,6 +450,14 @@ function initChatbot() {
     const bubble = document.createElement('div');
     bubble.className = 'chat-bubble';
     bubble.innerHTML = text;
+    // Seiten-Anker (#werdegang, #kontakt …) existieren nur auf der Start-/EN-Seite.
+    // Auf /assistent laeuft derselbe Chatbot standalone — dort zeigen sie ins Leere.
+    // Fehlt das Ziel im DOM, auf die passende Seite umbiegen.
+    bubble.querySelectorAll('a[href^="#"]').forEach((a) => {
+      const id = a.getAttribute('href').slice(1);
+      if (!id || document.getElementById(id)) return;
+      a.setAttribute('href', (isEn ? '/en' : '/') + '#' + id);
+    });
     bubbleContainer.appendChild(bubble);
     messages.appendChild(bubbleContainer);
     messages.scrollTop = messages.scrollHeight;
