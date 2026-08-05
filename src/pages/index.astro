@@ -55,17 +55,22 @@ const timeline: { year: string; role: string; org: string; orgUrl?: string; text
 
 const education: { year: string; title: string; org: string }[] = [
 	{ year: '2013', title: 'Mechatronik-Studium', org: 'Hochschule Osnabrück' },
-	{ year: '2009', title: 'Abitur (2. Bildungsweg)', org: 'Abendgymnasium Sophie Scholl' },
+	{ year: '2010–2013', title: 'Abitur (2. Bildungsweg)', org: 'Abendgymnasium Sophie Scholl' },
 	{ year: '2004', title: 'Berufsfachschule Informatik', org: 'BBS Bersenbrück' },
 	{ year: '2004', title: 'Realschulabschluss', org: 'Realschule Neuenkirchen' },
 ];
 
-const references: { url: string; host: string; name: string; meta: string; text: string }[] = [
+// `metric` nur setzen, wenn die Zahl belegt ist (GSC-Export, Tracker-Messung).
+// Keine geschätzten oder gerundeten Werte — lieber kein Badge als eine erfundene Zahl.
+const references: { url?: string; host: string; name: string; meta: string; text: string; metric?: string }[] = [
+	{ url: 'https://esentrans.de/', host: 'esentrans.de', name: 'EsenTrans', meta: 'Umzugsunternehmen · Würzburg', metric: '+111 % organische Klicks in 3 Monaten', text: 'Eigenes WordPress-Plugin entwickelt, das strukturierte Daten (Schema.org/JSON-LD) automatisiert auf eine Vielzahl von Städte-Landingpages ausrollt. Ergebnis über die Google Search Console belegt.' },
+	{ host: 'Beratungsmandat', name: 'Entitäts-Sichtbarkeit in KI-Antworten', meta: 'Personal Brand · Entity-SEO & GEO', metric: '+30 % KI-Zitationen in 30 Tagen', text: 'Namens- und Entitätsoptimierung für einen hochrangigen Berater: Landingpage mit strukturierten Daten, konsistente Entitätssignale, laufendes Monitoring über den eigenen Citation-Tracker.' },
+	{ url: 'https://tracker.pragma-code.de/', host: 'tracker.pragma-code.de', name: 'AI-Citation-Tracker', meta: 'Eigenes SaaS-Produkt · live im Kundeneinsatz', text: 'Multi-Tenant-SaaS, das misst, ob und wie eine Marke in LLM-Antworten zitiert wird — von der Idee bis zum Betrieb eigenständig gebaut. Next.js, Supabase, Gemini API.' },
 	{ url: 'https://www.imkerpur.de/', host: 'imkerpur.de', name: 'ImkerPur', meta: 'Online-Shop · Honig & Imkerei', text: 'JTL-Shop um SEO-optimierte Produkt- und Landingpages erweitert, Sichtbarkeit im organischen Suchkanal ausgebaut.' },
 	{ url: 'https://k-kbau.de/', host: 'k-kbau.de', name: 'K&K Bau GbR', meta: 'Bauunternehmen · Hoch-/Stahlbetonbau', text: 'Komplette Webpräsenz konzipiert, gebaut und anschließend SEO-optimiert.' },
 	{ url: 'https://www.alando-palais.de/', host: 'alando-palais.de', name: 'Alando Palais', meta: 'Hotel · Bar · Event-Location · Osnabrück', text: 'Aufwertung der Online-Präsenz in Zusammenarbeit mit der Agentur Next Choice — Google-Business-Profil und Reputationsmanagement.' },
 	{ url: 'https://www.kasinopark.com/', host: 'kasinopark.com', name: 'Kasinopark', meta: 'Gesellschaftshaus · Georgsmarienhütte', text: 'Mehrjährige Betreuung: Webentwicklung, Online-Präsenz, Online-Marketing und SEO.' },
-	{ url: 'https://shooting-solutions.de/', host: 'shooting-solutions.de', name: 'Shooting Solutions', meta: 'Schießsport & Training', text: 'Sechs Monate SEO-Sprint: Backlink-Aufbau, technisches SEO, Local SEO und redaktionelle Blogbeiträge.' },
+	{ url: 'https://shooting-solutions.de/', host: 'shooting-solutions.de', name: 'Shooting Solutions', meta: 'Schießsport & Training · rund 300 Produkte', text: 'Sechs Monate SEO-Sprint: Backlink-Aufbau, technisches SEO, Local SEO und redaktionelle Blogbeiträge.' },
 	{ url: 'https://yms-osnabrueck.de/', host: 'yms-osnabrueck.de', name: 'YMS Osnabrück', meta: 'Osnabrück', text: 'Über ein Jahr betreut: SEO, Sichtbarkeit, Google-Business-Profil und Social Media.' },
 ];
 
@@ -296,14 +301,19 @@ const personSchema = {
 				<div class="sec-eyebrow pc-mono">03 — Referenzen</div>
 				<h2 class="sec-title">Ausgewählte Projekte</h2>
 				<div class="refs">
-					{references.map(r => (
-						<a class="ref reveal" href={r.url} target="_blank" rel="noopener">
-							<div class="ref-host pc-mono">{r.host} ↗</div>
-							<h3>{r.name}</h3>
-							<div class="ref-meta">{r.meta}</div>
-							<p>{r.text}</p>
-						</a>
-					))}
+					{references.map(r => {
+						const Tag = r.url ? 'a' : 'div';
+						const linkProps = r.url ? { href: r.url, target: '_blank', rel: 'noopener' } : {};
+						return (
+							<Tag class="ref reveal" {...linkProps}>
+								<div class="ref-host pc-mono">{r.host}{r.url ? ' ↗' : ''}</div>
+								<h3>{r.name}</h3>
+								<div class="ref-meta">{r.meta}</div>
+								{r.metric && <div class="ref-metric">{r.metric}</div>}
+								<p>{r.text}</p>
+							</Tag>
+						);
+					})}
 				</div>
 				<p class="refs-more">Ausführliche Fallstudien mit Zahlen und Vorgehen: <a href="https://www.pragma-code.de/" target="_blank" rel="noopener">pragma-code.de</a></p>
 			</div>
@@ -676,6 +686,13 @@ const personSchema = {
 		.ref-host { color: var(--pc-green); margin-bottom: 12px; }
 		.ref h3 { font-size: 17px; font-weight: 800; margin-bottom: 2px; }
 		.ref-meta { font-size: 12.5px; color: var(--pc-fg-3); margin-bottom: 10px; }
+		.ref-metric {
+			display: inline-block; margin-bottom: 10px; padding: 4px 10px;
+			border: 1px solid color-mix(in srgb, var(--pc-yellow) 45%, transparent);
+			background: color-mix(in srgb, var(--pc-yellow) 12%, transparent);
+			border-radius: 999px; font-size: 12.5px; font-weight: 600;
+			color: var(--pc-yellow); line-height: 1.35;
+		}
 		.ref p { font-size: 14px; color: var(--pc-fg-2); }
 		.refs-more { margin-top: 28px; font-size: 14px; color: var(--pc-fg-2); }
 		.refs-more a { color: var(--pc-yellow); text-decoration: none; border-bottom: 1px solid rgba(255,200,41,.35); }
