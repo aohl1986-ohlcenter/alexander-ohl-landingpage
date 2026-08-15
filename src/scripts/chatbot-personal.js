@@ -274,6 +274,42 @@ Would you like to discuss a project, automation, or potential collaboration?<br/
 🔗 <a href="#contact">Jump to contact form</a>`
   },
   {
+    id: 'prinzipien',
+    keywords: [
+      'prinzipien', 'grundsaetze', 'philosophie', 'arbeitsweise', 'standards',
+      'vendor lock in', 'lock in', 'roi', 'performance', 'dsgvo', 'principles', 'values'
+    ],
+    de: `⚙️ <b>Alexanders 4 Arbeits- & Architekturprinzipien:</b><br/><br/>
+1. <b>Kein Vendor Lock-in (Open-Source-First):</b> n8n, Next.js, Astro, PostgreSQL & saubere APIs. 100 % Eigentum und Datenkontrolle beim Kunden.<br/>
+2. <b>Messbarer ROI statt Hype:</b> Jedes KI-Projekt wird an greifbaren Kennzahlen (Zeitersparnis, Leads, Klicks) gemessen.<br/>
+3. <b>Radikale Performance:</b> Sub-Sekunden-Ladezeiten & Core Web Vitals 100/100 für beste SEO-Rankings & Conversion.<br/>
+4. <b>DSGVO & Datensouveränität:</b> EU/DACH-Hosting, DSGVO-Konformität & optionale On-Premise-LLMs.<br/><br/>
+🔗 <a href="#prinzipien">Prinzipien im Detail ansehen</a>`,
+    en: `⚙️ <b>Alexander's 4 Core Engineering Principles:</b><br/><br/>
+1. <b>No Vendor Lock-in (Open-Source-First):</b> n8n, Next.js, Astro, PostgreSQL & clean APIs. 100% data autonomy for the client.<br/>
+2. <b>Measurable ROI Over Hype:</b> Every project is driven by tangible KPIs (saved hours, qualified leads, citations).<br/>
+3. <b>Radical Performance:</b> Sub-second load times & 100/100 Core Web Vitals for maximum SEO ranking & conversions.<br/>
+4. <b>GDPR & Data Sovereignty:</b> European DACH hosting & optional on-premise LLMs for sensitive business data.<br/><br/>
+🔗 <a href="#principles">View principles on page</a>`
+  },
+  {
+    id: 'fachartikel',
+    keywords: [
+      'fachartikel', 'blog', 'artikel', 'analysen', 'whitepaper', 'deep dive',
+      'geo statt seo', 'agentic ai workflows', 'make or buy', 'articles', 'insights'
+    ],
+    de: `📚 <b>Ausgewählte Fachartikel & Leitfäden:</b><br/><br/>
+• <b>GEO statt SEO (2026):</b> Der Masterplan für Markenpräsenz in ChatGPT, Claude & Gemini<br/>
+• <b>Agentic AI Workflows:</b> Wie KMU mit n8n & lokalen Modellen Prozesse automatisieren<br/>
+• <b>Make or Buy:</b> Wann sich Custom Code mit Next.js & Astro gegenüber SaaS lohnt<br/><br/>
+🔗 <a href="#fachartikel">Fachartikel auf dieser Seite ansehen</a> | <a href="https://www.pragma-code.de/blog" target="_blank" rel="noopener">Alle Artikel auf pragma-code.de/blog</a>`,
+    en: `📚 <b>Featured Whitepapers & Technical Guides:</b><br/><br/>
+• <b>GEO Instead of SEO (2026):</b> The masterplan for brand visibility in ChatGPT, Claude & Gemini<br/>
+• <b>Agentic AI Workflows:</b> How SMEs automate routine business logic with n8n<br/>
+• <b>Make or Buy:</b> When custom code with Next.js & Astro outperforms SaaS<br/><br/>
+🔗 <a href="#articles">View articles on this page</a> | <a href="https://www.pragma-code.de/en/blog" target="_blank" rel="noopener">All whitepapers on pragma-code.de/en/blog</a>`
+  },
+  {
     id: 'standort-remote',
     keywords: [
       'standort', 'remote', 'wo', 'region', 'osnabrueck', 'dach', 'deutschland',

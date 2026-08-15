@@ -18,6 +18,19 @@
 - SEO & GEO: technische SEO, Schema.org, Generative Engine Optimization (llms.txt, AI-Suche)
 - E-Commerce: WooCommerce, Shopify, JTL-Shop
 
+## 4 Arbeitsprinzipien
+
+1. Kein Vendor Lock-in (Open-Source-First & Datenautonomie)
+2. Messbarer ROI statt Hype (eingesparte Stunden, Leads, Zitate)
+3. Radikale Performance (Sub-Sekunden-Ladezeiten, Core Web Vitals 100/100)
+4. DSGVO & Datensouveränität (DACH/EU-Hosting, On-Premise LLMs)
+
+## Ausgewählte Fachartikel & Whitepaper
+
+- [GEO statt SEO (2026): Masterplan für Markenpräsenz in ChatGPT, Claude & Gemini](https://www.pragma-code.de/blog/geo-statt-seo-masterplan-ki-sichtbarkeit)
+- [Agentic AI Workflows 2026: Wie KMU mit n8n Prozesse automatisieren](https://www.pragma-code.de/blog/agentic-ai-workflows-2026)
+- [Make or Buy 2026: Wann sich Custom Code mit Next.js & Astro lohnt](https://www.pragma-code.de/blog/make-or-buy-2026-n8n-nextjs)
+
 ## Weiterführend
 
 - [Pragma-Code — IT-Beratung für den Mittelstand](https://www.pragma-code.de/)
