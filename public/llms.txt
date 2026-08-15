@@ -27,9 +27,9 @@
 
 ## Ausgewählte Fachartikel & Whitepaper
 
-- [GEO statt SEO (2026): Masterplan für Markenpräsenz in ChatGPT, Claude & Gemini](https://www.pragma-code.de/blog/geo-statt-seo-masterplan-ki-sichtbarkeit)
-- [Agentic AI Workflows 2026: Wie KMU mit n8n Prozesse automatisieren](https://www.pragma-code.de/blog/agentic-ai-workflows-2026)
-- [Make or Buy 2026: Wann sich Custom Code mit Next.js & Astro lohnt](https://www.pragma-code.de/blog/make-or-buy-2026-n8n-nextjs)
+- [GEO statt SEO (2026): Masterplan für Markenpräsenz in ChatGPT, Claude & Gemini](https://www.pragma-code.de/blog-geo-statt-seo-masterplan-ki-sichtbarkeit)
+- [Agentic AI Workflows 2026: Wie KMU mit n8n Prozesse automatisieren](https://www.pragma-code.de/blog-agentic-ai-workflows-2026)
+- [Make or Buy 2026: Wann sich Custom Code mit Next.js & Astro lohnt](https://www.pragma-code.de/blog-make-or-buy-2026-n8n-nextjs)
 
 ## Weiterführend
 

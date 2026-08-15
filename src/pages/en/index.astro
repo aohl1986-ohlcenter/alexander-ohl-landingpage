@@ -99,7 +99,7 @@ const references: { url?: string; host: string; name: string; meta: string; text
 	{ url: 'https://yms-osnabrueck.de/', host: 'yms-osnabrueck.de', name: 'YMS Osnabrück', meta: 'Osnabrück', text: 'Over a year of comprehensive support: SEO, online visibility, Google Business optimization and social media.' },
 ];
 
-// Featured Thought Leadership & Technical Deep-Dives from Pragma-Code
+// Featured Thought Leadership & Technical Deep-Dives from Pragma-Code (verified canonical URLs)
 const articles: { tag: string; time: string; year: string; title: string; desc: string; url: string }[] = [
 	{
 		tag: 'GEO & AI Search',
@@ -107,7 +107,7 @@ const articles: { tag: string; time: string; year: string; title: string; desc: 
 		year: '2026',
 		title: 'GEO Instead of SEO: The Masterplan for Brand Visibility in ChatGPT, Claude & Gemini',
 		desc: 'How AI answer engines drive purchasing decisions and how brands secure top citations through Entity SEO, Schema markup, and llms.txt.',
-		url: 'https://www.pragma-code.de/en/blog/geo-instead-of-seo-masterplan-ai-visibility'
+		url: 'https://www.pragma-code.de/en/blog-geo-over-seo-masterplan-ai-visibility'
 	},
 	{
 		tag: 'AI Automation',
@@ -115,7 +115,7 @@ const articles: { tag: string; time: string; year: string; title: string; desc: 
 		year: '2026',
 		title: 'Agentic AI Workflows 2026: How SMEs Automate Business Logic with n8n',
 		desc: 'The shift from simple chatbots to autonomous multi-agent pipelines: securely orchestrating business routine workflows for SMEs.',
-		url: 'https://www.pragma-code.de/en/blog/agentic-ai-workflows-2026'
+		url: 'https://www.pragma-code.de/en/blog-agentic-ai-workflows-2026'
 	},
 	{
 		tag: 'Web Architecture',
@@ -123,7 +123,7 @@ const articles: { tag: string; time: string; year: string; title: string; desc: 
 		year: '2026',
 		title: 'Make or Buy 2026: When Custom Code with Next.js & Astro Outperforms SaaS',
 		desc: 'Avoiding SaaS subscription traps: when tailored frontend systems deliver a positive ROI within just a few months.',
-		url: 'https://www.pragma-code.de/en/blog/make-or-buy-2026-n8n-nextjs'
+		url: 'https://www.pragma-code.de/en/blog-make-or-buy-2026-n8n-nextjs'
 	}
 ];
 
@@ -225,7 +225,7 @@ const personSchema = {
 						))}
 					</div>
 					<div class="hero-ctas">
-						<a class="btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">📅 Book Discovery Call</a>
+						<a class="btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">Book Discovery Call</a>
 						<a class="btn-ghost" href="#contact">Request a project</a>
 						<a class="btn-ghost" href="https://www.linkedin.com/in/alexander-ohl/" target="_blank" rel="noopener">LinkedIn ↗</a>
 					</div>
@@ -235,9 +235,10 @@ const personSchema = {
 				<div class="term" role="region" aria-label="Interactive Terminal: whoami — Alexander Ohl">
 					<div class="term-bar">
 						<span class="tdot red"></span><span class="tdot ylw"></span><span class="tdot grn"></span>
-						<span class="term-title pc-mono">alexander@ohl — zsh (interactive)</span>
+						<span class="term-title pc-mono">alexander@ohl — zsh</span>
 					</div>
 					<div class="term-body" id="term-container" onclick="document.getElementById('term-input')?.focus();">
+						<div id="term-typing" class="term-output" aria-live="polite"></div>
 						<div id="term-history"></div>
 						<form class="term-prompt-row" id="term-form" onsubmit="return false;">
 							<label for="term-input" class="p pc-mono">alexander@ohl ~ % </label>
@@ -248,7 +249,7 @@ const personSchema = {
 								autocomplete="off"
 								spellcheck="false"
 								aria-label="Enter terminal command (e.g. help, whoami, skills, projects, call)"
-								placeholder="Type e.g. 'help'..."
+								placeholder="type 'help'..."
 							/>
 						</form>
 					</div>
@@ -345,7 +346,7 @@ const personSchema = {
 			</div>
 		</section>
 
-		<!-- 02 — PRINCIPLES -->
+		<!-- 02 — PRINCIPLES (4-IN-A-ROW) -->
 		<section class="sec sec-alt" id="principles">
 			<div class="pc-container">
 				<div class="sec-eyebrow pc-mono">02 — Principles</div>
@@ -449,7 +450,7 @@ const personSchema = {
 					<h2 class="sec-title">Let's talk.</h2>
 					<p class="sec-lede">A quick question, a concrete project or just an exploratory chat — I usually reply within 24 hours.</p>
 					<div class="contact-actions">
-						<a class="btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">📅 Book 30-Min. Discovery Call</a>
+						<a class="btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">Book 30-Min. Discovery Call</a>
 						<a class="btn-ghost" href="mailto:info@pragma-code.de">info@pragma-code.de</a>
 						<a class="btn-ghost" href="https://www.pragma-code.de/projektanfrage" target="_blank" rel="noopener">Project request at Pragma-Code ↗</a>
 						<a class="btn-ghost" href="https://www.pragma-code.de/en/packages-pricing" target="_blank" rel="noopener">Packages & Pricing ↗</a>
@@ -488,14 +489,22 @@ const personSchema = {
 	</footer>
 
 	<script>
-		// Interactive Hero Terminal with CLI commands, history and quick-chips
+		// Terminal-Typing with authentic character-by-character timing and interactive CLI
+		const initialLines = [
+			{ cmd: 'whoami', out: 'Alexander Ohl — IT Generalist & AI Engineer' },
+			{ cmd: 'cat stack.txt', out: 'Web · SEO/GEO · AI Automation · E-Commerce' },
+			{ cmd: './verfuegbarkeit.sh', out: '● available for projects — DACH · Remote' }
+		];
 		const PROMPT_STR = 'alexander@ohl ~ % ';
+		const typingEl = document.getElementById('term-typing');
 		const historyEl = document.getElementById('term-history');
 		const inputEl = document.getElementById('term-input') as HTMLInputElement | null;
 		const formEl = document.getElementById('term-form');
 		const containerEl = document.getElementById('term-container');
 		const chips = document.querySelectorAll('.term-chip');
+		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+		let isTyping = true;
 		const cmdHistory: string[] = [];
 		let historyIdx = -1;
 
@@ -576,6 +585,7 @@ Overview: https://www.pragma-code.de/en/packages-pricing`,
 			historyIdx = cmdHistory.length;
 
 			if (cmd === 'clear') {
+				if (typingEl) typingEl.innerHTML = '';
 				if (historyEl) historyEl.innerHTML = '';
 				return;
 			}
@@ -595,24 +605,44 @@ Overview: https://www.pragma-code.de/en/packages-pricing`,
 			}
 		}
 
-		// Initial greeting lines
-		const initialLines = [
-			{ cmd: 'whoami', out: 'Alexander Ohl — IT Generalist & AI Engineer' },
-			{ cmd: 'cat stack.txt', out: 'Web · SEO/GEO · AI Automation · E-Commerce' },
-			{ cmd: './verfuegbarkeit.sh', out: '● available for projects — DACH · Remote' }
-		];
+		// Initial Typewriting
+		function renderStaticInitial() {
+			if (!typingEl) return;
+			typingEl.innerHTML = initialLines.map(l =>
+				`<div class="term-line"><span class="p pc-mono">${PROMPT_STR}</span><span class="cmd-text">${l.cmd}</span></div><div class="o pc-mono">${l.out}</div>`
+			).join('');
+			isTyping = false;
+		}
 
-		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		if (reduced) {
-			initialLines.forEach(l => appendOutput(l.cmd, l.out));
-		} else {
-			(async () => {
-				const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
-				for (const l of initialLines) {
-					appendOutput(l.cmd, l.out);
-					await sleep(180);
+		async function runTypewriter() {
+			if (!typingEl) return;
+			const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+			let html = '';
+			for (const l of initialLines) {
+				if (!isTyping) break;
+				html += `<div class="term-line"><span class="p pc-mono">${PROMPT_STR}</span><span class="cmd-text">`;
+				for (const ch of l.cmd) {
+					if (!isTyping) break;
+					html += ch === '<' ? '&lt;' : ch;
+					typingEl.innerHTML = html + '<span class="cursor"></span></span></div>';
+					if (containerEl) containerEl.scrollTop = containerEl.scrollHeight;
+					await sleep(38 + Math.random() * 45);
 				}
-			})();
+				if (!isTyping) break;
+				await sleep(260);
+				html += `</span></div>\n<div class="o pc-mono">${l.out}</div>\n`;
+				typingEl.innerHTML = html;
+				if (containerEl) containerEl.scrollTop = containerEl.scrollHeight;
+				await sleep(420);
+			}
+			isTyping = false;
+			if (containerEl) containerEl.scrollTop = containerEl.scrollHeight;
+		}
+
+		if (reduced) {
+			renderStaticInitial();
+		} else {
+			runTypewriter();
 		}
 
 		// Event listener for form & input
@@ -780,13 +810,17 @@ Overview: https://www.pragma-code.de/en/packages-pricing`,
 		.term-title { margin-left: 8px; color: var(--pc-fg-3); font-size: 12px; }
 		.term-body {
 			padding: 16px 18px; margin: 0; font-family: var(--pc-font-mono); font-size: 13px;
-			line-height: 1.8; color: var(--pc-fg); min-height: 220px; max-height: 320px;
+			line-height: 1.85; color: var(--pc-fg); min-height: 220px; max-height: 320px;
 			overflow-y: auto; cursor: text;
 		}
 		.term-body :global(.p) { color: var(--pc-yellow); font-weight: 700; }
-		.term-body :global(.o) { color: var(--pc-fg-2); white-space: pre-wrap; margin-bottom: 10px; margin-top: 2px; }
+		.term-body :global(.o) { color: var(--pc-fg-2); white-space: pre-wrap; margin-bottom: 8px; margin-top: 1px; }
 		.term-body :global(.cmd-text) { color: var(--pc-fg); }
 		.term-body :global(.term-line) { margin-top: 4px; }
+		.term-body :global(.cursor) {
+			display: inline-block; width: 8px; height: 15px; vertical-align: -2px;
+			background: var(--pc-green); animation: blink 1.1s steps(1) infinite;
+		}
 		.term-prompt-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 		.term-prompt-row .p { color: var(--pc-yellow); font-weight: 700; white-space: nowrap; }
 		.term-cli-input {
@@ -906,17 +940,28 @@ Overview: https://www.pragma-code.de/en/packages-pricing`,
 		}
 		.card-cta:hover { gap: 10px; }
 
-		/* Principles Grid */
-		.principles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: clamp(28px, 4vw, 44px); }
+		/* Principles Grid: Strict 4-column row on desktop */
+		.principles-grid {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 18px;
+			margin-top: clamp(28px, 4vw, 44px);
+		}
+		@media (max-width: 1060px) {
+			.principles-grid { grid-template-columns: repeat(2, 1fr); }
+		}
+		@media (max-width: 580px) {
+			.principles-grid { grid-template-columns: 1fr; }
+		}
 		.principle-card {
 			background: var(--pc-navy-700); border: 1px solid var(--pc-line);
-			border-radius: var(--pc-r-lg); padding: 26px;
+			border-radius: var(--pc-r-lg); padding: 24px;
 			transition: transform var(--pc-base) var(--pc-ease), border-color var(--pc-base) var(--pc-ease);
 		}
 		.principle-card:hover { transform: translateY(-4px); border-color: rgba(255, 200, 41, 0.4); }
 		.principle-num { font-size: 14px; font-weight: 800; color: var(--pc-yellow); margin-bottom: 12px; }
-		.principle-card h3 { font-size: 17.5px; font-weight: 800; margin-bottom: 10px; }
-		.principle-card p { font-size: 14px; color: var(--pc-fg-2); line-height: 1.6; }
+		.principle-card h3 { font-size: 16.5px; font-weight: 800; line-height: 1.35; margin-bottom: 10px; }
+		.principle-card p { font-size: 13.5px; color: var(--pc-fg-2); line-height: 1.55; }
 
 		/* Timeline */
 		.tl { list-style: none; padding: 0; position: relative; max-width: 760px; }
