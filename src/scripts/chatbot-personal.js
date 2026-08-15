@@ -155,23 +155,30 @@ The synergy of mechatronics, computer science, and engineering experience forms 
   {
     id: 'referenzen',
     keywords: [
-      'referenzen', 'projekte', 'kunden', 'beispiele', 'imkerpur', 'kk bau',
-      'alando', 'kasinopark', 'shooting solutions', 'yms', 'portfolio', 'cases', 'references'
+      'referenzen', 'projekte', 'kunden', 'beispiele', 'esentrans', 'imkerpur', 'kk bau',
+      'alando', 'kasinopark', 'shooting solutions', 'yms', 'reisemobile', 'n&w', 'physiotherapie',
+      'portfolio', 'cases', 'references'
     ],
     de: `📁 <b>Ausgewählte Kundenprojekte & Referenzen:</b><br/><br/>
-• <b>ImkerPur (imkerpur.de):</b> JTL-Shop Erweiterung & SEO-Optimierung<br/>
+• <b>EsenTrans (esentrans.de):</b> WordPress-Schema-Plugin (+111 % Klicks)<br/>
+• <b>ImkerPur (imkerpur.de/lp):</b> JTL-Shop Erweiterung & SEO-Landingpages<br/>
+• <b>N&W Reisemobile (n-w-reisemobile.de):</b> Webdesign, SEO & Social Media<br/>
+• <b>Physiotherapie Osnabrück (physiotherapie-osnabrück.com):</b> Webpräsenz & Local SEO<br/>
+• <b>Shooting Solutions (shooting-solutions.de):</b> 6-Monate SEO-Sprint (Backlinks, Content)<br/>
 • <b>K&K Bau GbR (k-kbau.de):</b> Komplett-Relaunch & SEO für Bauunternehmen<br/>
-• <b>Alando Palais (alando-palais.de):</b> Google-Business & Reputation (in Kooperation mit Next Choice)<br/>
-• <b>Kasinopark (kasinopark.com):</b> Mehrjährige Webentwicklung & SEO-Betreuung<br/>
-• <b>Shooting Solutions (shooting-solutions.de):</b> 6-Monate SEO-Sprint (Backlinks, Content, Local SEO)<br/>
+• <b>Alando Palais (alando-palais.de):</b> Google-Business & Reputation<br/>
+• <b>Kasinopark (kasinopark.com):</b> Mehrjährige Webentwicklung & Betreuung<br/>
 • <b>YMS Osnabrück (yms-osnabrueck.de):</b> SEO, Sichtbarkeit & Social Media<br/><br/>
 🔗 <a href="#referenzen">Referenzen im Detail auf der Seite ansehen</a>`,
     en: `📁 <b>Selected Client Projects & Case Studies:</b><br/><br/>
-• <b>ImkerPur (imkerpur.de):</b> JTL-Shop expansion & organic SEO<br/>
+• <b>EsenTrans (esentrans.de):</b> Custom schema plugin (+111% clicks)<br/>
+• <b>ImkerPur (imkerpur.de/lp):</b> JTL-Shop expansion & landing pages<br/>
+• <b>N&W Reisemobile (n-w-reisemobile.de):</b> Web design, SEO & social media<br/>
+• <b>Physiotherapie Osnabrück (physiotherapie-osnabrück.com):</b> Web presence & local SEO<br/>
+• <b>Shooting Solutions (shooting-solutions.de):</b> 6-month SEO sprint (backlinks, content)<br/>
 • <b>K&K Bau GbR (k-kbau.de):</b> Full website design, build & SEO<br/>
-• <b>Alando Palais (alando-palais.de):</b> Google Business & reputation (in cooperation with Next Choice)<br/>
-• <b>Kasinopark (kasinopark.com):</b> Multi-year web development & SEO care<br/>
-• <b>Shooting Solutions (shooting-solutions.de):</b> 6-month SEO sprint<br/>
+• <b>Alando Palais (alando-palais.de):</b> Google Business & reputation<br/>
+• <b>Kasinopark (kasinopark.com):</b> Multi-year web development & care<br/>
 • <b>YMS Osnabrück (yms-osnabrueck.de):</b> Local SEO & social media<br/><br/>
 🔗 <a href="#references">View detailed case studies on page</a>`
   },
