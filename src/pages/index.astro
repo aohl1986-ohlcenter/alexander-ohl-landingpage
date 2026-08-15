@@ -505,6 +505,7 @@ const personSchema = {
 		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		let isTyping = true;
+		let activeTypingAbort: (() => void) | null = null;
 		const cmdHistory: string[] = [];
 		let historyIdx = -1;
 
@@ -566,14 +567,70 @@ const personSchema = {
 				.replace(/>/g, '&gt;');
 		}
 
-		function appendOutput(cmd: string, output: string) {
+		function formatOutputHtml(text: string) {
+			const escaped = escapeHtml(text);
+			return escaped.replace(
+				/(https?:\/\/[^\s]+)/g,
+				'<a href="$1" target="_blank" rel="noopener" style="color:var(--pc-yellow);text-decoration:underline;">$1</a>'
+			);
+		}
+
+		async function appendOutput(cmd: string, output: string) {
 			if (!historyEl) return;
+
+			// Falls noch eine vorherige Antwort tippt, sofort beenden
+			if (activeTypingAbort) {
+				activeTypingAbort();
+				activeTypingAbort = null;
+			}
+
 			const item = document.createElement('div');
 			item.className = 'term-entry';
-			item.innerHTML = `<div class="term-line"><span class="p pc-mono">${PROMPT_STR}</span><span class="cmd-text">${escapeHtml(cmd)}</span></div>${output ? `<div class="o pc-mono">${escapeHtml(output)}</div>` : ''}`;
+			item.innerHTML = `<div class="term-line"><span class="p pc-mono">${PROMPT_STR}</span><span class="cmd-text">${escapeHtml(cmd)}</span></div><div class="o pc-mono"></div>`;
 			historyEl.appendChild(item);
-			if (containerEl) {
-				containerEl.scrollTop = containerEl.scrollHeight;
+
+			const outDiv = item.querySelector('.o') as HTMLDivElement | null;
+			if (!outDiv || !output) {
+				if (containerEl) containerEl.scrollTop = containerEl.scrollHeight;
+				return;
+			}
+
+			if (reduced) {
+				outDiv.innerHTML = formatOutputHtml(output);
+				if (containerEl) containerEl.scrollTop = containerEl.scrollHeight;
+				return;
+			}
+
+			let aborted = false;
+			activeTypingAbort = () => {
+				aborted = true;
+				outDiv.innerHTML = formatOutputHtml(output);
+				if (containerEl) containerEl.scrollTop = containerEl.scrollHeight;
+			};
+
+			const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+			let typed = '';
+
+			for (let i = 0; i < output.length; i++) {
+				if (aborted) return;
+				typed += output[i];
+				outDiv.innerHTML = formatOutputHtml(typed) + '<span class="cursor"></span>';
+				if (containerEl) containerEl.scrollTop = containerEl.scrollHeight;
+
+				const ch = output[i];
+				if (ch === '\n') {
+					await sleep(45);
+				} else if (ch === ' ') {
+					await sleep(10);
+				} else {
+					await sleep(12 + Math.random() * 14);
+				}
+			}
+
+			if (!aborted) {
+				outDiv.innerHTML = formatOutputHtml(output);
+				activeTypingAbort = null;
+				if (containerEl) containerEl.scrollTop = containerEl.scrollHeight;
 			}
 		}
 
@@ -581,10 +638,18 @@ const personSchema = {
 			const cmd = rawCmd.trim().toLowerCase();
 			if (!cmd) return;
 
+			if (isTyping) {
+				renderStaticInitial();
+			}
+
 			cmdHistory.push(rawCmd);
 			historyIdx = cmdHistory.length;
 
 			if (cmd === 'clear') {
+				if (activeTypingAbort) {
+					activeTypingAbort();
+					activeTypingAbort = null;
+				}
 				if (typingEl) typingEl.innerHTML = '';
 				if (historyEl) historyEl.innerHTML = '';
 				return;
