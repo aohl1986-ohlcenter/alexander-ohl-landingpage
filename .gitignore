@@ -1,3 +1,20 @@
+# Abhängigkeiten
 node_modules/
+
+# Build-Ausgabe
 dist/
+
+# Astro-Cache (generiert, gehört nicht ins Repo)
+.astro/
+
+# Wrangler / Cloudflare
+.wrangler/
+
+# lokale Umgebung
+.env
+.env.*
+!.env.example
+
+# Betriebssystem
 .DS_Store
+Thumbs.db
