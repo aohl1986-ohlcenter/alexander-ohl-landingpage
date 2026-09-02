@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/blog.css';
+import { posts, formatDate } from '../../data/posts';
+
+const siteRoot = 'https://www.alexander-ohl.com';
+
+const blogSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'Blog',
+	'@id': `${siteRoot}/blog#blog`,
+	url: `${siteRoot}/blog`,
+	name: 'Fachartikel von Alexander Ohl',
+	description:
+		'Technische Deep-Dives zu KI-Automatisierung, Systemintegration, SEO & GEO, E-Commerce und IT-Sicherheit für den DACH-Mittelstand.',
+	inLanguage: 'de-DE',
+	author: {
+		'@type': 'Person',
+		'@id': `${siteRoot}/#person`,
+		name: 'Alexander Ohl',
+		url: siteRoot,
+		areaServed: ['DE', 'AT', 'CH']
+	},
+	blogPost: posts.map(p => ({
+		'@type': 'BlogPosting',
+		'@id': `${siteRoot}/blog/${p.slug}#article`,
+		url: `${siteRoot}/blog/${p.slug}`,
+		headline: p.title,
+		description: p.metaDescription,
+		datePublished: p.published,
+		dateModified: p.updated,
+		articleSection: p.category,
+		keywords: p.tags.join(', '),
+		inLanguage: 'de-DE'
+	}))
+};
+
+const breadcrumbSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Start', item: siteRoot },
+		{ '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteRoot}/blog` }
+	]
+};
+
+const categories = [...new Set(posts.map(p => p.category))];
+---
+
+<Layout
+	title="Blog: KI, Integration, GEO, E-Commerce & IT-Sicherheit | Alexander Ohl"
+	description="Technische Fachartikel für den DACH-Mittelstand: KI-Automatisierung mit n8n und RAG, API-first-Integration, Generative Engine Optimization, Agentic Commerce und NIS2/EU AI Act."
+	ogType="website"
+>
+	<Fragment slot="head">
+		<meta name="geo.region" content="DE" />
+		<meta name="geo.placename" content="DACH-Raum (Deutschland, Österreich, Schweiz)" />
+		<meta name="content-language" content="de" />
+		<script type="application/ld+json" set:html={JSON.stringify(blogSchema)} />
+		<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+	</Fragment>
+
+	<header class="bl-hd">
+		<div class="pc-container bl-hd-inner">
+			<a class="bl-hd-logo" href="/" aria-label="Alexander Ohl — Startseite">
+				<span>alexander@ohl</span><span class="tilde">:~$</span>
+			</a>
+			<nav class="bl-hd-nav" aria-label="Hauptnavigation">
+				<a href="/blog" aria-current="page">Blog</a>
+				<a href="/#werdegang" class="bl-hide-sm">Werdegang</a>
+				<a href="/#referenzen" class="bl-hide-sm">Referenzen</a>
+				<a href="/#kontakt" class="bl-cta">Kontakt</a>
+			</nav>
+		</div>
+	</header>
+
+	<main>
+		<div class="pc-container">
+			<nav class="bl-crumbs" aria-label="Brotkrumen">
+				<a href="/">Start</a><span>/</span>Blog
+			</nav>
+
+			<div class="bl-intro">
+				<h1>Fachartikel <span class="yellow">aus echten Implementierungen.</span></h1>
+				<p>
+					Keine Trendlisten, sondern das, was in Projekten tatsächlich funktioniert hat — und was
+					nicht. Schwerpunkte: {categories.join(', ')}. Alle Beiträge sind auf den
+					DACH-Mittelstand zugeschnitten und nennen Aufwände, Grenzen und Kostenrahmen.
+				</p>
+			</div>
+
+			<div class="bl-grid">
+				{posts.map(p => (
+					<a class="bl-card reveal" href={`/blog/${p.slug}`}>
+						<div class="bl-card-meta">
+							<span class="bl-tag">{p.category}</span>
+							<span class="bl-card-time pc-mono">
+								<time datetime={p.published}>{formatDate(p.published)}</time> · {p.readingMinutes} Min.
+							</span>
+						</div>
+						<h2>{p.title}</h2>
+						<p>{p.excerpt}</p>
+						<span class="bl-card-more">Artikel lesen →</span>
+					</a>
+				))}
+			</div>
+
+			<section class="bl-cta">
+				<h2>Ein Thema fehlt oder betrifft Sie konkret?</h2>
+				<p>
+					Schreiben Sie mir, welches Problem Sie gerade lösen — ich antworte in der Regel innerhalb
+					von 24 Stunden, auch wenn daraus kein Projekt wird.
+				</p>
+				<div class="bl-cta-actions">
+					<a class="bl-btn bl-btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">30-Min. Discovery-Call buchen</a>
+					<a class="bl-btn bl-btn-ghost" href="mailto:info@pragma-code.de">info@pragma-code.de</a>
+					<a class="bl-btn bl-btn-ghost" href="https://www.pragma-code.de/blog" target="_blank" rel="noopener">Pragma-Code Blog ↗</a>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<footer class="bl-ft">
+		<div class="pc-container bl-ft-inner">
+			<div class="pc-mono">© {new Date().getFullYear()} Alexander Ohl · alexander-ohl.com</div>
+			<nav aria-label="Rechtliches">
+				<a href="/">Start</a>
+				<a href="/impressum">Impressum</a>
+				<a href="/datenschutz">Datenschutz</a>
+				<a href="https://www.pragma-code.de/" target="_blank" rel="noopener">Pragma-Code ↗</a>
+			</nav>
+		</div>
+	</footer>
+</Layout>

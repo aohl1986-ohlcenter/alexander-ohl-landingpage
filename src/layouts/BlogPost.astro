@@ -1,0 +1,287 @@
+---
+import Layout from './Layout.astro';
+import '../styles/blog.css';
+import { bySlug, formatDate, type Post } from '../data/posts';
+
+export interface FaqItem { q: string; a: string }
+export interface GlossaryItem { term: string; def: string }
+export interface TocItem { id: string; label: string }
+
+export interface Props {
+	slug: string;
+	toc: TocItem[];
+	faq: FaqItem[];
+	glossary: GlossaryItem[];
+}
+
+const { slug, toc, faq, glossary } = Astro.props;
+const post: Post = bySlug(slug);
+const related: Post[] = post.related.map(bySlug);
+
+const siteRoot = 'https://www.alexander-ohl.com';
+const url = `${siteRoot}/blog/${post.slug}`;
+
+// Autoren-Entität: identisch zu den Profil-Links im Footer der Landingpage,
+// damit LLMs und Suchmaschinen dieselbe Person über alle Seiten hinweg auflösen.
+const authorSameAs = [
+	'https://www.pragma-code.de/alexander-ohl',
+	'https://www.linkedin.com/in/alexander-ohl/',
+	'https://www.xing.com/profile/AlexanderOhl_PragmaCode',
+	'https://github.com/aohl1986-ohlcenter',
+	'https://www.gulp.de/gulp2/g/spezialisten/profil/alexander.ohl',
+	'https://g.dev/alexanderohl',
+	'https://www.provenexpert.com/pragma-code-llc/',
+	'https://www.behance.net/alexander-ohl'
+];
+
+const author = {
+	'@type': 'Person',
+	'@id': `${siteRoot}/#person`,
+	name: 'Alexander Ohl',
+	url: siteRoot,
+	jobTitle: 'KI-Automatisierungs-Engineer & Full-Stack-Entwickler',
+	knowsLanguage: ['de', 'en'],
+	areaServed: ['DE', 'AT', 'CH'],
+	sameAs: authorSameAs
+};
+
+const publisher = {
+	'@type': 'Organization',
+	'@id': 'https://www.pragma-code.de/#organization',
+	name: 'Pragma-Code',
+	url: 'https://www.pragma-code.de/',
+	areaServed: ['DE', 'AT', 'CH']
+};
+
+const blogPostingSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BlogPosting',
+	'@id': `${url}#article`,
+	mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+	url,
+	headline: post.title,
+	description: post.metaDescription,
+	image: new URL(post.ogImage, siteRoot).toString(),
+	inLanguage: 'de-DE',
+	datePublished: post.published,
+	dateModified: post.updated,
+	articleSection: post.category,
+	keywords: post.tags.join(', '),
+	timeRequired: `PT${post.readingMinutes}M`,
+	isAccessibleForFree: true,
+	author,
+	publisher,
+	about: post.tags.slice(0, 3).map(t => ({ '@type': 'Thing', name: t })),
+	spatialCoverage: [
+		{ '@type': 'Country', name: 'Deutschland' },
+		{ '@type': 'Country', name: 'Österreich' },
+		{ '@type': 'Country', name: 'Schweiz' }
+	]
+};
+
+const breadcrumbSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Start', item: siteRoot },
+		{ '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteRoot}/blog` },
+		{ '@type': 'ListItem', position: 3, name: post.title, item: url }
+	]
+};
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	'@id': `${url}#faq`,
+	mainEntity: faq.map(f => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a }
+	}))
+};
+
+const glossarySchema = {
+	'@context': 'https://schema.org',
+	'@type': 'DefinedTermSet',
+	'@id': `${url}#glossar`,
+	name: `Fachglossar: ${post.category}`,
+	inLanguage: 'de-DE',
+	hasDefinedTerm: glossary.map(g => ({
+		'@type': 'DefinedTerm',
+		name: g.term,
+		description: g.def,
+		inDefinedTermSet: `${url}#glossar`
+	}))
+};
+---
+
+<Layout
+	title={post.metaTitle}
+	description={post.metaDescription}
+	ogImage={post.ogImage}
+	ogType="article"
+	articleMeta={{ published: post.published, modified: post.updated, section: post.category, tags: post.tags }}
+>
+	<Fragment slot="head">
+		<!-- Lokales Geo-Targeting: DACH-Raum, remote betreut -->
+		<meta name="geo.region" content="DE" />
+		<meta name="geo.placename" content="DACH-Raum (Deutschland, Österreich, Schweiz)" />
+		<meta name="content-language" content="de" />
+		<script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
+		<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+		<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+		<script type="application/ld+json" set:html={JSON.stringify(glossarySchema)} />
+	</Fragment>
+
+	<header class="bl-hd">
+		<div class="pc-container bl-hd-inner">
+			<a class="bl-hd-logo" href="/" aria-label="Alexander Ohl — Startseite">
+				<span>alexander@ohl</span><span class="tilde">:~$</span>
+			</a>
+			<nav class="bl-hd-nav" aria-label="Hauptnavigation">
+				<a href="/blog" aria-current="page">Blog</a>
+				<a href="/#werdegang" class="bl-hide-sm">Werdegang</a>
+				<a href="/#referenzen" class="bl-hide-sm">Referenzen</a>
+				<a href="/#kontakt" class="bl-cta">Kontakt</a>
+			</nav>
+		</div>
+	</header>
+
+	<main class="bl-article">
+		<div class="pc-container bl-article-inner">
+			<nav class="bl-crumbs" aria-label="Brotkrumen">
+				<a href="/">Start</a><span>/</span><a href="/blog">Blog</a><span>/</span>{post.category}
+			</nav>
+
+			<article>
+				<div class="bl-hero">
+					<h1>{post.title}</h1>
+					<p class="bl-lede">{post.lede}</p>
+					<div class="bl-byline">
+						<span>{post.category}</span><span class="sep">·</span>
+						<span>Veröffentlicht am <time datetime={post.published}>{formatDate(post.published)}</time></span><span class="sep">·</span>
+						<span>{post.readingMinutes} Min. Lesezeit</span><span class="sep">·</span>
+						<span>Autor: <a href="/">Alexander Ohl</a></span>
+					</div>
+				</div>
+
+				<slot name="summary" />
+
+				<nav class="bl-toc" aria-label="Inhaltsübersicht">
+					<h2>Inhaltsübersicht</h2>
+					<ol>
+						{toc.map(t => <li><a href={`#${t.id}`}>{t.label}</a></li>)}
+					</ol>
+				</nav>
+
+				<div class="bl-body">
+					<slot />
+
+					<h2 id="faq">Häufige Fragen</h2>
+					<div class="bl-faq">
+						{faq.map(f => (
+							<details>
+								<summary>{f.q}</summary>
+								<div><p set:html={f.a} /></div>
+							</details>
+						))}
+					</div>
+
+					<h2 id="glossar">Fachglossar</h2>
+					<dl class="bl-glossary">
+						{glossary.map(g => (
+							<div>
+								<dt>{g.term}</dt>
+								<dd>{g.def}</dd>
+							</div>
+						))}
+					</dl>
+				</div>
+
+				<div class="bl-tags" aria-label="Themen">
+					{post.tags.map(t => <span>{t}</span>)}
+				</div>
+			</article>
+
+			<aside class="bl-author">
+				<img
+					src="/assets/alexander-ohl-portrait.webp"
+					width="84" height="84" loading="lazy" decoding="async"
+					alt="Porträt von Alexander Ohl"
+				/>
+				<div class="bl-author-body">
+					<div class="kicker">Über den Autor</div>
+					<h2>Alexander Ohl</h2>
+					<p>
+						KI-Automatisierungs-Engineer und Full-Stack-Entwickler mit über 15 Jahren Praxis in
+						Webentwicklung, Automatisierung, SEO/GEO und E-Commerce. Gründer von Pragma-Code,
+						remote im gesamten DACH-Raum tätig. Arbeitet konsequent Open-Source-first — ohne
+						Vendor Lock-in und mit nachweisbarem ROI.
+					</p>
+					<div class="bl-author-links">
+						<a href="/">Profil &amp; Werdegang</a>
+						<a href={post.service.url} target="_blank" rel="noopener">{post.service.label} bei Pragma-Code ↗</a>
+						<a href="https://www.linkedin.com/in/alexander-ohl/" target="_blank" rel="noopener">LinkedIn ↗</a>
+					</div>
+				</div>
+			</aside>
+
+			<section class="bl-region" aria-labelledby="region-title">
+				<h2 id="region-title">Umsetzung im DACH-Raum</h2>
+				<p>
+					Projekte werden remote aus Tbilisi für Kunden in <strong>Deutschland, Österreich und der
+					Schweiz</strong> umgesetzt — in deutscher Sprache, mit EU-Hosting und nach DSGVO.
+					Zusammenarbeit funktioniert asynchron plus feste Termine in mitteleuropäischer Zeitzone.
+				</p>
+				<p>
+					Sie sitzen in Berlin, Hamburg, München, Wien oder Zürich? Für die Zusammenarbeit macht das
+					keinen Unterschied — für die Rechtslage (NIS2, DSGVO, EU AI Act) sehr wohl. Beides wird
+					im Projekt von Anfang an mitgedacht.
+					<a href="https://www.pragma-code.de/projektanfrage" target="_blank" rel="noopener">Projektanfrage bei Pragma-Code ↗</a>
+				</p>
+			</section>
+
+			<section class="bl-cta">
+				<h2>Passt das Thema zu Ihrem Vorhaben?</h2>
+				<p>
+					30 Minuten, konkrete Einschätzung, keine Verkaufspräsentation. Sie erfahren, was in Ihrem
+					Fall realistisch ist — und was Sie sich sparen können.
+				</p>
+				<div class="bl-cta-actions">
+					<a class="bl-btn bl-btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">30-Min. Discovery-Call buchen</a>
+					<a class="bl-btn bl-btn-ghost" href="mailto:info@pragma-code.de">info@pragma-code.de</a>
+					<a class="bl-btn bl-btn-ghost" href={post.service.url} target="_blank" rel="noopener">{post.service.label} ↗</a>
+				</div>
+			</section>
+
+			<section class="bl-related">
+				<h2>Weiterführende Artikel</h2>
+				<div class="bl-grid">
+					{related.map(r => (
+						<a class="bl-card" href={`/blog/${r.slug}`}>
+							<div class="bl-card-meta">
+								<span class="bl-tag">{r.category}</span>
+								<span class="bl-card-time pc-mono">{r.readingMinutes} Min.</span>
+							</div>
+							<h2>{r.title}</h2>
+							<p>{r.excerpt}</p>
+							<span class="bl-card-more">Artikel lesen →</span>
+						</a>
+					))}
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<footer class="bl-ft">
+		<div class="pc-container bl-ft-inner">
+			<div class="pc-mono">© {new Date().getFullYear()} Alexander Ohl · alexander-ohl.com</div>
+			<nav aria-label="Rechtliches">
+				<a href="/blog">Blog</a>
+				<a href="/impressum">Impressum</a>
+				<a href="/datenschutz">Datenschutz</a>
+				<a href="https://www.pragma-code.de/" target="_blank" rel="noopener">Pragma-Code ↗</a>
+			</nav>
+		</div>
+	</footer>
+</Layout>
