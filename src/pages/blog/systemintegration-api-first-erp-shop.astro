@@ -1,0 +1,389 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+
+const toc = [
+	{ id: 'ausgangslage', label: 'Ausgangslage: die gewachsene Punkt-zu-Punkt-Landschaft' },
+	{ id: 'grundlagen', label: 'Was API-first konkret bedeutet' },
+	{ id: 'architektur', label: 'Referenzarchitektur: Hub statt Spinnennetz' },
+	{ id: 'legacy', label: 'Legacy-ERP anbinden, wenn es keine API gibt' },
+	{ id: 'vergleich', label: 'Vergleich: Punkt-zu-Punkt, iPaaS, eigene Middleware' },
+	{ id: 'fehler', label: 'Die teuersten Integrationsfehler' },
+	{ id: 'roadmap', label: 'Roadmap: Migration ohne Stillstand' },
+	{ id: 'fazit', label: 'Fazit und Quick-Check' },
+	{ id: 'faq', label: 'Häufige Fragen' },
+	{ id: 'glossar', label: 'Fachglossar' }
+];
+
+const faq = [
+	{
+		q: 'Wann lohnt sich eine eigene Middleware gegenüber einem iPaaS-Dienst?',
+		a: 'Faustregel: ab etwa fünf dauerhaft betriebenen Schnittstellen, bei hohem Nachrichtenvolumen oder wenn die Daten die EU nicht verlassen dürfen. Darunter ist ein iPaaS-Dienst günstiger, weil die laufenden Kosten unter dem Aufwand für Betrieb und Wartung einer eigenen Lösung liegen.'
+	},
+	{
+		q: 'Unser ERP hat keine REST-API. Ist Integration trotzdem möglich?',
+		a: 'Fast immer. Übliche Wege sind eine lesende Datenbankverbindung auf eine Replik, ein Datei-basierter Austausch über CSV oder XML in einem überwachten Verzeichnis, eine vorhandene SOAP- oder RFC-Schnittstelle oder ein vom Hersteller angebotenes Zwischenformat. Direkte Schreibzugriffe auf die Produktivdatenbank sind dagegen tabu — sie umgehen die Geschäftslogik des ERP.'
+	},
+	{
+		q: 'Event-driven oder Polling — was ist besser?',
+		a: 'Event-driven ist überall dort vorzuziehen, wo Aktualität zählt und das Quellsystem Webhooks anbietet: weniger Last, geringere Latenz. Polling bleibt sinnvoll bei Systemen ohne Ereignisunterstützung, als Rückfallebene für verlorene Ereignisse und für den nächtlichen Abgleich. In der Praxis kombiniert man beides.'
+	},
+	{
+		q: 'Wie verhindere ich doppelte Datensätze bei Schnittstellenfehlern?',
+		a: 'Über Idempotenzschlüssel: Jede Nachricht trägt eine eindeutige Kennung, und jeder schreibende Schritt prüft vor der Ausführung, ob diese Kennung bereits verarbeitet wurde. Zusätzlich gehört pro Objekt eine stabile Fremdschlüssel-Zuordnung in eine eigene Mapping-Tabelle — nicht in ein Freitextfeld des Zielsystems.'
+	},
+	{
+		q: 'Wer ist das führende System für Kundendaten — CRM oder ERP?',
+		a: 'Das muss pro Datenfeld entschieden und dokumentiert werden, nicht pro System. Üblich ist: Stammdaten und Zahlungskonditionen führt das ERP, Kontakthistorie und Vertriebsstatus das CRM. Ohne diese Festlegung überschreiben sich zwei Systeme dauerhaft gegenseitig, und niemand kann sagen, welcher Wert stimmt.'
+	},
+	{
+		q: 'Was kostet eine typische Schnittstelle?',
+		a: 'Eine einzelne, gut dokumentierte Schnittstelle zwischen zwei Systemen mit vorhandenen APIs liegt meist im vierstelligen Bereich. Der Aufwand steigt deutlich, sobald Datenmodelle nicht zueinander passen, ein Legacy-System ohne API beteiligt ist oder historische Daten migriert werden müssen. Die Erstintegration trägt dabei den Aufbau, jede weitere Schnittstelle wird günstiger.'
+	},
+	{
+		q: 'Wie dokumentiere ich Schnittstellen so, dass sie wartbar bleiben?',
+		a: 'Als maschinenlesbare Spezifikation im Repository — OpenAPI für HTTP-Schnittstellen, JSON Schema für Nachrichtenformate — ergänzt um eine kurze Seite pro Integration mit Zweck, führendem System, Auslöser, Fehlerverhalten und zuständiger Person. Diese eine Seite ist im Störungsfall mehr wert als jede ausführliche Konzeptunterlage.'
+	}
+];
+
+const glossary = [
+	{ term: 'API-first', def: 'Entwurfsprinzip, bei dem die Schnittstelle eines Systems zuerst spezifiziert und dann implementiert wird. Jede Funktion ist damit programmatisch erreichbar, nicht nur über die Oberfläche — Voraussetzung dafür, dass Systeme später ohne Umwege zusammenarbeiten.' },
+	{ term: 'iPaaS', def: 'Integration Platform as a Service — gehostete Plattform mit fertigen Konnektoren zu verbreiteten Systemen. Schnell einsatzbereit, dafür mit laufenden volumenabhängigen Kosten und Datenhaltung beim Anbieter.' },
+	{ term: 'Idempotenzschlüssel', def: 'Eindeutige Kennung einer Nachricht, anhand derer ein Zielsystem erkennt, ob es diesen Vorgang bereits verarbeitet hat. Verhindert Doppelbuchungen bei Wiederholungsversuchen nach Netzwerkfehlern.' },
+	{ term: 'Dead Letter Queue', def: 'Warteschlange für Nachrichten, die nach mehreren Versuchen nicht verarbeitet werden konnten. Sie verhindert, dass ein einzelner fehlerhafter Datensatz die gesamte Verarbeitung blockiert, und macht Fehler sichtbar statt sie zu verwerfen.' },
+	{ term: 'System of Record', def: 'Das für ein bestimmtes Datenfeld verbindlich führende System. Alle anderen Systeme halten davon nur Kopien. Ohne diese Festlegung entstehen zirkuläre Überschreibungen zwischen Systemen.' },
+	{ term: 'Anti-Corruption Layer', def: 'Übersetzungsschicht zwischen dem Datenmodell eines Altsystems und dem der eigenen Anwendung. Verhindert, dass die Eigenheiten des Altsystems in alle neuen Systeme durchsickern und dort dauerhaft festwachsen.' }
+];
+---
+
+<BlogPost slug="systemintegration-api-first-erp-shop" toc={toc} faq={faq} glossary={glossary}>
+	<div class="bl-summary" slot="summary">
+		<h2>Das Wichtigste in Kürze</h2>
+		<ul>
+			<li><strong>Punkt-zu-Punkt-Verbindungen skalieren nicht.</strong> Bei sechs Systemen sind theoretisch fünfzehn Verbindungen möglich — jede mit eigener Fehlerbehandlung, eigenem Datenmodell und eigener Zuständigkeit.</li>
+			<li><strong>Die wichtigste Entscheidung ist nicht technisch.</strong> Welches System für welches Datenfeld führend ist, entscheidet über Datenqualität — und wird meist nie schriftlich festgelegt.</li>
+			<li><strong>Legacy-ERP ohne API ist kein Ausschlusskriterium.</strong> Lesende Replik, überwachter Dateiaustausch oder eine vorhandene SOAP-Schnittstelle reichen für die meisten Anwendungsfälle.</li>
+			<li><strong>Fehlerbehandlung ist der eigentliche Umfang.</strong> Der Erfolgsfall ist an einem Tag gebaut; Wiederholungslogik, Idempotenz und eine Warteschlange für Fehlerfälle machen den Rest aus.</li>
+			<li><strong>Portabilität kostet fast nichts, wenn man sie von Anfang an mitdenkt</strong> — und sehr viel, wenn man sie nachrüsten muss.</li>
+		</ul>
+	</div>
+
+	<div class="bl-stats">
+		<div class="bl-stat"><b>n(n−1)/2</b><span>mögliche Punkt-zu-Punkt-Verbindungen bei n Systemen — bei acht Systemen bereits 28</span></div>
+		<div class="bl-stat"><b>1 Seite</b><span>Dokumentation pro Schnittstelle ist im Störungsfall mehr wert als jedes Konzeptdokument</span></div>
+		<div class="bl-stat"><b>5+</b><span>dauerhafte Schnittstellen: ab hier trägt eine eigene Integrationsschicht wirtschaftlich</span></div>
+	</div>
+
+	<h2 id="ausgangslage">1. Ausgangslage: die gewachsene Punkt-zu-Punkt-Landschaft</h2>
+	<p>
+		Die Systemlandschaft eines typischen Mittelständlers ist selten geplant worden — sie ist
+		entstanden. Zuerst kam das ERP, dann der Shop, dann ein CRM für den Vertrieb, dann ein
+		Versanddienstleister mit eigenem Portal, dann ein Buchhaltungssystem, dann ein Werkzeug für
+		Newsletter. Jedes System wurde für sich ausgewählt und war für sich betrachtet die richtige
+		Entscheidung. Verbunden wurden sie hinterher, jeweils genau dann, wenn ein konkreter Schmerz
+		zu groß wurde.
+	</p>
+	<p>
+		Das Ergebnis ist ein Geflecht direkter Verbindungen: Der Shop schreibt Bestellungen ins ERP,
+		das ERP schickt Rechnungen an die Buchhaltung, ein Skript synchronisiert Kunden ins CRM, ein
+		Export erzeugt nachts eine CSV-Datei für den Versanddienstleister. Mathematisch sind bei
+		<code>n</code> Systemen bis zu <code>n(n−1)/2</code> Verbindungen möglich — bei acht Systemen
+		also 28. Real sind es meist zehn bis fünfzehn, und schon das reicht für den entscheidenden
+		Effekt: Niemand hat mehr den Überblick, welche Daten wohin fließen.
+	</p>
+	<p>
+		Die Symptome sind überall gleich. Ein Kunde existiert dreimal, mit drei unterschiedlichen
+		Adressen. Eine Preisänderung im ERP kommt im Shop erst am nächsten Tag an, manchmal gar nicht.
+		Ein Skript, das seit 2019 läuft, hat der damalige Praktikant geschrieben, und seit dessen
+		Weggang traut sich niemand, es anzufassen. Fällt eine Verbindung aus, merkt es niemand, bis
+		ein Kunde anruft.
+	</p>
+	<p>
+		Die naheliegende Reaktion — jede kaputte Verbindung einzeln reparieren — verschlimmert die
+		Lage, weil sie das Muster fortschreibt. Der Ausweg beginnt mit einer anderen Frage: nicht
+		„wie verbinde ich A mit B?“, sondern „wo liegt die Wahrheit über ein Datenobjekt, und wie
+		kommt sie zu allen, die sie brauchen?“
+	</p>
+
+	<h2 id="grundlagen">2. Was API-first konkret bedeutet</h2>
+	<p>
+		API-first wird häufig als Technologieentscheidung missverstanden. Tatsächlich ist es zuerst
+		eine Reihenfolgeentscheidung: Die Schnittstelle wird spezifiziert, bevor sie gebaut wird, und
+		jede Funktion eines Systems ist programmatisch erreichbar — nicht nur über die Oberfläche.
+		Für die Praxis im Mittelstand folgen daraus vier konkrete Konsequenzen.
+	</p>
+
+	<h3>Jedes Datenobjekt hat genau ein führendes System</h3>
+	<p>
+		Diese Festlegung ist der Kern und wird trotzdem in der Mehrzahl der Projekte nie schriftlich
+		getroffen. Sie erfolgt nicht pro System, sondern pro Datenfeld. Üblich und bewährt: Die
+		Kundenstammdaten und Zahlungskonditionen führt das ERP, weil sie dort rechtlich relevant sind.
+		Kontakthistorie und Vertriebsstatus führt das CRM. Produktbeschreibungen und Bilder führt das
+		PIM oder der Shop. Bestände führt das ERP, immer.
+	</p>
+	<p>
+		Ohne diese Festlegung entstehen zirkuläre Überschreibungen: Das CRM aktualisiert die Adresse
+		im ERP, der nächtliche ERP-Export überschreibt sie im CRM zurück, und beim nächsten Durchlauf
+		beginnt das Spiel von vorn. Solche Schleifen sind der häufigste Grund für Datenqualität, der
+		niemand mehr traut.
+	</p>
+
+	<h3>Verträge statt Absprachen</h3>
+	<p>
+		Eine Schnittstelle ist ein Vertrag zwischen zwei Systemen — und Verträge gehören schriftlich
+		fixiert, maschinenlesbar und versioniert. In der Praxis heißt das: eine OpenAPI-Spezifikation
+		für HTTP-Schnittstellen, ein JSON Schema für Nachrichtenformate, beides im Repository neben
+		dem Code. Der Nutzen zeigt sich nicht am Tag der Erstellung, sondern zwei Jahre später, wenn
+		ein Feld ergänzt werden soll und niemand mehr weiß, wer alles davon liest.
+	</p>
+
+	<h3>Ereignisse statt Zustandsabfragen</h3>
+	<p>
+		Wenn ein Quellsystem melden kann, dass sich etwas geändert hat, sollte man es melden lassen,
+		statt alle fünf Minuten nachzufragen. Ereignisbasierte Integration reduziert Last und Latenz
+		erheblich. In der Realität kommt man trotzdem nicht ohne Polling aus: als Rückfallebene für
+		verlorene Ereignisse und für den nächtlichen Vollabgleich, der stille Abweichungen aufdeckt.
+		Die belastbare Architektur kombiniert beides.
+	</p>
+
+	<h3>Portabilität als Entwurfsziel</h3>
+	<p>
+		Jedes System in der Landschaft wird irgendwann ersetzt. Wenn die Integrationslogik in
+		herstellerspezifischen Konfigurationsoberflächen liegt, wird jeder Wechsel zum Neubau. Liegt
+		sie in exportierbaren Formaten — n8n-Workflows als JSON, Transformationen als lesbarer Code,
+		Zuordnungen in einer eigenen Datenbanktabelle — ist ein Systemwechsel Arbeit, aber kein
+		Projekt von vorn.
+	</p>
+
+	<h2 id="architektur">3. Referenzarchitektur: Hub statt Spinnennetz</h2>
+	<p>
+		Statt jedes System mit jedem zu verbinden, spricht jedes System mit genau einer Stelle: einer
+		Integrationsschicht, die Übersetzung, Fehlerbehandlung und Protokollierung zentral übernimmt.
+		Aus <code>n(n−1)/2</code> Verbindungen werden <code>n</code> Anbindungen.
+	</p>
+	<p>
+		Diese Schicht besteht aus vier klar getrennten Aufgaben. Die <strong>Anbindung</strong> holt
+		Daten aus dem Quellsystem oder nimmt dessen Ereignisse entgegen und normalisiert sie in ein
+		internes Format. Die <strong>Übersetzung</strong> bildet dieses Format auf das Zielmodell ab —
+		hier liegt die Fachlogik, hier gehören Tests hin. Die <strong>Zustellung</strong> schreibt ins
+		Zielsystem, mit Idempotenzprüfung und Wiederholungslogik. Die <strong>Beobachtung</strong>
+		protokolliert jeden Vorgang, alarmiert bei Fehlerhäufung und hält eine Warteschlange für
+		Nachrichten bereit, die endgültig gescheitert sind.
+	</p>
+	<p>
+		Der letzte Punkt macht in der Praxis den größeren Teil des Aufwands aus. Der Erfolgsfall ist
+		an einem Tag gebaut. Was Wochen kostet, ist die Frage, was passieren soll, wenn das Zielsystem
+		zwölf Minuten nicht erreichbar ist, wenn ein Datensatz ein Pflichtfeld nicht enthält oder wenn
+		dieselbe Nachricht zweimal ankommt.
+	</p>
+	<pre><code>{`// Zustellung mit Idempotenz und begrenztem Wiederholungsversuch
+async function zustellen(nachricht) {
+  const key = nachricht.idempotenzSchluessel; // z. B. "shop:bestellung:100234"
+
+  if (await protokoll.bereitsVerarbeitet(key)) {
+    return { status: 'uebersprungen', key };
+  }
+
+  for (let versuch = 1; versuch <= 4; versuch++) {
+    try {
+      const ergebnis = await erp.bestellungAnlegen(nachricht.daten, { idempotencyKey: key });
+      await protokoll.erfolg(key, ergebnis.belegnummer);
+      await mapping.speichern('bestellung', nachricht.quellId, ergebnis.belegnummer);
+      return { status: 'ok', key };
+    } catch (fehler) {
+      if (!istVoruebergehend(fehler) || versuch === 4) {
+        // Fachlicher Fehler oder Versuche erschöpft: sichtbar parken, nicht verwerfen
+        await deadLetter.ablegen({ key, nachricht, fehler: fehler.message });
+        await alarm.melden('zustellung_fehlgeschlagen', key);
+        return { status: 'fehler', key };
+      }
+      await warte(2 ** versuch * 1000); // exponentiell: 2s, 4s, 8s
+    }
+  }
+}`}</code></pre>
+	<p>
+		Zwei Details in diesem Muster sind entscheidend. Erstens wird zwischen vorübergehenden und
+		fachlichen Fehlern unterschieden: Ein Verbindungsabbruch rechtfertigt einen weiteren Versuch,
+		ein fehlendes Pflichtfeld nicht — dort würde jeder Wiederholungsversuch nur denselben Fehler
+		erzeugen. Zweitens wird eine gescheiterte Nachricht <em>geparkt</em>, nicht verworfen. Eine
+		Dead Letter Queue, die jemand regelmäßig ansieht, ist der Unterschied zwischen einer
+		Integration, der man vertraut, und einer, bei der man nie sicher ist, ob alles angekommen ist.
+	</p>
+	<p>
+		Ergänzt wird die Zustellung um eine eigene <strong>Mapping-Tabelle</strong>: Sie hält fest,
+		welche Kennung im Quellsystem welcher Kennung im Zielsystem entspricht. Diese Zuordnung gehört
+		in die Integrationsschicht — nicht in ein Freitextfeld des Zielsystems, wo sie beim nächsten
+		Datenimport verloren geht.
+	</p>
+
+	<h2 id="legacy">4. Legacy-ERP anbinden, wenn es keine API gibt</h2>
+	<p>
+		Der häufigste Einwand in Integrationsprojekten lautet: „Unser ERP kann das nicht.“ In den
+		wenigsten Fällen stimmt das. Es gibt in der Regel vier gangbare Wege, in absteigender
+		Attraktivität.
+	</p>
+	<p>
+		<strong>Der beste Weg</strong> ist eine vorhandene, wenn auch unmoderne Schnittstelle: SOAP,
+		ein RFC-Baustein, ein herstellerspezifischer Konnektor. Unmodern ist kein Problem — eine
+		SOAP-Schnittstelle hinter einer sauberen internen Abstraktion funktioniert genauso zuverlässig
+		wie REST, sie ist nur unbequemer zu schreiben.
+	</p>
+	<p>
+		<strong>Der zweitbeste Weg</strong> ist eine lesende Datenbankverbindung, idealerweise auf eine
+		Replik statt auf die Produktivdatenbank. Damit lassen sich Bestände, Preise und Stammdaten
+		zuverlässig auslesen. Für schreibende Zugriffe ist dieser Weg dagegen ausgeschlossen: Ein
+		direkter Insert umgeht die Geschäftslogik des ERP — Nummernkreise, Validierungen, Buchungslogik
+		— und erzeugt Datensätze, die formal existieren, aber fachlich unvollständig sind. Der Schaden
+		zeigt sich meist erst Monate später beim Jahresabschluss.
+	</p>
+	<p>
+		<strong>Der dritte Weg</strong> ist der Dateiaustausch: CSV oder XML in einem überwachten
+		Verzeichnis oder per SFTP. Das wirkt altmodisch und ist trotzdem oft die pragmatischste Lösung,
+		solange drei Bedingungen erfüllt sind — jede Datei trägt einen eindeutigen Namen mit Zeitstempel,
+		verarbeitete Dateien werden in ein Archivverzeichnis verschoben statt gelöscht, und das Ausbleiben
+		einer erwarteten Datei löst einen Alarm aus. Genau der letzte Punkt fehlt in nahezu jeder
+		gewachsenen Dateischnittstelle.
+	</p>
+	<p>
+		<strong>Der letzte Weg</strong> ist eine Oberflächenautomatisierung, die Eingaben simuliert. Sie
+		ist fragil, bricht bei jedem Update und sollte nur als befristete Überbrückung eingesetzt werden
+		— mit einem festen Datum, an dem sie ersetzt wird.
+	</p>
+	<div class="bl-note">
+		<div class="bl-note-title">Anti-Corruption Layer</div>
+		<p>
+			Altsysteme haben eigenwillige Datenmodelle: Kundennummern mit Bedeutung in einzelnen Stellen,
+			Statuscodes als einstellige Buchstaben, Datumsfelder als Text. Diese Eigenheiten dürfen die
+			Integrationsschicht nicht verlassen. Eine Übersetzungsschicht bildet sie einmalig auf ein
+			sauberes internes Modell ab. Fehlt sie, sickern die Eigenarten des Altsystems in alle neuen
+			Systeme durch — und überleben dort das Altsystem um Jahre.
+		</p>
+	</div>
+
+	<h2 id="vergleich">5. Vergleich: Punkt-zu-Punkt, iPaaS, eigene Middleware</h2>
+	<div class="bl-table">
+		<table>
+			<caption>Einordnung für Mittelständler mit 20–250 Mitarbeitenden. Beträge sind Erfahrungswerte, keine Angebote.</caption>
+			<thead>
+				<tr><th>Kriterium</th><th>Punkt-zu-Punkt</th><th>iPaaS (Cloud)</th><th>Eigene Middleware</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Aufwand für die erste Schnittstelle</td><td>Gering</td><td>Gering</td><td>Hoch (Grundaufbau)</td></tr>
+				<tr><td>Aufwand für die zehnte Schnittstelle</td><td>Sehr hoch</td><td>Gering</td><td>Gering</td></tr>
+				<tr><td>Laufende Kosten</td><td>Keine direkten</td><td>Volumenabhängig, steigend</td><td>Server ab ca. 20 € / Monat</td></tr>
+				<tr><td>Fehlerbehandlung</td><td>Pro Verbindung neu erfunden</td><td>Eingebaut, begrenzt anpassbar</td><td>Zentral, frei gestaltbar</td></tr>
+				<tr><td>Datenhaltung</td><td>Verteilt</td><td>Beim Anbieter</td><td>Im eigenen Zugriff</td></tr>
+				<tr><td>Legacy ohne API</td><td>Möglich, unstrukturiert</td><td>Meist nicht abgedeckt</td><td>Frei lösbar</td></tr>
+				<tr><td>Nachvollziehbarkeit</td><td>Gering</td><td>Gut innerhalb der Plattform</td><td>Vollständig</td></tr>
+				<tr><td>Portabilität</td><td>Keine</td><td>Gering</td><td>Hoch</td></tr>
+				<tr><td>Sinnvoll bei</td><td>1–2 dauerhaften Verbindungen</td><td>3–5 Verbindungen, Standardsysteme</td><td>5+ Verbindungen oder Legacy im Spiel</td></tr>
+			</tbody>
+		</table>
+	</div>
+	<p>
+		Die Tabelle legt einen Mittelweg nahe, der sich in der Praxis bewährt hat: eine selbst
+		betriebene n8n-Instanz als Integrationsschicht, ergänzt um eigene Dienste dort, wo die
+		Fachlogik zu komplex für einen Workflow wird. Man behält die Nachvollziehbarkeit einer
+		grafischen Oberfläche für die einfachen achtzig Prozent und die volle Freiheit für die
+		schwierigen zwanzig — bei planbaren, volumenunabhängigen Kosten.
+	</p>
+
+	<h2 id="fehler">6. Die teuersten Integrationsfehler</h2>
+	<p>
+		<strong>Kein führendes System festgelegt.</strong> Der teuerste Fehler überhaupt, weil er sich
+		erst nach Monaten in unsauberen Daten zeigt und dann kaum noch rückwirkend zu bereinigen ist.
+		Die Festlegung kostet eine Sitzung mit den Fachbereichen und eine Tabelle mit drei Spalten:
+		Datenfeld, führendes System, Begründung.
+	</p>
+	<p>
+		<strong>Fehler still verwerfen.</strong> Ein <code>try/catch</code>, das den Fehler protokolliert
+		und weitermacht, wirkt robust und ist das Gegenteil davon. Nach sechs Monaten fehlen dreihundert
+		Bestellungen im ERP und niemand weiß, welche. Fehler gehören in eine sichtbare Warteschlange
+		mit benannter Zuständigkeit.
+	</p>
+	<p>
+		<strong>Zugangsdaten im Workflow.</strong> API-Schlüssel, die direkt in einer Workflow-Definition
+		stehen, landen im Export, im Backup und in der Versionshistorie. Sie gehören in einen
+		Secret-Speicher und werden zur Laufzeit referenziert.
+	</p>
+	<p>
+		<strong>Keine Trennung von Test und Produktion.</strong> Wer Schnittstellen direkt am
+		Produktivsystem entwickelt, verschickt früher oder später Testbestellungen an echte Kunden. Eine
+		Testumgebung ist bei Integrationsprojekten kein Luxus, sondern Grundausstattung.
+	</p>
+	<p>
+		<strong>Vollabgleich statt Delta.</strong> Ein nächtlicher Abgleich, der alle 80.000 Artikel
+		überträgt, funktioniert bei 8.000 gut und bricht bei 80.000 zusammen. Deltas über Zeitstempel
+		oder Änderungszähler sind von Anfang an kaum aufwendiger — nachträglich eingebaut dagegen schon.
+	</p>
+	<p>
+		<strong>Keine Dokumentation der Zuständigkeit.</strong> Wenn um 22 Uhr eine Schnittstelle steht,
+		muss ohne Suche klar sein, wer angerufen wird. Eine Seite pro Integration mit Zweck, Auslöser,
+		Fehlerverhalten und Ansprechpartner ist die wirksamste Dokumentation, die es gibt.
+	</p>
+
+	<h2 id="roadmap">7. Roadmap: Migration ohne Stillstand</h2>
+	<ol class="bl-steps">
+		<li>
+			<b>Bestandsaufnahme (Woche 1–2)</b>
+			Alle bestehenden Datenflüsse erfassen — auch die Skripte, von denen die IT nichts weiß.
+			Pro Fluss notieren: Quelle, Ziel, Auslöser, Häufigkeit, Verantwortung. Das Ergebnis ist
+			meist unangenehm und immer aufschlussreich.
+		</li>
+		<li>
+			<b>Datenhoheit festlegen (Woche 2)</b>
+			Pro Datenobjekt und relevantem Feld das führende System bestimmen, gemeinsam mit den
+			Fachbereichen. Schriftlich, im Repository, mit Datum. Diese Tabelle ist das wichtigste
+			Ergebnis des gesamten Projekts.
+		</li>
+		<li>
+			<b>Integrationsschicht aufbauen (Woche 3–5)</b>
+			Die Schicht mit Protokollierung, Wiederholungslogik, Idempotenzprüfung und Dead Letter
+			Queue aufsetzen — zunächst für genau eine, gut verstandene Verbindung.
+		</li>
+		<li>
+			<b>Erste Verbindung umziehen (Woche 5–7)</b>
+			Eine bestehende Punkt-zu-Punkt-Verbindung über die neue Schicht führen, im Parallelbetrieb
+			mit Abgleich der Ergebnisse. Erst nach fehlerfreiem Parallelbetrieb die alte Verbindung
+			abschalten — und tatsächlich abschalten, nicht nur deaktivieren.
+		</li>
+		<li>
+			<b>Restliche Verbindungen nach Risiko (ab Woche 8)</b>
+			In der Reihenfolge ihrer Störanfälligkeit migrieren, nicht in der Reihenfolge ihrer
+			Einfachheit. Jede Migration bringt die Dokumentationsseite und den Eintrag in der
+			Alarmierung mit.
+		</li>
+	</ol>
+
+	<h2 id="fazit">8. Fazit und Quick-Check</h2>
+	<p>
+		Integration ist unspektakuläre Arbeit, und genau deshalb wird sie unterschätzt. Sie erzeugt
+		keine sichtbaren Oberflächen und keine Vorführeffekte. Was sie erzeugt, ist die Voraussetzung
+		für alles andere: Ohne verlässlichen, dokumentierten Zugriff auf die eigenen Daten scheitern
+		auch KI-Projekte, Shop-Relaunches und Auswertungen — nicht an ihrer eigenen Komplexität,
+		sondern daran, dass die Daten nicht dort sind, wo sie gebraucht werden, oder niemand ihnen
+		traut.
+	</p>
+	<p>
+		Der wirtschaftliche Kern ist die Wiederverwendung. Die erste Schnittstelle trägt den Aufbau der
+		Schicht und ist entsprechend teuer. Ab der dritten sinkt der Aufwand deutlich, weil
+		Fehlerbehandlung, Protokollierung und Betrieb bereits stehen. Wer diese Kurve kennt, bewertet
+		das erste Angebot anders — und trifft die Aufbauentscheidung nicht nach dem Preis der ersten
+		Verbindung.
+	</p>
+	<div class="bl-note">
+		<div class="bl-note-title">Quick-Check</div>
+		<ul class="bl-check">
+			<li>Existiert eine schriftliche Liste aller aktiven Datenflüsse zwischen Ihren Systemen?</li>
+			<li>Ist pro Datenfeld festgelegt und dokumentiert, welches System führend ist?</li>
+			<li>Werden fehlgeschlagene Übertragungen sichtbar geparkt statt still verworfen?</li>
+			<li>Trägt jede Nachricht einen Idempotenzschlüssel?</li>
+			<li>Löst das Ausbleiben eines erwarteten Datenimports einen Alarm aus?</li>
+			<li>Liegen Zugangsdaten in einem Secret-Speicher statt in Workflow-Definitionen?</li>
+			<li>Gibt es zu jeder Schnittstelle eine Seite mit benannter Zuständigkeit?</li>
+		</ul>
+	</div>
+	<p>
+		Wer hier mehr als zweimal verneinen muss, hat kein Werkzeugproblem, sondern ein
+		Strukturproblem — und das lässt sich schrittweise lösen, ohne den Betrieb anzuhalten.
+	</p>
+</BlogPost>
