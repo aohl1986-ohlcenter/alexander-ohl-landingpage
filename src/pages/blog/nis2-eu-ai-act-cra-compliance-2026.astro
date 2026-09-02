@@ -1,0 +1,398 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+
+const toc = [
+	{ id: 'lage', label: 'Drei Regelwerke, ein gemeinsamer Kern' },
+	{ id: 'nis2', label: 'NIS2: seit Dezember 2025 geltendes Recht' },
+	{ id: 'aiact', label: 'EU AI Act: was der Digital Omnibus verschoben hat' },
+	{ id: 'cra', label: 'Cyber Resilience Act: Meldepflicht seit September 2026' },
+	{ id: 'artefakte', label: 'Die sechs Artefakte, die alle drei bedienen' },
+	{ id: 'vergleich', label: 'Übersicht: Betroffenheit, Fristen, Sanktionen' },
+	{ id: 'fehler', label: 'Typische Fehler in der Umsetzung' },
+	{ id: 'roadmap', label: 'Roadmap in fünf Schritten' },
+	{ id: 'fazit', label: 'Fazit und Quick-Check' },
+	{ id: 'faq', label: 'Häufige Fragen' },
+	{ id: 'glossar', label: 'Fachglossar' }
+];
+
+const faq = [
+	{
+		q: 'Bin ich von NIS2 betroffen, wenn ich nur 60 Mitarbeitende habe?',
+		a: 'Möglicherweise ja. Maßgeblich ist die Kombination aus Sektorzugehörigkeit und Größe: ab 50 Beschäftigten oder 10 Mio. Euro Umsatz in einem der 18 erfassten Sektoren. Neu hinzugekommen sind unter anderem Abfallwirtschaft, Lebensmittelproduktion und Teile des verarbeitenden Gewerbes. Die Prüfung ist eine Selbstidentifikationspflicht — das BSI meldet sich nicht von sich aus.'
+	},
+	{
+		q: 'Die BSI-Registrierungsfrist ist abgelaufen. Was jetzt?',
+		a: 'Nachträglich registrieren. Die Frist nach § 33 BSIG endete am 6. März 2026, das BSI hatte eine Nachfrist bis zum 31. Juli 2026 gesetzt; das Portal unter muk.bsi.bund.de bleibt darüber hinaus geöffnet. Eine verspätete Registrierung ist in jedem Fall besser als keine — sie zeigt, dass das Unternehmen reagiert, und die übrigen Pflichten gelten ohnehin seit dem 6. Dezember 2025.'
+	},
+	{
+		q: 'Wurde der EU AI Act komplett auf 2027 verschoben?',
+		a: 'Nein. Verschoben wurden durch die Verordnung (EU) 2026/1744 nur bestimmte Hochrisiko-Pflichten: auf den 2. Dezember 2027 für Systeme nach Anhang III und auf den 2. August 2028 für Anhang I. Die Verbote, die KI-Kompetenzpflicht nach Artikel 4, die GPAI-Regeln und die Transparenzpflichten nach Artikel 50 gelten unverändert.'
+	},
+	{
+		q: 'Betrifft der Cyber Resilience Act auch reine Softwareanbieter?',
+		a: 'Ja. Der CRA erfasst Produkte mit digitalen Elementen, und dazu zählt eigenständig vertriebene Software. Seit dem 11. September 2026 gilt die Meldepflicht für aktiv ausgenutzte Schwachstellen und schwerwiegende Vorfälle mit einer Frühwarnung binnen 24 Stunden; vollständig anwendbar wird die Verordnung am 11. Dezember 2027.'
+	},
+	{
+		q: 'Reicht eine ISO-27001-Zertifizierung für NIS2 aus?',
+		a: 'Sie deckt einen großen Teil der Risikomanagementanforderungen aus § 30 BSIG ab und kann als Nachweis dienen, ist aber nicht deckungsgleich. Nicht enthalten sind insbesondere das NIS2-spezifische Meldeverfahren mit seinen 24-Stunden-, 72-Stunden- und Ein-Monats-Stufen sowie die persönlichen Pflichten der Geschäftsleitung.'
+	},
+	{
+		q: 'Was bedeutet die KI-Kompetenzpflicht praktisch?',
+		a: 'Personen, die KI-Systeme betreiben oder nutzen, müssen über ausreichende Kompetenz dafür verfügen, und das Unternehmen muss das nachweisen können. In der Praxis genügt für die meisten Häuser eine dokumentierte Schulung mit Teilnehmerliste, eine schriftliche Nutzungsrichtlinie und eine Auffrischung bei wesentlichen Änderungen. Ein umfangreiches Programm ist dafür nicht nötig.'
+	},
+	{
+		q: 'Womit fange ich an, wenn alle drei Regelwerke gleichzeitig greifen?',
+		a: 'Mit den Inventaren — Systeme, Dienstleister, KI-Anwendungen — und mit dem Meldeprozess. Die Inventare sind die gemeinsame Grundlage aller drei Regelwerke, und der Meldeprozess ist die einzige Pflicht ohne Vorbereitungszeit: Tritt der Vorfall ein, läuft die 24-Stunden-Frist sofort.'
+	}
+];
+
+const glossary = [
+	{ term: 'NIS2UmsuCG', def: 'NIS-2-Umsetzungs- und Cybersicherheitsstärkungsgesetz — das deutsche Gesetz zur Umsetzung der EU-Richtlinie NIS2. Es ändert im Kern das BSI-Gesetz und ist am 6. Dezember 2025 ohne Übergangsfrist in Kraft getreten.' },
+	{ term: 'Wesentliche und wichtige Einrichtung', def: 'Die beiden Betroffenheitsklassen unter NIS2. Sie unterscheiden sich in der Aufsichtsintensität und im Bußgeldrahmen, nicht wesentlich im Pflichtenkatalog. Die Einordnung ergibt sich aus Sektor, Beschäftigtenzahl und Umsatz.' },
+	{ term: 'SBOM', def: 'Software Bill of Materials — maschinenlesbares Verzeichnis aller in einem Produkt enthaltenen Komponenten und ihrer Versionen. Grundlage dafür, bei einer neu bekannt gewordenen Schwachstelle innerhalb von Minuten statt Tagen zu wissen, ob man betroffen ist.' },
+	{ term: 'KI-Inventar', def: 'Verzeichnis aller im Unternehmen eingesetzten KI-Systeme mit Zweck, Anbieter, verarbeiteten Daten, Verantwortlichkeit und Risikoeinstufung. Ausgangspunkt jeder Bewertung nach EU AI Act und zugleich das wirksamste Mittel gegen Shadow AI.' },
+	{ term: 'Digital Omnibus', def: 'Verordnung (EU) 2026/1744, am 24. Juli 2026 im Amtsblatt veröffentlicht und seit dem 27. Juli 2026 in Kraft. Sie verschiebt die Anwendungstermine für bestimmte Hochrisiko-Pflichten des EU AI Act, lässt Verbote, KI-Kompetenz-, GPAI- und Transparenzpflichten aber unberührt.' },
+	{ term: 'Lieferkettensorgfalt (IT)', def: 'Pflicht, die Cybersicherheit der eingesetzten Dienstleister und Lieferanten zu bewerten und vertraglich abzusichern. Praktisch der Grund, warum NIS2 auch Unternehmen erreicht, die selbst nicht in den Anwendungsbereich fallen — über die Anforderungen ihrer Kunden.' }
+];
+---
+
+<BlogPost slug="nis2-eu-ai-act-cra-compliance-2026" toc={toc} faq={faq} glossary={glossary}>
+	<div class="bl-summary" slot="summary">
+		<h2>Das Wichtigste in Kürze</h2>
+		<ul>
+			<li><strong>NIS2 gilt in Deutschland seit dem 6. Dezember 2025</strong> — ohne Übergangsfrist. Die BSI-Registrierungsfrist am 6. März 2026 ist abgelaufen; nachregistrieren bleibt der richtige Weg.</li>
+			<li><strong>Der EU AI Act wurde nur teilweise verschoben.</strong> Verbote, KI-Kompetenzpflicht, GPAI- und Transparenzpflichten gelten unverändert; verschoben sind Hochrisiko-Pflichten auf Dezember 2027 beziehungsweise August 2028.</li>
+			<li><strong>Der Cyber Resilience Act ist seit dem 11. September 2026 mit Meldepflichten wirksam</strong> und wird am 11. Dezember 2027 vollständig anwendbar.</li>
+			<li><strong>Alle drei enden in denselben Artefakten:</strong> Inventare, Meldeprozess, Protokollierung, Nachweise, Schulung, Lieferantenprüfung.</li>
+			<li><strong>Der Meldeprozess hat keine Vorbereitungszeit.</strong> Er ist deshalb die erste Aufgabe, nicht die letzte.</li>
+		</ul>
+	</div>
+
+	<div class="bl-note warn">
+		<div class="bl-note-title">Hinweis</div>
+		<p>
+			Dieser Beitrag ist ein technischer Umsetzungsleitfaden und ersetzt keine Rechtsberatung. Die
+			genannten Fristen und Paragrafen sind auf dem Stand September 2026 recherchiert; die
+			Betroffenheitsprüfung im Einzelfall gehört in juristische Hände. Was hier beschrieben wird,
+			ist die technische Seite — und die ist in aller Regel der größere Teil der Arbeit.
+		</p>
+	</div>
+
+	<div class="bl-stats">
+		<div class="bl-stat"><b>~29.500</b><span>Einrichtungen in Deutschland fallen nach BSI-Schätzung unter NIS2 — in 18 Sektoren</span></div>
+		<div class="bl-stat"><b>24 Std.</b><span>Frist für die Frühwarnung bei einem erheblichen Sicherheitsvorfall — unter NIS2 wie unter CRA</span></div>
+		<div class="bl-stat"><b>6 Artefakte</b><span>bedienen die technischen Anforderungen aller drei Regelwerke gemeinsam</span></div>
+	</div>
+
+	<h2 id="lage">1. Drei Regelwerke, ein gemeinsamer Kern</h2>
+	<p>
+		Seit Ende 2025 greifen im DACH-Raum drei umfangreiche Regelwerke annähernd gleichzeitig: das
+		deutsche NIS2-Umsetzungsgesetz, der EU AI Act und der Cyber Resilience Act. In der Wahrnehmung
+		vieler Geschäftsführungen ergibt das eine unübersichtliche Menge an Pflichten, die man am
+		liebsten an eine Kanzlei delegieren würde.
+	</p>
+	<p>
+		Das ist verständlich und führt trotzdem in die falsche Richtung. Denn wer die drei Texte auf
+		ihre technischen Anforderungen reduziert, findet einen erstaunlich kleinen gemeinsamen Kern:
+		Man muss wissen, was man betreibt. Man muss merken, wenn etwas passiert. Man muss es melden
+		können. Man muss belegen können, dass man sich gekümmert hat. Und man muss dieselben
+		Anforderungen an seine Dienstleister weitergeben.
+	</p>
+	<p>
+		Diese fünf Sätze beschreiben keine Regulierungslast, sondern gute IT-Praxis. Der Unterschied zu
+		vorher ist, dass sie jetzt schriftlich nachweisbar sein müssen. Genau daran scheitern
+		Umsetzungen: nicht an fehlenden Maßnahmen, sondern daran, dass niemand die vorhandenen
+		dokumentiert hat.
+	</p>
+	<p>
+		Ein zweiter Punkt wird regelmäßig unterschätzt: Auch wer selbst nicht in den Anwendungsbereich
+		fällt, wird über die Lieferkette erreicht. NIS2 verpflichtet betroffene Unternehmen dazu, die
+		Sicherheit ihrer Dienstleister zu bewerten. In der Praxis heißt das, dass Fragebögen und
+		Vertragsklauseln bei Zulieferern und IT-Dienstleistern ankommen, die von NIS2 nie gehört haben.
+		Wer darauf vorbereitet ist, gewinnt Ausschreibungen, für die andere nachreichen müssen.
+	</p>
+
+	<h2 id="nis2">2. NIS2: seit Dezember 2025 geltendes Recht</h2>
+	<p>
+		Das NIS-2-Umsetzungs- und Cybersicherheitsstärkungsgesetz (NIS2UmsuCG) wurde am 6. Dezember
+		2025 verkündet und gilt seitdem. Eine Übergangsfrist gibt es nicht. Nach BSI-Schätzung sind
+		rund 29.500 Einrichtungen in achtzehn Sektoren betroffen — deutlich mehr als unter der
+		Vorgängerregelung, weil unter anderem Abfallwirtschaft, Lebensmittelproduktion und Teile des
+		verarbeitenden Gewerbes hinzugekommen sind.
+	</p>
+	<p>
+		Die Betroffenheit ergibt sich aus Sektor und Größe: in der Regel ab fünfzig Beschäftigten oder
+		zehn Millionen Euro Jahresumsatz. Entscheidend für die Praxis ist der Charakter dieser Prüfung
+		— sie ist eine <strong>Selbstidentifikationspflicht</strong>. Das BSI informiert Unternehmen
+		nicht darüber, dass sie betroffen sind. Eine Umfrage von G DATA ergab, dass ein erheblicher
+		Teil der Mittelständler die eigene Betroffenheit nicht kannte.
+	</p>
+	<p>
+		Die Registrierung erfolgt über das Melde- und Unterrichtungskanal-Portal des BSI
+		(<code>muk.bsi.bund.de</code>), das am 6. Januar 2026 online ging. Die Frist nach § 33 BSIG
+		endete am 6. März 2026, das BSI setzte eine Nachfrist bis zum 31. Juli 2026. Beide Termine sind
+		verstrichen — was nichts daran ändert, dass eine nachträgliche Registrierung der einzig
+		sinnvolle Weg ist.
+	</p>
+	<p>
+		Inhaltlich lassen sich die Pflichten in drei Blöcke gliedern. Das <strong>Risikomanagement</strong>
+		nach § 30 BSIG umfasst zehn Maßnahmenbereiche — von der Risikoanalyse über Backup- und
+		Notfallmanagement bis zu Mehrfaktor-Authentifizierung und Lieferkettensicherheit. Wer diese
+		Liste liest, liest im Wesentlichen das Inhaltsverzeichnis eines
+		Informationssicherheits-Managementsystems.
+	</p>
+	<p>
+		Die <strong>Meldepflicht</strong> nach § 32 BSIG ist dreistufig: eine Frühwarnung binnen 24
+		Stunden, ein Bericht binnen 72 Stunden, ein Abschlussbericht binnen eines Monats. Diese Fristen
+		kennen keine Vorbereitungszeit. Wer den Ablauf nicht vorab festgelegt hat, verliert die ersten
+		Stunden mit der Frage, wer eigentlich zuständig ist.
+	</p>
+	<p>
+		Der dritte Block betrifft die <strong>Geschäftsleitung</strong> unmittelbar: Nach § 38 BSIG
+		muss sie die Maßnahmen billigen, ihre Umsetzung überwachen und sich regelmäßig schulen lassen.
+		Für besonders wichtige Einrichtungen kommt nach § 39 BSIG eine Nachweispflicht hinzu, die
+		innerhalb von drei Jahren nach Inkrafttreten — also bis Dezember 2028 — durch Audits oder
+		Zertifizierungen zu erfüllen ist.
+	</p>
+
+	<h2 id="aiact">3. EU AI Act: was der Digital Omnibus verschoben hat</h2>
+	<p>
+		Rund um den EU AI Act kursiert seit Sommer 2026 eine Fehlinformation, die für Unternehmen teuer
+		werden kann: dass die Verordnung „auf 2027 verschoben“ sei. Das ist falsch, und der Irrtum
+		betrifft ausgerechnet die Pflichten, die den Mittelstand am unmittelbarsten treffen.
+	</p>
+	<p>
+		Tatsächlich ist die Verordnung (EU) 2024/1689 seit dem 1. August 2024 in Kraft und wird
+		gestaffelt anwendbar. Seit dem 2. Februar 2025 gelten die Verbote inakzeptabler Praktiken und
+		— für nahezu jedes Unternehmen relevant — die KI-Kompetenzpflicht nach Artikel 4. Seit dem
+		2. August 2025 gelten die Pflichten für Anbieter von General-Purpose-AI-Modellen.
+	</p>
+	<p>
+		Der sogenannte Digital Omnibus, Verordnung (EU) 2026/1744, wurde am 24. Juli 2026 im Amtsblatt
+		veröffentlicht und trat am 27. Juli 2026 in Kraft. Verschoben hat er die Anwendung bestimmter
+		Hochrisiko-Vorschriften: auf den <strong>2. Dezember 2027</strong> für eigenständige
+		Hochrisiko-Systeme nach Anhang III und auf den <strong>2. August 2028</strong> für in regulierte
+		Produkte eingebettete Systeme nach Anhang I. <strong>Nicht verschoben</strong> wurden die
+		Verbote, die KI-Kompetenzpflicht, die GPAI-Regeln und die Transparenzpflichten nach Artikel 50.
+	</p>
+	<p>
+		Für einen typischen Mittelständler folgt daraus eine überschaubare Aufgabenliste. Die
+		üblicherweise eingesetzten Werkzeuge — Assistenzsysteme für Text und Recherche, KI-Funktionen
+		in Office-Paketen, Dokumentenextraktion in Workflows — fallen in aller Regel in die Klasse
+		begrenzten Risikos. Kritisch wird es dort, wo KI über Menschen entscheidet oder mitentscheidet:
+		Bewerbervorauswahl, Leistungsbewertung, Kreditwürdigkeit, Zugang zu Bildung. Solche Anwendungen
+		sind Hochrisiko nach Anhang III — die Einstufung gilt unverändert, nur der Stichtag für die
+		vollen Pflichten hat sich verschoben.
+	</p>
+	<p>
+		Die KI-Kompetenzpflicht ist in der Praxis der Punkt, an dem am häufigsten nichts geschieht,
+		obwohl der Aufwand gering ist: eine dokumentierte Schulung mit Teilnehmerliste, eine
+		schriftliche Nutzungsrichtlinie, eine Auffrischung bei wesentlichen Änderungen. Damit ist die
+		Pflicht für die allermeisten Häuser erfüllt — und gleichzeitig das wirksamste Mittel gegen
+		Shadow AI.
+	</p>
+	<div class="bl-note">
+		<div class="bl-note-title">Praxisnotiz</div>
+		<p>
+			Die Verschiebung der Hochrisiko-Fristen ist kein Anlass zum Abwarten. Harmonisierte Normen
+			für den AI Act waren im Verlauf des Jahres 2026 noch nicht im Amtsblatt gelistet — die
+			Verschiebung schafft Zeit für deren Fertigstellung, nicht Entwarnung. Wer ein
+			Hochrisiko-System betreibt, sollte das gewonnene Jahr für den Aufbau der Governance nutzen.
+			ISO/IEC 42001 bietet dafür eine brauchbare Struktur, auch bevor die EU-Normen vorliegen.
+		</p>
+	</div>
+
+	<h2 id="cra">4. Cyber Resilience Act: Meldepflicht seit September 2026</h2>
+	<p>
+		Der Cyber Resilience Act, Verordnung (EU) 2024/2847, ist das dritte Regelwerk und wird von
+		Mittelständlern am häufigsten übersehen — weil viele annehmen, er betreffe nur Hersteller von
+		Hardware. Tatsächlich erfasst er <strong>Produkte mit digitalen Elementen</strong>, und dazu
+		zählt eigenständig vertriebene Software. Wer ein Softwareprodukt, eine App oder ein vernetztes
+		Gerät in Verkehr bringt, ist im Anwendungsbereich.
+	</p>
+	<p>
+		Der Zeitplan ist gestaffelt. Seit dem 11. Juni 2026 können Konformitätsbewertungsstellen die
+		Erfüllung der Anforderungen bewerten. Seit dem <strong>11. September 2026</strong> gilt die
+		Meldepflicht nach Artikel 14: Aktiv ausgenutzte Schwachstellen und schwerwiegende
+		Sicherheitsvorfälle sind binnen 24 Stunden als Frühwarnung und binnen 72 Stunden mit weiteren
+		Informationen über die zentrale Meldeplattform zu melden. <strong>Vollständig anwendbar</strong>
+		wird die Verordnung am 11. Dezember 2027 — dann gelten Security-by-Design, das Management von
+		Schwachstellen über den gesamten Produktlebenszyklus und die CE-Kennzeichnung.
+	</p>
+	<p>
+		Die technisch anspruchsvollste Anforderung ist das Schwachstellenmanagement über den
+		Lebenszyklus. Sie setzt voraus, dass man weiß, was im eigenen Produkt steckt — und das ist die
+		Aufgabe der SBOM, des maschinenlesbaren Komponentenverzeichnisses. Ohne sie ist die Frage
+		„sind wir von dieser neu bekannt gewordenen Schwachstelle betroffen?“ eine mehrtägige
+		Recherche. Mit ihr ist sie eine Abfrage von Minuten. Bei modernen Build-Werkzeugen entsteht
+		eine SBOM praktisch nebenbei; der Aufwand liegt darin, sie systematisch zu archivieren und
+		gegen aktuelle Schwachstellendatenbanken abzugleichen.
+	</p>
+
+	<h2 id="artefakte">5. Die sechs Artefakte, die alle drei bedienen</h2>
+	<p>
+		Wer die drei Regelwerke getrennt abarbeitet, macht dieselbe Arbeit dreimal. Sinnvoller ist es,
+		von den technischen Ergebnissen her zu denken. Sechs Artefakte decken den weit überwiegenden
+		Teil der technischen Anforderungen ab.
+	</p>
+	<p>
+		<strong>Erstens das Asset- und Systeminventar.</strong> Welche Systeme werden betrieben, in
+		welchen Versionen, auf welcher Infrastruktur, mit welchen Daten, unter wessen Verantwortung.
+		Grundlage für NIS2-Risikomanagement und CRA-Schwachstellenmanagement gleichermaßen. Ein
+		gepflegtes Verzeichnis in einem Repository ist dafür ausreichend — ein eingekauftes Werkzeug
+		ist nicht erforderlich und ersetzt die Pflegearbeit ohnehin nicht.
+	</p>
+	<p>
+		<strong>Zweitens das KI-Inventar.</strong> Dieselbe Logik für KI-Systeme: Zweck, Anbieter,
+		verarbeitete Daten, Verantwortlichkeit, Risikoeinstufung nach AI Act. Der Aufbau deckt
+		gleichzeitig Shadow AI auf, weil er die Frage stellt, was tatsächlich genutzt wird — nicht, was
+		genehmigt wurde.
+	</p>
+	<p>
+		<strong>Drittens der Meldeprozess.</strong> Ein einseitiges Dokument genügt: Wer entscheidet, ob
+		ein Vorfall meldepflichtig ist; wer meldet; über welchen Kanal; welche Angaben werden in der
+		Frühwarnung übermittelt; wer vertritt die zuständige Person. Dazu ein jährlicher Trockentest.
+		Das ist die Maßnahme mit dem besten Verhältnis von Aufwand zu Wirkung im gesamten Themenfeld,
+		weil sie im Ernstfall die ersten Stunden rettet.
+	</p>
+	<p>
+		<strong>Viertens die Protokollierung.</strong> Zentral gesammelte, gegen Manipulation
+		geschützte und ausreichend lange aufbewahrte Protokolle sind die Voraussetzung dafür, einen
+		Vorfall überhaupt beschreiben zu können. Ohne sie ist die 72-Stunden-Meldung eine Vermutung.
+	</p>
+	<p>
+		<strong>Fünftens die SBOM.</strong> Für eigene Softwareprodukte Pflicht unter CRA, für
+		eingekaufte Software ein starkes Argument gegenüber dem Lieferanten. Automatisiert erzeugt,
+		versioniert abgelegt, regelmäßig gegen Schwachstellendatenbanken geprüft.
+	</p>
+	<p>
+		<strong>Sechstens der Nachweisordner.</strong> Schulungsnachweise, Sitzungsprotokolle der
+		Geschäftsleitung mit dokumentierter Billigung der Maßnahmen, Lieferantenbewertungen,
+		Testprotokolle. Unspektakulär, und im Prüfungsfall das Einzige, was zählt. Der Grundsatz
+		dahinter ist schlicht: Eine Maßnahme, die nicht dokumentiert ist, hat aus Sicht einer Behörde
+		nicht stattgefunden.
+	</p>
+
+	<h2 id="vergleich">6. Übersicht: Betroffenheit, Fristen, Sanktionen</h2>
+	<div class="bl-table">
+		<table>
+			<caption>Stand September 2026. Fristen und Einordnungen ersetzen keine Prüfung des Einzelfalls.</caption>
+			<thead>
+				<tr><th>Merkmal</th><th>NIS2 (NIS2UmsuCG / BSIG)</th><th>EU AI Act (VO 2024/1689)</th><th>CRA (VO 2024/2847)</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Betrifft</td><td>Einrichtungen in 18 Sektoren ab ca. 50 Beschäftigten</td><td>Anbieter und Betreiber von KI-Systemen, größenunabhängig</td><td>Hersteller, Importeure und Händler von Produkten mit digitalen Elementen</td></tr>
+				<tr><td>Gilt seit</td><td>6. Dezember 2025, ohne Übergangsfrist</td><td>Gestaffelt seit 1. August 2024</td><td>Gestaffelt seit 11. Dezember 2024</td></tr>
+				<tr><td>Nächste harte Termine</td><td>Nachweis für bes. wichtige Einrichtungen bis Dezember 2028</td><td>Anhang III: 2. Dezember 2027 · Anhang I: 2. August 2028</td><td>Vollständige Anwendbarkeit: 11. Dezember 2027</td></tr>
+				<tr><td>Bereits jetzt wirksam</td><td>Registrierung, Meldepflicht, Risikomanagement, GF-Schulung</td><td>Verbote, KI-Kompetenz (Art. 4), GPAI, Transparenz (Art. 50)</td><td>Meldepflicht nach Art. 14 seit 11. September 2026</td></tr>
+				<tr><td>Meldefristen</td><td>24 Std. / 72 Std. / 1 Monat</td><td>Keine allgemeine Vorfallsmeldung</td><td>24 Std. Frühwarnung, 72 Std. Nachbericht</td></tr>
+				<tr><td>Sanktionsrahmen</td><td>Bußgelder gestaffelt nach Einrichtungsklasse, Leitungshaftung</td><td>Bis 35 Mio. € / 7 % (Verbote), bis 15 Mio. € / 3 % (übrige)</td><td>Bußgelder plus Marktrücknahme des Produkts</td></tr>
+				<tr><td>Zentrales Artefakt</td><td>Risikomanagement und Meldeprozess</td><td>KI-Inventar und Kompetenznachweis</td><td>SBOM und Schwachstellenmanagement</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2 id="fehler">7. Typische Fehler in der Umsetzung</h2>
+	<p>
+		<strong>Betroffenheit nicht geprüft.</strong> Der häufigste Fehler und zugleich der billigste zu
+		beheben. Die Prüfung dauert einen halben Tag; sie zu unterlassen erzeugt im Schadensfall die
+		unangenehme Situation, dass die fehlende Registrierung öffentlich sichtbar wird.
+	</p>
+	<p>
+		<strong>Compliance als Dokumentenprojekt.</strong> Ein Aktenordner mit Richtlinien, die niemand
+		umsetzt, hilft weder im Prüfungsfall noch im Ernstfall. Umgekehrt sind vorhandene technische
+		Maßnahmen ohne Dokumentation ebenfalls wertlos. Beides gehört zusammen — und beides entsteht
+		schneller, wenn man von den sechs Artefakten aus denkt statt vom Gesetzestext.
+	</p>
+	<p>
+		<strong>Die Geschäftsleitung delegiert vollständig.</strong> NIS2 adressiert die Leitungsebene
+		ausdrücklich: Billigung der Maßnahmen, Überwachung, eigene Schulung. Diese Pflichten sind nicht
+		delegierbar. Ein Geschäftsführer, der nicht dokumentieren kann, dass er sich gekümmert hat, hat
+		im Zweifel ein persönliches Problem.
+	</p>
+	<p>
+		<strong>Meldeprozess ungeübt.</strong> Ein Ablaufdokument, das nie durchgespielt wurde, hält der
+		Realität nicht stand. Ein Trockentest pro Jahr — jemand ruft an, das Team spielt die ersten
+		zwei Stunden durch — deckt zuverlässig auf, dass die hinterlegte Telefonnummer veraltet ist
+		und niemand weiß, wer die Meldung freigibt.
+	</p>
+	<p>
+		<strong>Lieferanten nicht einbezogen.</strong> Die Lieferkettensorgfalt wird gern übersehen, ist
+		aber der Punkt, an dem die Regulierung sich fortpflanzt. Ein knapper Fragebogen an die
+		wichtigsten IT-Dienstleister und eine Vertragsklausel zur Vorfallsmeldung decken den größten
+		Teil ab.
+	</p>
+	<p>
+		<strong>Auf die verschobenen Fristen warten.</strong> Die Hochrisiko-Pflichten des AI Act sind
+		verschoben, die Einstufung ist es nicht. Wer ein Recruiting-System mit KI-Unterstützung
+		betreibt, betreibt weiterhin ein Hochrisiko-System — er hat nur mehr Zeit für den Nachweis. Die
+		Governance dafür entsteht nicht in vier Wochen.
+	</p>
+
+	<h2 id="roadmap">8. Roadmap in fünf Schritten</h2>
+	<ol class="bl-steps">
+		<li>
+			<b>Betroffenheit klären (Woche 1)</b>
+			NIS2-Betroffenheit anhand von Sektor, Beschäftigtenzahl und Umsatz prüfen, mit
+			schriftlichem Ergebnis und Datum — auch ein begründetes „nicht betroffen“ ist ein
+			wertvolles Dokument. Parallel klären, ob eigene Software unter den CRA fällt.
+		</li>
+		<li>
+			<b>Inventare aufbauen (Woche 1–3)</b>
+			System-, Dienstleister- und KI-Inventar anlegen. Für das KI-Inventar aktiv nachfragen,
+			nicht nur Genehmigtes erfassen — sonst entsteht ein Verzeichnis der Wunschvorstellung.
+		</li>
+		<li>
+			<b>Meldeprozess festlegen (Woche 2–3)</b>
+			Zuständigkeiten, Kanäle, Vertretungsregelung und Inhalte der Frühwarnung auf einer Seite
+			festhalten. BSI-Registrierung nachholen, falls noch nicht erfolgt. Termin für den ersten
+			Trockentest setzen.
+		</li>
+		<li>
+			<b>Technische Lücken schließen (Woche 3–10)</b>
+			Zentrale Protokollierung, Mehrfaktor-Authentifizierung, geprüfte Backup-Wiederherstellung,
+			SBOM-Erzeugung im Build-Prozess. Nach Risiko priorisieren, nicht nach Aufwand.
+		</li>
+		<li>
+			<b>Nachweise und Rhythmus etablieren (ab Woche 6, fortlaufend)</b>
+			Schulungen durchführen und dokumentieren, Billigung durch die Geschäftsleitung
+			protokollieren, Lieferantenfragebögen versenden. Halbjährliche Überprüfung der Inventare
+			und jährlicher Meldetest im Kalender verankern.
+		</li>
+	</ol>
+
+	<h2 id="fazit">9. Fazit und Quick-Check</h2>
+	<p>
+		Die Gleichzeitigkeit der drei Regelwerke wirkt bedrohlicher, als die Umsetzung tatsächlich ist.
+		Wer sie nicht als drei Rechtsprojekte, sondern als eine Reihe technischer Artefakte begreift,
+		arbeitet einmal statt dreimal — und baut dabei überwiegend Dinge, die ohnehin fehlten:
+		Inventare, Protokolle, ein geübter Meldeweg, dokumentierte Schulungen, geprüfte Lieferanten.
+	</p>
+	<p>
+		Zwei Punkte verdienen dabei Vorrang. Der Meldeprozess, weil er als Einziger keine
+		Vorbereitungszeit kennt: Tritt der Vorfall ein, läuft die 24-Stunden-Frist ab dem Bekanntwerden,
+		unabhängig davon, ob jemand weiß, wer zuständig ist. Und die Inventare, weil ohne sie keine
+		der anderen Pflichten sinnvoll erfüllbar ist — man kann weder Risiken bewerten noch Vorfälle
+		beschreiben noch Betroffenheit von einer Schwachstelle feststellen, wenn unklar ist, was
+		überhaupt betrieben wird.
+	</p>
+	<div class="bl-note">
+		<div class="bl-note-title">Quick-Check</div>
+		<ul class="bl-check">
+			<li>Liegt eine schriftliche, datierte NIS2-Betroffenheitsprüfung vor — auch bei negativem Ergebnis?</li>
+			<li>Ist die Registrierung beim BSI erfolgt, falls Sie betroffen sind?</li>
+			<li>Existiert ein einseitiger Meldeprozess mit benannter Zuständigkeit und Vertretung?</li>
+			<li>Wurde dieser Prozess in den letzten zwölf Monaten einmal durchgespielt?</li>
+			<li>Gibt es ein KI-Inventar, das auch inoffiziell genutzte Werkzeuge erfasst?</li>
+			<li>Sind Schulungen zur KI-Kompetenz durchgeführt und mit Teilnehmerliste dokumentiert?</li>
+			<li>Erzeugt Ihr Build-Prozess eine SBOM, falls Sie Software in Verkehr bringen?</li>
+			<li>Ist die Billigung der Sicherheitsmaßnahmen durch die Geschäftsleitung protokolliert?</li>
+		</ul>
+	</div>
+	<p>
+		Acht Fragen, von denen die meisten mit Arbeit eines einzelnen Tages beantwortbar werden. Die
+		Regulierung verlangt keine perfekte Sicherheit — sie verlangt den Nachweis, dass man sich
+		strukturiert gekümmert hat. Dieser Nachweis ist deutlich einfacher zu führen, wenn man ihn
+		nebenbei erzeugt, statt ihn nachträglich zu rekonstruieren.
+	</p>
+</BlogPost>
