@@ -202,12 +202,48 @@
   background-color: var(--pc-navy-800);
 }
 .bl-table:focus-visible, .bl-body pre:focus-visible { outline: 2px solid var(--pc-yellow); outline-offset: 2px; }
-.bl-table table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 560px; }
-.bl-table th, .bl-table td { padding: 13px 16px; text-align: left; border-bottom: 1px solid var(--pc-line); vertical-align: top; }
-.bl-table thead th { background: var(--pc-navy-900); color: var(--pc-fg); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.bl-table table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 620px; }
+.bl-table th, .bl-table td {
+  padding: 12px 18px; text-align: left; vertical-align: top;
+  border-bottom: 1px solid var(--pc-line);
+  line-height: 1.5; hyphens: none;
+}
+
+/* Spaltenköpfe */
+.bl-table thead th {
+  background: var(--pc-navy-900); color: var(--pc-fg);
+  font-size: 13px; font-weight: 700; white-space: nowrap;
+  border-bottom: 1px solid var(--pc-line-2);
+  position: sticky; top: 0; z-index: 2;
+}
+/* Eckzelle haftet in beide Richtungen — sonst scrollt die Spaltenüberschrift
+   der ersten Spalte weg, während ihre Zeilenbeschriftungen stehen bleiben. */
+.bl-table thead th:first-child {
+  left: 0; z-index: 3;
+  background: var(--pc-navy-900);
+  box-shadow: 1px 0 0 var(--pc-line);
+}
+
+/* Zeilenüberschrift: bleibt beim Horizontalscrollen stehen, damit immer
+   sichtbar ist, zu welchem Kriterium ein Wert gehört. Braucht deshalb einen
+   deckenden Hintergrund — die Zebra-Streifen liefern ihn über --row-bg. */
+.bl-table tbody tr { --row-bg: var(--pc-navy-800); }
+.bl-table tbody tr:nth-child(even) { --row-bg: #131a3a; }
+.bl-table tbody th[scope='row'] {
+  position: sticky; left: 0; z-index: 1;
+  background: var(--row-bg);
+  color: var(--pc-fg); font-weight: 600;
+  min-width: 168px; max-width: 220px;
+  box-shadow: 1px 0 0 var(--pc-line);
+}
+/* Halbtransparent, damit die Scroll-Andeutung am rechten Rand durchscheint */
+.bl-table tbody tr:nth-child(even) td { background: rgba(255, 255, 255, .022); }
 .bl-table td { color: var(--pc-fg-2); }
-.bl-table tbody tr:last-child td { border-bottom: 0; }
-.bl-table caption { caption-side: bottom; padding: 12px 16px; color: var(--pc-fg-3); font-size: 13px; text-align: left; }
+.bl-table tbody tr:last-child th, .bl-table tbody tr:last-child td { border-bottom: 0; }
+.bl-table caption {
+  caption-side: bottom; padding: 12px 18px;
+  color: var(--pc-fg-3); font-size: 13px; text-align: left; line-height: 1.5;
+}
 
 /* Info-/Warnbox */
 .bl-note {
@@ -309,4 +345,10 @@
 .bl-tags span {
   font-family: var(--pc-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
   color: var(--pc-fg-3); border: 1px solid var(--pc-line); border-radius: var(--pc-r-pill); padding: 5px 12px;
+}
+
+@media (max-width: 640px) {
+  .bl-table table { font-size: 14px; }
+  .bl-table th, .bl-table td { padding: 11px 14px; }
+  .bl-table tbody th[scope='row'] { min-width: 132px; max-width: 150px; }
 }
