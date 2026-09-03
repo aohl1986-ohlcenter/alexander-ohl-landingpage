@@ -175,7 +175,7 @@ const glossary = [
 		zwölf Minuten nicht erreichbar ist, wenn ein Datensatz ein Pflichtfeld nicht enthält oder wenn
 		dieselbe Nachricht zweimal ankommt.
 	</p>
-	<pre><code>{`// Zustellung mit Idempotenz und begrenztem Wiederholungsversuch
+	<pre tabindex="0" role="region" aria-label="Codebeispiel, horizontal scrollbar"><code>{`// Zustellung mit Idempotenz und begrenztem Wiederholungsversuch
 async function zustellen(nachricht) {
   const key = nachricht.idempotenzSchluessel; // z. B. "shop:bestellung:100234"
 
@@ -260,7 +260,7 @@ async function zustellen(nachricht) {
 	</div>
 
 	<h2 id="vergleich">5. Vergleich: Punkt-zu-Punkt, iPaaS, eigene Middleware</h2>
-	<div class="bl-table">
+	<div class="bl-table" tabindex="0" role="region" aria-label="Vergleichstabelle, horizontal scrollbar">
 		<table>
 			<caption>Einordnung für Mittelständler mit 20–250 Mitarbeitenden. Beträge sind Erfahrungswerte, keine Angebote.</caption>
 			<thead>

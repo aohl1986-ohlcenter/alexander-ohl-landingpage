@@ -174,14 +174,34 @@
 }
 .bl-body pre {
   margin: 24px 0; padding: 20px; overflow-x: auto;
-  background: var(--pc-navy-900); border: 1px solid var(--pc-line); border-radius: var(--pc-r-md);
+  background:
+    linear-gradient(to right, var(--pc-navy-900) 40%, rgba(10, 14, 35, 0)) left / 40px 100% no-repeat local,
+    linear-gradient(to left,  var(--pc-navy-900) 40%, rgba(10, 14, 35, 0)) right / 40px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(255, 200, 41, .28), rgba(255, 200, 41, 0)) left / 18px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgba(255, 200, 41, .28), rgba(255, 200, 41, 0)) right / 18px 100% no-repeat scroll;
+  background-color: var(--pc-navy-900);
+  border: 1px solid var(--pc-line); border-radius: var(--pc-r-md);
   font-family: var(--pc-font-mono); font-size: 13px; line-height: 1.65; color: var(--pc-fg-2);
   tab-size: 2;
 }
 .bl-body pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; }
 
 /* Tabellen — scrollen in eigenem Container, nie die Seite */
-.bl-table { margin: 28px 0; overflow-x: auto; border: 1px solid var(--pc-line); border-radius: var(--pc-r-md); }
+/* overflow-x mit tabindex im Markup: der Scroll-Container ist damit auch per
+   Tastatur bedienbar. Die vier Gradienten erzeugen
+   eine helle Kante, die nur sichtbar ist, solange in diese Richtung noch Inhalt liegt — die
+   'local'-Ebenen scrollen mit und decken die 'scroll'-Ebenen an den Enden ab. */
+.bl-table {
+  margin: 28px 0; overflow-x: auto;
+  border: 1px solid var(--pc-line); border-radius: var(--pc-r-md);
+  background:
+    linear-gradient(to right, var(--pc-navy-800) 40%, rgba(15, 20, 48, 0)) left / 44px 100% no-repeat local,
+    linear-gradient(to left,  var(--pc-navy-800) 40%, rgba(15, 20, 48, 0)) right / 44px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(255, 200, 41, .30), rgba(255, 200, 41, 0)) left / 20px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgba(255, 200, 41, .30), rgba(255, 200, 41, 0)) right / 20px 100% no-repeat scroll;
+  background-color: var(--pc-navy-800);
+}
+.bl-table:focus-visible, .bl-body pre:focus-visible { outline: 2px solid var(--pc-yellow); outline-offset: 2px; }
 .bl-table table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 560px; }
 .bl-table th, .bl-table td { padding: 13px 16px; text-align: left; border-bottom: 1px solid var(--pc-line); vertical-align: top; }
 .bl-table thead th { background: var(--pc-navy-900); color: var(--pc-fg); font-size: 13px; font-weight: 700; white-space: nowrap; }
@@ -223,9 +243,14 @@
 /* FAQ */
 .bl-faq { margin: 24px 0; display: grid; gap: 12px; }
 .bl-faq details { border: 1px solid var(--pc-line); border-radius: var(--pc-r-md); background: var(--pc-navy-700); }
-.bl-faq summary { padding: 17px 22px; cursor: pointer; font-weight: 700; list-style: none; color: var(--pc-fg); }
+.bl-faq summary {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  padding: 17px 22px; cursor: pointer; font-weight: 700; list-style: none; color: var(--pc-fg);
+}
 .bl-faq summary::-webkit-details-marker { display: none; }
-.bl-faq summary::after { content: '+'; float: right; color: var(--pc-yellow); font-weight: 400; font-size: 20px; line-height: 1; }
+.bl-faq summary::after {
+  content: '+'; flex: none; color: var(--pc-yellow); font-weight: 400; font-size: 20px; line-height: 1.4;
+}
 .bl-faq details[open] summary::after { content: '−'; }
 .bl-faq details > div { padding: 0 22px 18px; color: var(--pc-fg-2); }
 .bl-faq details > div p:first-child { margin-top: 0; }

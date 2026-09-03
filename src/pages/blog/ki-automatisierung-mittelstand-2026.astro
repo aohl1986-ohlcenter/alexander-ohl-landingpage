@@ -202,7 +202,7 @@ const glossary = [
 		Brücke dazwischen ist ein Schema, gegen das jede Antwort geprüft wird, bevor sie
 		weiterverarbeitet wird:
 	</p>
-	<pre><code>{`// Vereinfachtes Muster: Modellantwort validieren, statt ihr zu vertrauen
+	<pre tabindex="0" role="region" aria-label="Codebeispiel, horizontal scrollbar"><code>{`// Vereinfachtes Muster: Modellantwort validieren, statt ihr zu vertrauen
 const Rechnung = z.object({
   rechnungsnummer: z.string().min(1),
   netto:           z.number().positive(),
@@ -286,7 +286,7 @@ await buchhaltung.uebergeben(parsed.data);`}</code></pre>
 		erwarteten Anzahl der Automatisierungen und am Schutzbedarf der Daten hängen, nicht am
 		Werkzeugkatalog eines Anbieters.
 	</p>
-	<div class="bl-table">
+	<div class="bl-table" tabindex="0" role="region" aria-label="Vergleichstabelle, horizontal scrollbar">
 		<table>
 			<caption>Einordnung für einen Mittelständler mit 20–250 Mitarbeitenden. Beträge sind Erfahrungswerte, keine Angebote.</caption>
 			<thead>
