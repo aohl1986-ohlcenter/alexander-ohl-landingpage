@@ -1,0 +1,400 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+
+const toc = [
+	{ id: 'ausgangslage', label: 'Zero-Click: warum Rankings allein nicht mehr reichen' },
+	{ id: 'grundlagen', label: 'Wie eine KI-Antwort tatsächlich zustande kommt' },
+	{ id: 'entitaeten', label: 'Entitäten statt Keywords: das Schema-Fundament' },
+	{ id: 'technik', label: 'Crawler-Zugang, llms.txt und Auslieferung' },
+	{ id: 'content', label: 'Zitierfähige Inhaltsstruktur' },
+	{ id: 'vergleich', label: 'Vergleich: klassisches SEO und GEO nebeneinander' },
+	{ id: 'messen', label: 'Messung: was ohne Klicks noch zählbar ist' },
+	{ id: 'roadmap', label: 'Roadmap in fünf Schritten' },
+	{ id: 'fazit', label: 'Fazit und Quick-Check' },
+	{ id: 'faq', label: 'Häufige Fragen' },
+	{ id: 'glossar', label: 'Fachglossar' }
+];
+
+const faq = [
+	{
+		q: 'Ersetzt GEO klassisches SEO?',
+		a: 'Nein. Die technische Basis ist weitgehend deckungsgleich: erreichbare Inhalte, saubere Struktur, schnelle Auslieferung, verlässliche interne Verlinkung. GEO ergänzt diese Basis um Entitäten-Klarheit, zitierfähige Textstruktur und maschinenlesbare Übersichten. Wer die SEO-Grundlagen nicht hat, kann GEO nicht sinnvoll darauf setzen.'
+	},
+	{
+		q: 'Was ist llms.txt und braucht das jede Website?',
+		a: 'llms.txt ist eine Markdown-Datei im Wurzelverzeichnis, die die wichtigsten Inhalte einer Website in kompakter, maschinenlesbarer Form auflistet — vergleichbar mit einer kommentierten Sitemap für Sprachmodelle. Sie ist kein offizieller Standard und keine Garantie für Aufnahme. Der Aufwand ist mit ein bis zwei Stunden aber so gering, dass sie sich für jede Seite mit ernsthaftem Inhaltsangebot lohnt.'
+	},
+	{
+		q: 'Soll ich GPTBot und ClaudeBot in der robots.txt zulassen?',
+		a: 'Wer in KI-Antworten vorkommen will, muss den Zugriff erlauben — ein blockierter Crawler kann nicht zitieren. Die Abwägung ist strategisch: Zugang bedeutet Sichtbarkeit, Blockade schützt Inhalte vor Weiterverwendung. Für die meisten Dienstleister und B2B-Anbieter überwiegt der Sichtbarkeitsnutzen deutlich; bei kostenpflichtigen Inhalten kann die Entscheidung anders ausfallen.'
+	},
+	{
+		q: 'Wie messe ich, ob meine Marke in KI-Antworten vorkommt?',
+		a: 'Über wiederholte, standardisierte Prompt-Tests: Ein fester Satz kaufnaher Fragen wird regelmäßig gegen mehrere KI-Systeme gestellt und protokolliert, ob und in welchem Zusammenhang die Marke genannt wird. Ergänzend liefern Server-Logs die Zugriffe der KI-Crawler und die Analytics-Daten die Sitzungen mit Verweisen aus Chatoberflächen.'
+	},
+	{
+		q: 'Wie lange dauert es, bis GEO-Maßnahmen wirken?',
+		a: 'Technische Änderungen wie strukturierte Daten und Crawler-Freigaben wirken innerhalb weniger Wochen, sobald neu gecrawlt wurde. Der Aufbau als anerkannte Entität — also die Erwähnung in Quellen, die die Modelle als vertrauenswürdig behandeln — dauert Monate. Wer nach vier Wochen keine Wirkung sieht, hat meist die zweite Ebene noch gar nicht begonnen.'
+	},
+	{
+		q: 'Hilft mehr Inhalt automatisch bei der KI-Sichtbarkeit?',
+		a: 'Nein, häufig das Gegenteil. Generischer Inhalt ohne eigene Substanz wird gefiltert und verwässert zugleich das Themenprofil der Domain. Ein präziser, belegter Fachartikel mit klarer Autorenschaft ist für die Zitierwahrscheinlichkeit mehr wert als zwanzig oberflächliche Beiträge.'
+	},
+	{
+		q: 'Was hat lokales Geo-Targeting mit GEO zu tun?',
+		a: 'Sie überschneiden sich stärker, als die Namensgleichheit vermuten lässt. Viele Anfragen enthalten einen regionalen Bezug. Wer im Schema klar angibt, welche Regionen er bedient und in welcher Sprache er arbeitet, wird bei solchen Anfragen eher in die Vorauswahl genommen. Erfundene Standortseiten ohne echte Präsenz schaden dagegen — sie sind als Doorway-Struktur erkennbar.'
+	}
+];
+
+const glossary = [
+	{ term: 'GEO (Generative Engine Optimization)', def: 'Optimierung von Inhalten und Technik darauf, in den Antworten generativer KI-Systeme genannt und zitiert zu werden — im Unterschied zur Optimierung auf Positionen in klassischen Suchergebnislisten.' },
+	{ term: 'Zero-Click', def: 'Suchanfrage, die ohne Klick auf ein Ergebnis endet, weil die Antwort bereits in der Oberfläche steht. Für Anbieter bedeutet das: Sichtbarkeit entsteht durch die Nennung selbst, nicht mehr zwingend durch den Besuch.' },
+	{ term: 'Entität', def: 'Eindeutig identifizierbares Ding, über das ein System Fakten kennt — eine Person, ein Unternehmen, ein Produkt, ein Ort. Entitäten werden über stabile Kennungen und Querverweise erkannt, nicht über Wortübereinstimmung.' },
+	{ term: 'llms.txt', def: 'Markdown-Datei im Wurzelverzeichnis einer Domain, die die wichtigsten Inhalte kompakt und maschinenlesbar auflistet. Kein offizieller Standard, aber ein günstiges Signal zur strukturierten Selbstbeschreibung.' },
+	{ term: 'E-E-A-T', def: 'Erfahrung, Fachkompetenz, Autorität und Vertrauenswürdigkeit — Bewertungsdimensionen für Inhaltsqualität. Praktisch übersetzt in: benannte Autoren mit nachweisbarem Hintergrund, belegte Aussagen und nachvollziehbare Quellen.' },
+	{ term: 'Share of Voice (KI)', def: 'Anteil der eigenen Marke an allen Nennungen in einem definierten Satz KI-Antworten, gemessen im Vergleich zu den Wettbewerbern. Der praktikabelste Ersatz für Rankings in einer Welt ohne Ergebnisliste.' }
+];
+---
+
+<BlogPost slug="geo-statt-seo-ki-sichtbarkeit-2026" toc={toc} faq={faq} glossary={glossary}>
+	<div class="bl-summary" slot="summary">
+		<h2>Das Wichtigste in Kürze</h2>
+		<ul>
+			<li><strong>Der Wettbewerb hat sich verlagert:</strong> nicht mehr Platz 1 von zehn Ergebnissen, sondern eine von zwei oder drei Nennungen in einer synthetisierten Antwort.</li>
+			<li><strong>GEO ist überwiegend Technik und Struktur</strong>, nicht Textmenge. Entitäten, Crawler-Zugang, Auslieferungsgeschwindigkeit und zitierfähiger Aufbau sind die Hebel.</li>
+			<li><strong>Wer KI-Crawler blockiert, ist nicht zitierbar.</strong> Die Entscheidung über GPTBot und ClaudeBot in der robots.txt ist eine strategische, keine technische.</li>
+			<li><strong>Mehr Inhalt hilft nicht.</strong> Generische Beiträge werden gefiltert und verwässern das Themenprofil der Domain.</li>
+			<li><strong>Messung braucht neue Kennzahlen.</strong> Ohne Klicks bleiben Prompt-Tests, Crawler-Zugriffe in den Server-Logs und Verweis-Sitzungen aus Chatoberflächen.</li>
+		</ul>
+	</div>
+
+	<div class="bl-stats">
+		<div class="bl-stat"><b>2–3</b><span>Anbieter werden in einer typischen KI-Antwort genannt — nicht zehn wie in einer Ergebnisliste</span></div>
+		<div class="bl-stat"><b>1–2 Std.</b><span>Aufwand für eine erste llms.txt — das günstigste GEO-Signal überhaupt</span></div>
+		<div class="bl-stat"><b>Monate</b><span>braucht der Aufbau als anerkannte Entität; die Technik wirkt in Wochen</span></div>
+	</div>
+
+	<h2 id="ausgangslage">1. Zero-Click: warum Rankings allein nicht mehr reichen</h2>
+	<p>
+		Die klassische Suchergebnisseite war ein Wettbewerb um Aufmerksamkeit unter zehn sichtbaren
+		Anbietern. Wer auf Platz sieben stand, bekam wenig Klicks, war aber vorhanden. Eine
+		KI-generierte Antwort funktioniert anders: Sie nennt zwei oder drei Anbieter und fasst deren
+		Eigenschaften zusammen. Es gibt keinen Platz sieben. Entweder man wird genannt, oder man
+		existiert für diese Anfrage nicht.
+	</p>
+	<p>
+		Dieser Unterschied ist für die Praxis wichtiger als die Frage, wie viel Prozent der Suchen
+		heute über Chatoberflächen laufen. Die kursierenden Zahlen dazu schwanken erheblich und hängen
+		stark von Branche und Zielgruppe ab. Entscheidend ist die Struktur des Ergebnisses: Die
+		Verteilung ist nicht mehr flach, sondern konzentriert. In einem solchen Umfeld ist Sichtbarkeit
+		kein gradueller, sondern ein binärer Zustand.
+	</p>
+	<p>
+		Hinzu kommt eine Verschiebung in der Art der Anfragen. Menschen tippen in ein Chatfenster
+		andere Dinge als in ein Suchfeld: nicht „Warenwirtschaft Schnittstelle Shop“, sondern „Wir
+		haben einen WooCommerce-Shop und ein altes ERP ohne API — wie bekommen wir die Bestellungen
+		automatisch übertragen, ohne alles neu zu bauen?“. Solche Anfragen enthalten Kontext,
+		Einschränkungen und ein Ziel. Inhalte, die genau auf diesen Zuschnitt antworten — mit
+		Bedingungen, Grenzen und Aufwandsangaben — werden dabei bevorzugt verwendet, weil sie sich
+		direkt in eine brauchbare Antwort übersetzen lassen.
+	</p>
+	<p>
+		Ein Nebeneffekt macht die Sache angenehmer, als sie klingt: Die Nennung in einer KI-Antwort
+		erreicht Menschen in einer sehr frühen Phase der Entscheidung, oft bevor sie überhaupt eine
+		Anbieterliste haben. Wer dort auftaucht, konkurriert später nicht mehr um Aufmerksamkeit,
+		sondern steht bereits auf der Liste.
+	</p>
+
+	<h2 id="grundlagen">2. Wie eine KI-Antwort tatsächlich zustande kommt</h2>
+	<p>
+		Ein Großteil der GEO-Ratschläge im Umlauf ist deshalb wirkungslos, weil er den Prozess nicht
+		berücksichtigt, der zur Antwort führt. Vereinfacht, aber praxistauglich, läuft er in vier
+		Stufen ab.
+	</p>
+	<p>
+		<strong>Erstens die Auflösung der Absicht.</strong> Die Anfrage wird in Teilaspekte zerlegt:
+		Was wird gesucht, unter welchen Bedingungen, in welchem Kontext. Aus einer Frage entstehen dabei
+		intern oft mehrere Suchanfragen — je eine pro Teilaspekt.
+	</p>
+	<p>
+		<strong>Zweitens die Beschaffung.</strong> Das System sucht — teils über klassische Suchindizes,
+		teils über eigene Indizes — nach Quellen zu diesen Teilaspekten. An dieser Stelle wirkt die
+		gesamte klassische Suchmaschinenoptimierung weiter: Was nicht auffindbar und nicht abrufbar
+		ist, wird auch nicht in die Auswahl aufgenommen.
+	</p>
+	<p>
+		<strong>Drittens die Bewertung.</strong> Die gefundenen Quellen werden nach Verlässlichkeit
+		gewichtet. Hier zählen erkennbare Autorenschaft, thematische Konsistenz der Domain,
+		Übereinstimmung der Aussagen mit anderen Quellen und die Frage, ob sich Aussagen einer
+		identifizierbaren Entität zuordnen lassen. Widersprüchliche oder anonyme Quellen fallen zurück.
+	</p>
+	<p>
+		<strong>Viertens die Synthese.</strong> Aus den verbliebenen Quellen wird eine Antwort
+		formuliert. Bevorzugt übernommen werden Passagen, die eine abgeschlossene Aussage enthalten —
+		ein Satz, der aus dem Zusammenhang gelöst noch stimmt und trotzdem etwas aussagt.
+	</p>
+	<p>
+		Aus diesen vier Stufen folgen die drei Arbeitsfelder, um die es im Rest dieses Artikels geht:
+		erkennbar sein als Entität, technisch erreichbar sein für die Beschaffung, und Inhalte so
+		bauen, dass die Synthese sie verwenden kann.
+	</p>
+
+	<h2 id="entitaeten">3. Entitäten statt Keywords: das Schema-Fundament</h2>
+	<p>
+		Der wichtigste Unterschied zwischen klassischer Optimierung und GEO liegt in der Bezugsgröße.
+		Klassisch war der Bezugspunkt ein Suchbegriff — eine Zeichenkette. Für ein Sprachmodell ist
+		der Bezugspunkt eine Entität: eine Person, ein Unternehmen, eine Dienstleistung, ein Ort. Das
+		Modell fragt nicht, ob ein Wort vorkommt, sondern ob es über eine bestimmte Sache verlässliche
+		Fakten kennt.
+	</p>
+	<p>
+		Strukturierte Daten nach Schema.org sind der direkteste Weg, diese Fakten mitzuteilen. Drei
+		Punkte machen dabei den Unterschied zwischen wirkungslosem und wirksamem Markup.
+	</p>
+	<p>
+		<strong>Stabile Kennungen.</strong> Jede Entität bekommt eine feste <code>@id</code>, unter der
+		sie auf allen Seiten referenziert wird. So erkennt ein auswertendes System, dass der Autor
+		eines Artikels dieselbe Person ist wie die im Impressum genannte — statt zwei unabhängige
+		Personen anzunehmen.
+	</p>
+	<p>
+		<strong>Querverweise nach außen.</strong> Über <code>sameAs</code> wird die eigene Entität mit
+		Profilen verknüpft, die anderswo existieren: Branchenverzeichnisse, Fachplattformen,
+		Code-Repositories, Bewertungsportale. Diese Verweise sind der Mechanismus, über den eine
+		Behauptung zu einem prüfbaren Fakt wird.
+	</p>
+	<p>
+		<strong>Vollständigkeit statt Minimalismus.</strong> Ein <code>Organization</code>-Objekt mit
+		Namen und Logo sagt fast nichts. Ergänzt um <code>areaServed</code>, <code>knowsLanguage</code>,
+		<code>knowsAbout</code> und die angebotenen Leistungen wird daraus ein Profil, aus dem sich
+		Eignung ableiten lässt.
+	</p>
+	<pre tabindex="0" role="region" aria-label="Codebeispiel, horizontal scrollbar"><code>{`{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://www.alexander-ohl.com/#person",
+  "name": "Alexander Ohl",
+  "jobTitle": "KI-Automatisierungs-Engineer & Full-Stack-Entwickler",
+  "knowsAbout": [
+    "KI-Automatisierung", "n8n", "Retrieval Augmented Generation",
+    "Systemintegration", "Generative Engine Optimization", "E-Commerce"
+  ],
+  "knowsLanguage": ["de", "en"],
+  "areaServed": ["DE", "AT", "CH"],
+  "worksFor": { "@id": "https://www.pragma-code.de/#organization" },
+  "sameAs": [
+    "https://www.linkedin.com/in/alexander-ohl/",
+    "https://github.com/aohl1986-ohlcenter",
+    "https://www.xing.com/profile/AlexanderOhl_PragmaCode"
+  ]
+}`}</code></pre>
+	<p>
+		Für Fachartikel kommt <code>BlogPosting</code> hinzu, mit <code>author</code> als Verweis auf
+		dieselbe <code>@id</code>, mit <code>datePublished</code> und <code>dateModified</code> sowie
+		mit einem <code>FAQPage</code>-Block für den Fragenteil. Ein <code>DefinedTermSet</code> für
+		ein Glossar ist ein unterschätztes Signal: Es liefert saubere Definitionen genau in der Form,
+		in der ein Modell sie übernehmen kann.
+	</p>
+	<div class="bl-note warn">
+		<div class="bl-note-title">Häufiger Fehler</div>
+		<p>
+			Strukturierte Daten, die etwas anderes behaupten als die sichtbare Seite, richten Schaden an.
+			Wenn das Markup fünf Leistungen und drei Standorte nennt, die im Seitentext nicht vorkommen,
+			ist das kein Zusatzsignal, sondern ein Widerspruch — und Widersprüche senken die Gewichtung
+			einer Quelle. Markup beschreibt, was ohnehin da ist; es ersetzt es nicht.
+		</p>
+	</div>
+
+	<h2 id="technik">4. Crawler-Zugang, llms.txt und Auslieferung</h2>
+	<p>
+		Die technische Seite von GEO ist überschaubar und wird trotzdem regelmäßig übersehen, weil sie
+		unspektakulär ist.
+	</p>
+
+	<h3>Die Crawler-Entscheidung</h3>
+	<p>
+		KI-Systeme greifen mit eigenen Bezeichnern auf Websites zu — GPTBot, ClaudeBot,
+		PerplexityBot und weitere. Wer sie in der <code>robots.txt</code> ausschließt, kann nicht
+		zitiert werden. Das ist eine legitime Entscheidung für Anbieter, deren Inhalte selbst das
+		Produkt sind. Für Dienstleister und B2B-Anbieter, deren Inhalte für die Anbahnung existieren,
+		ist der Ausschluss dagegen fast immer ein Eigentor.
+	</p>
+	<p>
+		Ebenso wichtig: Diese Crawler führen typischerweise kein JavaScript aus. Inhalte, die erst im
+		Browser nachgeladen werden, sind für sie schlicht nicht vorhanden. Serverseitig gerenderte
+		oder statisch erzeugte Seiten sind hier klar im Vorteil — nicht aus Prinzipientreue, sondern
+		weil der Inhalt im ausgelieferten HTML steht.
+	</p>
+
+	<h3>llms.txt als kompakte Selbstbeschreibung</h3>
+	<p>
+		Die Datei <code>/llms.txt</code> im Wurzelverzeichnis listet die wichtigsten Inhalte einer
+		Domain in Markdown auf — mit einem Satz Kontext pro Eintrag. Sie ist kein offizieller Standard
+		und garantiert nichts. Ihr Wert liegt in etwas anderem: Sie zwingt zur Entscheidung, welche
+		zehn bis zwanzig Seiten das Angebot tatsächlich ausmachen, und sie liefert ein sauberes,
+		kurzes Profil ohne Navigations- und Layout-Rauschen. Bei ein bis zwei Stunden Aufwand ist das
+		Verhältnis von Kosten zu möglichem Nutzen konkurrenzlos.
+	</p>
+
+	<h3>Auslieferung und Aktualität</h3>
+	<p>
+		Crawler haben ein begrenztes Zeitbudget pro Domain. Schnelle Antwortzeiten und ein sauberer
+		Statuscode-Haushalt — keine Weiterleitungsketten, keine Seiten, die bei Fehlern trotzdem
+		Status 200 liefern — führen unmittelbar dazu, dass mehr Seiten erfasst werden.
+		Konsistente Kanonisierung gehört ebenfalls hierher: Wenn dieselbe Seite unter mehreren
+		Adressen erreichbar ist, verteilen sich die Signale auf Varianten statt sich zu summieren.
+	</p>
+
+	<h2 id="content">5. Zitierfähige Inhaltsstruktur</h2>
+	<p>
+		Die Synthesestufe übernimmt bevorzugt Passagen, die für sich stehen können. Daraus folgen
+		vier konkrete Schreibregeln, die sich in der Praxis bewährt haben.
+	</p>
+	<p>
+		<strong>Die Antwort steht vorn.</strong> Jeder größere Abschnitt beginnt mit einer Aussage, die
+		die Frage des Abschnitts beantwortet. Die Herleitung folgt danach. Der übliche Aufbau mit
+		Hinführung, Spannungsbogen und Erkenntnis am Ende funktioniert für Menschen und arbeitet gegen
+		die maschinelle Verwertung.
+	</p>
+	<p>
+		<strong>Aussagen sind selbsttragend.</strong> „Das ist meist der günstigere Weg“ ist wertlos,
+		sobald der Satz aus dem Zusammenhang gelöst wird. „Ab etwa fünf dauerhaften Schnittstellen ist
+		eine eigene Integrationsschicht wirtschaftlicher als ein volumenabhängiger Cloud-Dienst“ bleibt
+		verwertbar.
+	</p>
+	<p>
+		<strong>Zahlen mit Herkunft und Datum.</strong> Eine Zahl ohne Quelle ist eine Behauptung. Mit
+		Quelle und Stand wird sie zu einem Fakt, der übernommen werden kann. Das gilt auch für eigene
+		Erfahrungswerte — dann eben ausgewiesen als Erfahrungswert, nicht als Statistik.
+	</p>
+	<p>
+		<strong>Grenzen benennen.</strong> Inhalte, die auch sagen, wann etwas <em>nicht</em> die
+		richtige Lösung ist, werden erkennbar häufiger für Empfehlungen herangezogen. Der Grund ist
+		naheliegend: Eine Empfehlung mit Bedingung ist für den Fragenden brauchbarer als eine ohne, und
+		sie signalisiert Erfahrung statt Verkaufsabsicht.
+	</p>
+	<p>
+		Formal gehören dazu eine saubere Überschriftenhierarchie mit sprechenden Überschriften, ein
+		FAQ-Teil, der reale Fragen beantwortet statt Keywords zu wiederholen, ein Glossar mit
+		Definitionen von zwei bis drei Sätzen und ein benannter Autor mit nachvollziehbarem
+		Hintergrund. Nichts davon ist neu — neu ist nur, wie unmittelbar es sich auswirkt.
+	</p>
+
+	<h2 id="vergleich">6. Vergleich: klassisches SEO und GEO nebeneinander</h2>
+	<div class="bl-table" tabindex="0" role="region" aria-label="Vergleichstabelle, horizontal scrollbar">
+		<table>
+			<caption>GEO ersetzt SEO nicht, sondern setzt darauf auf. Die technische Basis ist weitgehend identisch.</caption>
+			<thead>
+				<tr><th>Dimension</th><th>Klassisches SEO</th><th>GEO</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Ziel</td><td>Position in der Ergebnisliste</td><td>Nennung und Zitat in der Antwort</td></tr>
+				<tr><td>Bezugsgröße</td><td>Suchbegriff</td><td>Entität und Absicht</td></tr>
+				<tr><td>Erfolgsmessung</td><td>Rankings, Klicks, Impressionen</td><td>Nennungsquote, Share of Voice, Crawler-Zugriffe</td></tr>
+				<tr><td>Ideale Textlänge</td><td>Am Wettbewerb orientiert</td><td>So lang wie nötig, jede Aussage belegt</td></tr>
+				<tr><td>Struktursignal</td><td>Überschriften, interne Links</td><td>Entitäten-Markup, FAQ, DefinedTermSet</td></tr>
+				<tr><td>Technische Basis</td><td>Crawlbarkeit, Performance, Kanonisierung</td><td>Identisch — plus Crawler-Freigabe und llms.txt</td></tr>
+				<tr><td>Rolle des Autors</td><td>Optional</td><td>Zentral: verknüpfte, nachweisbare Identität</td></tr>
+				<tr><td>Wirkungseintritt</td><td>Wochen bis Monate</td><td>Technik in Wochen, Entitätsaufbau in Monaten</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2 id="messen">7. Messung: was ohne Klicks noch zählbar ist</h2>
+	<p>
+		Die unangenehme Wahrheit zuerst: Es gibt keine Search Console für KI-Antworten. Wer messen
+		will, muss selbst messen. Drei Verfahren liefern zusammen ein belastbares Bild.
+	</p>
+	<p>
+		<strong>Standardisierte Prompt-Tests.</strong> Ein fester Satz von zwanzig bis fünfzig
+		kaufnahen Fragen wird in gleichbleibendem Wortlaut regelmäßig gegen mehrere KI-Systeme
+		gestellt. Protokolliert wird, ob die eigene Marke genannt wird, in welchem Zusammenhang, und
+		welche Wettbewerber daneben erscheinen. Der Zeitverlauf ist aussagekräftiger als jede
+		Einzelmessung. Wichtig ist, dass die Fragen unverändert bleiben — sonst misst man die eigene
+		Formulierung statt der Sichtbarkeit.
+	</p>
+	<p>
+		<strong>Server-Logs.</strong> Die Zugriffe der KI-Crawler stehen im Zugriffsprotokoll. Daraus
+		lässt sich ablesen, welche Seiten überhaupt erfasst werden, wie oft und ob Fehler auftreten.
+		Das ist die einzige direkte, nicht interpretierte Messung in diesem Feld — und die am
+		häufigsten ungenutzte.
+	</p>
+	<p>
+		<strong>Verweis-Sitzungen.</strong> Ein Teil der Nutzer klickt die genannte Quelle an. Diese
+		Sitzungen tragen erkennbare Herkunftsangaben aus Chatoberflächen. Die absoluten Zahlen sind
+		meist klein, die Qualität aber überdurchschnittlich, weil diese Besucher bereits eine
+		Vorauswahl hinter sich haben.
+	</p>
+	<div class="bl-note">
+		<div class="bl-note-title">Praktischer Zuschnitt</div>
+		<p>
+			Für den Anfang genügt eine Tabelle: dreißig Fragen, drei KI-Systeme, monatlich abgefragt,
+			Ergebnisse als Ja/Nein plus Notiz. Das kostet zwei Stunden im Monat und beantwortet die
+			Frage, ob sich etwas bewegt, zuverlässiger als jedes Werkzeug, das man erst einführen muss.
+			Automatisieren lohnt sich, sobald die Messung Routine ist.
+		</p>
+	</div>
+
+	<h2 id="roadmap">8. Roadmap in fünf Schritten</h2>
+	<ol class="bl-steps">
+		<li>
+			<b>Ausgangsmessung (Woche 1)</b>
+			Fragenkatalog erstellen und einmal vollständig durchmessen. Parallel die Server-Logs auf
+			KI-Crawler-Zugriffe prüfen. Ohne diese Basis lässt sich später keine Wirkung belegen.
+		</li>
+		<li>
+			<b>Technische Freigabe (Woche 1–2)</b>
+			robots.txt bewusst entscheiden, Weiterleitungsketten auflösen, Kanonisierung prüfen,
+			serverseitiges Rendering für die zentralen Seiten sicherstellen. Anschließend llms.txt
+			anlegen.
+		</li>
+		<li>
+			<b>Entitäten sauber aufsetzen (Woche 2–3)</b>
+			Person und Organisation mit stabilen Kennungen, sameAs-Verweisen, areaServed und
+			knowsAbout auszeichnen und über alle Seiten konsistent referenzieren. Widersprüche zwischen
+			Markup und sichtbarem Inhalt beseitigen.
+		</li>
+		<li>
+			<b>Zwei bis drei Kernartikel bauen (Woche 3–8)</b>
+			Statt vieler kurzer Beiträge zwei bis drei substanzielle Fachartikel zu den Themen, für
+			die man genannt werden will — mit Executive Summary, FAQ, Glossar, benanntem Autor und
+			belegten Zahlen. Ergebnis in der llms.txt ergänzen.
+		</li>
+		<li>
+			<b>Monatlich nachmessen und nachschärfen (fortlaufend)</b>
+			Dieselben Fragen, dieselbe Auswertung. Themen, bei denen die Nennung ausbleibt, gezielt
+			mit einem weiteren Artikel oder einer präziseren Passage bedienen.
+		</li>
+	</ol>
+
+	<h2 id="fazit">9. Fazit und Quick-Check</h2>
+	<p>
+		GEO wird häufig als etwas völlig Neues verkauft. Der weitaus größte Teil der Wirkung entsteht
+		jedoch aus Dingen, die auch ohne KI-Suche richtig gewesen wären: erreichbare, schnelle Seiten,
+		saubere strukturierte Daten, ein benannter Autor, präzise Aussagen mit Quellen. Neu ist die
+		Konsequenz. In einer Ergebnisliste konnte man mit einer halbherzigen Umsetzung noch auf Platz
+		acht landen. In einer Antwort mit drei Nennungen gibt es diesen Trostplatz nicht.
+	</p>
+	<p>
+		Deshalb ist die wirksamste Entscheidung meist eine Reduktion: weniger Inhalte, dafür belegte;
+		weniger Seiten, dafür konsistent ausgezeichnete; weniger Kanäle, dafür eine eindeutig
+		identifizierbare Entität, die überall dieselbe ist.
+	</p>
+	<div class="bl-note">
+		<div class="bl-note-title">Quick-Check</div>
+		<ul class="bl-check">
+			<li>Ist bewusst entschieden, ob GPTBot, ClaudeBot und PerplexityBot Zugriff haben?</li>
+			<li>Stehen Ihre Kerninhalte im ausgelieferten HTML — auch ohne JavaScript?</li>
+			<li>Existiert eine gepflegte llms.txt mit den wirklich wichtigen Seiten?</li>
+			<li>Tragen Person und Organisation stabile Kennungen und sameAs-Verweise?</li>
+			<li>Widerspricht Ihr Markup an keiner Stelle dem sichtbaren Seiteninhalt?</li>
+			<li>Beginnt jeder Abschnitt Ihrer Fachartikel mit der Antwort statt mit der Hinführung?</li>
+			<li>Messen Sie monatlich mit einem unveränderten Fragenkatalog nach?</li>
+		</ul>
+	</div>
+	<p>
+		Sieben Punkte, von denen fünf an einem Arbeitstag erledigt sind. Die beiden verbleibenden —
+		substanzielle Inhalte und regelmäßige Messung — sind die eigentliche Arbeit und zugleich der
+		Teil, den die meisten Wettbewerber auslassen.
+	</p>
+</BlogPost>

@@ -1,0 +1,382 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+
+const toc = [
+	{ id: 'ausgangslage', label: 'Wenn der Agent die Vorauswahl trifft' },
+	{ id: 'produktdaten', label: 'Produktdaten sind der neue Rankingfaktor' },
+	{ id: 'architektur', label: 'Headless: wann es sich rechnet und wann nicht' },
+	{ id: 'technik', label: 'Technische Umsetzung: Feeds, Schema, Performance' },
+	{ id: 'vergleich', label: 'Vergleich: WooCommerce, Shopify, JTL-Shop' },
+	{ id: 'fehler', label: 'Fehler, die Shops unsichtbar machen' },
+	{ id: 'roadmap', label: 'Roadmap in fünf Schritten' },
+	{ id: 'fazit', label: 'Fazit und Quick-Check' },
+	{ id: 'faq', label: 'Häufige Fragen' },
+	{ id: 'glossar', label: 'Fachglossar' }
+];
+
+const faq = [
+	{
+		q: 'Muss ich meinen Shop jetzt auf Headless umbauen?',
+		a: 'In den seltensten Fällen. Headless löst Probleme mit Performance, mehreren Ausspielkanälen und stark abweichender Frontend-Logik. Wer diese Probleme nicht hat, kauft sich mit Headless vor allem Komplexität ein. Die Datenqualität, die für KI-Sichtbarkeit entscheidend ist, lässt sich in jedem klassischen Shopsystem herstellen.'
+	},
+	{
+		q: 'Was macht Produktdaten für KI-Agenten verwertbar?',
+		a: 'Vollständige, eindeutige Attribute statt Fließtext: Maße mit Einheit, Material, Kompatibilität, Lieferzeit, Rückgabebedingungen — jeweils als eigenes Feld, nicht versteckt in der Beschreibung. Dazu stabile Kennungen wie GTIN oder MPN, aktuelle Verfügbarkeit und ein Preis, der der Anzeige im Shop entspricht.'
+	},
+	{
+		q: 'Reicht ein Google-Shopping-Feed für KI-Sichtbarkeit?',
+		a: 'Er ist eine gute Grundlage, weil er zur Datendisziplin zwingt, deckt aber nur die Pflichtattribute ab. Für KI-Anfragen sind gerade die Felder relevant, die im Shopping-Feed optional sind: Kompatibilität, Anwendungszweck, technische Grenzen. Das strukturierte Markup auf der Produktseite selbst bleibt der wichtigere Kanal.'
+	},
+	{
+		q: 'Kaufen KI-Agenten heute schon eigenständig ein?',
+		a: 'Der automatisierte Abschluss steckt in den Anfängen und ist auf wenige Plattformen begrenzt. Wirtschaftlich relevant ist bereits heute die Stufe davor: Die Vorauswahl und der Vergleich finden im Chat statt. Wer dort nicht in der engeren Auswahl landet, verliert den Auftrag, bevor der Shop überhaupt aufgerufen wird.'
+	},
+	{
+		q: 'Wie wichtig ist Ladegeschwindigkeit noch, wenn KI vorauswählt?',
+		a: 'Sie bleibt doppelt wichtig. Crawler mit begrenztem Zeitbudget erfassen langsame Shops unvollständig, und Besucher aus einer KI-Empfehlung kommen mit hoher Kaufabsicht — eine langsame Produktseite verschenkt genau die wertvollsten Sitzungen.'
+	},
+	{
+		q: 'Wie halte ich Verfügbarkeit und Preis in allen Kanälen konsistent?',
+		a: 'Über ein führendes System — in aller Regel das ERP — und einen Abgleich, der Änderungen als Ereignis verteilt statt nächtlich alles neu zu exportieren. Abweichungen zwischen Feed, Markup und Shopanzeige sind der häufigste Grund dafür, dass ein Angebot aus Vergleichen und Empfehlungen herausfällt.'
+	},
+	{
+		q: 'Lohnt sich ein PIM-System für einen mittelgroßen Shop?',
+		a: 'Ab etwa 1.000 Artikeln mit mehreren Varianten oder mehreren Ausspielkanälen fast immer. Darunter genügt oft eine disziplinierte Attributstruktur im vorhandenen Shopsystem plus eine klare Regel, wer welche Felder pflegt. Entscheidend ist die Struktur, nicht das Werkzeug.'
+	}
+];
+
+const glossary = [
+	{ term: 'Agentic Commerce', def: 'Handelsmodell, bei dem ein KI-Agent im Auftrag eines Nutzers Produkte sucht, vergleicht, vorauswählt und in fortgeschrittener Form auch bestellt. Die Kaufentscheidung wird damit teilweise an Software delegiert, die maschinenlesbare Daten benötigt.' },
+	{ term: 'Headless Commerce', def: 'Architektur, bei der die Shop-Logik über APIs bereitgestellt und die Darstellung von einem eigenständigen Frontend übernommen wird. Erlaubt mehrere Ausspielkanäle und maximale Freiheit im Frontend, erhöht aber Betriebs- und Wartungsaufwand.' },
+	{ term: 'PIM', def: 'Product Information Management — zentrales System für Produktattribute, Texte, Medien und Kanalzuordnungen. Führendes System für alles, was ein Produkt beschreibt, im Unterschied zum ERP als führendem System für Preis und Bestand.' },
+	{ term: 'GTIN', def: 'Global Trade Item Number, die weltweit eindeutige Artikelkennung. Sie erlaubt es Vergleichsdiensten und KI-Systemen, ein Angebot demselben Produkt zuzuordnen wie das eines Wettbewerbers — ohne sie ist ein Artikel nur schwer vergleichbar.' },
+	{ term: 'Attributtiefe', def: 'Anzahl und Genauigkeit der maschinenlesbaren Eigenschaften eines Produkts. Sie entscheidet darüber, für wie viele konkrete Anfragen ein Artikel überhaupt als passend erkannt werden kann.' },
+	{ term: 'Composable Commerce', def: 'Aufbau einer Handelsplattform aus austauschbaren Einzeldiensten für Katalog, Warenkorb, Zahlung und Suche statt aus einer Gesamtlösung. Erhöht Flexibilität, verlagert aber Integrationsverantwortung in das eigene Haus.' }
+];
+---
+
+<BlogPost slug="agentic-commerce-headless-shop-2026" toc={toc} faq={faq} glossary={glossary}>
+	<div class="bl-summary" slot="summary">
+		<h2>Das Wichtigste in Kürze</h2>
+		<ul>
+			<li><strong>Die Vorauswahl verlagert sich ins Chatfenster.</strong> Wer dort nicht in die engere Wahl kommt, verliert den Auftrag, bevor der Shop überhaupt aufgerufen wird.</li>
+			<li><strong>Produktdaten schlagen Design.</strong> Ein Agent sieht keine Bildsprache — er sieht Attribute. Fehlende Felder sind verlorene Anfragen.</li>
+			<li><strong>Headless ist kein Selbstzweck.</strong> Es löst Performance-, Mehrkanal- und Frontend-Probleme. Wer diese nicht hat, kauft nur Komplexität.</li>
+			<li><strong>Konsistenz über alle Kanäle ist Pflicht.</strong> Weicht der Preis im Feed von dem auf der Seite ab, fällt das Angebot aus Vergleichen heraus.</li>
+			<li><strong>Geschwindigkeit bleibt relevant</strong> — für das Crawl-Budget und für Besucher, die mit hoher Kaufabsicht ankommen.</li>
+		</ul>
+	</div>
+
+	<div class="bl-stats">
+		<div class="bl-stat"><b>1 Feld</b><span>fehlende Kompatibilitätsangabe genügt, damit ein Artikel für eine ganze Anfragenklasse unsichtbar ist</span></div>
+		<div class="bl-stat"><b>1.000+</b><span>Artikel mit Varianten: ab hier trägt ein PIM-System wirtschaftlich</span></div>
+		<div class="bl-stat"><b>3 Quellen</b><span>Shopseite, Feed und Markup müssen denselben Preis und Bestand zeigen — sonst fällt das Angebot heraus</span></div>
+	</div>
+
+	<h2 id="ausgangslage">1. Wenn der Agent die Vorauswahl trifft</h2>
+	<p>
+		Der Umbau im Handel läuft leiser ab, als die Schlagzeilen zum autonomen Einkauf vermuten
+		lassen. Der vollautomatische Kaufabschluss durch einen Agenten ist heute auf wenige Plattformen
+		begrenzt und wirtschaftlich noch eine Randerscheinung. Die Stufe davor ist es längst nicht
+		mehr: Die Recherche, der Vergleich und die Vorauswahl finden zunehmend im Chatfenster statt.
+	</p>
+	<p>
+		Der Unterschied zur klassischen Shop-Suche ist grundlegend. In einem Shop formuliert der Kunde
+		eine Suche und filtert selbst. Im Chat formuliert er eine Anforderung: „Ich brauche eine
+		Ersatzpumpe für ein Gerät Baujahr 2018, Anschluss 3/4 Zoll, muss bis nächsten Dienstag da
+		sein.“ Diese Anfrage enthält vier prüfbare Bedingungen. Ein System, das sie beantworten soll,
+		braucht zu jedem Artikel maschinenlesbare Angaben zu Kompatibilität, Anschlussmaß,
+		Verfügbarkeit und Lieferzeit.
+	</p>
+	<p>
+		Genau hier entscheidet sich die Sichtbarkeit — und zwar nicht im Marketing, sondern in der
+		Datenpflege. Steht das Anschlussmaß nur im Beschreibungstext oder auf einem Datenblatt-PDF,
+		fällt der Artikel aus der Auswahl. Nicht weil er ungeeignet wäre, sondern weil seine Eignung
+		nicht feststellbar ist. Ein einzelnes fehlendes Attribut macht einen Artikel für eine ganze
+		Klasse von Anfragen unsichtbar.
+	</p>
+	<p>
+		Das ist eine unbequeme, aber im Kern gute Nachricht: Der Hebel liegt bei Arbeit, die man selbst
+		kontrolliert, und nicht bei einem Algorithmus, dessen Verhalten man nur erraten kann. Wer
+		saubere Produktdaten pflegt, gewinnt gleichzeitig in der Shop-Suche, in Preisvergleichen, in
+		Marktplätzen und in KI-Antworten. Die Investition zahlt in alle Kanäle gleichzeitig ein.
+	</p>
+
+	<h2 id="produktdaten">2. Produktdaten sind der neue Rankingfaktor</h2>
+	<p>
+		Produktdatenqualität ist ein unpopuläres Thema, weil sie keine sichtbaren Erfolge produziert.
+		Sie lässt sich trotzdem in vier klar benennbare Dimensionen zerlegen.
+	</p>
+
+	<h3>Vollständigkeit</h3>
+	<p>
+		Jedes Attribut, das für eine Kaufentscheidung relevant sein kann, existiert als eigenes Feld
+		mit definiertem Wertebereich. Der praktische Test ist einfach: Man nimmt die zwanzig häufigsten
+		Fragen aus dem Kundenservice und prüft, ob jede davon aus den strukturierten Daten beantwortbar
+		ist. In den meisten Shops sind es weniger als die Hälfte.
+	</p>
+
+	<h3>Eindeutigkeit</h3>
+	<p>
+		Werte gehören normalisiert: „3/4 Zoll“, „0,75 Zoll“ und „19,05 mm“ sind für einen Menschen
+		dasselbe und für ein System drei verschiedene Dinge. Einheiten gehören in ein eigenes Feld,
+		Aufzählungen in eine feste Werteliste. Stabile Kennungen — GTIN, MPN, Herstellerartikelnummer —
+		erlauben die Zuordnung desselben Produkts über Anbieter hinweg. Ohne sie ist ein Artikel kaum
+		vergleichbar und taucht in Vergleichen entsprechend selten auf.
+	</p>
+
+	<h3>Aktualität</h3>
+	<p>
+		Bestand und Preis müssen der Realität entsprechen, und zwar in allen Ausspielungen gleichzeitig.
+		Ein Artikel, der im Feed als lieferbar gemeldet wird und im Shop seit drei Wochen ausverkauft
+		ist, beschädigt nicht nur diesen einen Verkauf — er senkt die Verlässlichkeit der gesamten
+		Datenquelle. Nächtliche Vollexporte sind dafür zu langsam; Änderungen gehören als Ereignis
+		verteilt.
+	</p>
+
+	<h3>Kontext</h3>
+	<p>
+		Die vierte Dimension wird am häufigsten übersehen. Ein Agent, der eine Anforderung
+		beantworten soll, braucht nicht nur die Eigenschaften eines Artikels, sondern seinen
+		Verwendungszusammenhang: Wofür ist er geeignet, wofür ausdrücklich nicht, womit ist er
+		kompatibel, was wird zusätzlich benötigt. Diese Angaben stehen in vielen Shops im
+		Beschreibungstext — dort sind sie für Menschen lesbar und für Maschinen nur eingeschränkt
+		verwertbar. Als eigenes Attributfeld werden sie zum Auswahlkriterium.
+	</p>
+	<div class="bl-note">
+		<div class="bl-note-title">Pragmatischer Einstieg</div>
+		<p>
+			Der vollständige Datenausbau über den gesamten Katalog ist ein Projekt über Monate. Der
+			wirtschaftlich sinnvolle Einstieg ist eine Teilmenge: die fünfzig umsatzstärksten Artikel,
+			für diese aber vollständig — inklusive Kompatibilität, Anwendungszweck und Grenzen. Diese
+			Auswahl liefert innerhalb weniger Wochen eine belastbare Aussage darüber, ob sich der Aufwand
+			für den Rest lohnt.
+		</p>
+	</div>
+
+	<h2 id="architektur">3. Headless: wann es sich rechnet und wann nicht</h2>
+	<p>
+		Headless Commerce wird häufig als notwendige Modernisierung dargestellt. Tatsächlich ist es
+		eine Abwägung mit klaren Bedingungen auf beiden Seiten.
+	</p>
+	<p>
+		<strong>Dafür spricht es</strong>, wenn dieselben Produktdaten über mehrere Kanäle ausgespielt
+		werden — Shop, App, Marktplätze, Händlerportal —, wenn das Frontend deutlich von dem abweicht,
+		was das Shopsystem vorsieht, oder wenn die Ladegeschwindigkeit der Produktseiten mit dem
+		monolithischen System nicht mehr in den Griff zu bekommen ist.
+	</p>
+	<p>
+		<strong>Dagegen spricht es</strong>, wenn ein einziger Kanal bedient wird, wenn das Team klein
+		ist und wenn die Anforderungen an das Frontend im Rahmen dessen liegen, was das Shopsystem
+		ohnehin bietet. Headless verdoppelt in dieser Situation die Zahl der zu betreibenden Systeme
+		und verlagert Funktionen, die vorher eingebaut waren — Warenkorb, Checkout, Suche,
+		Kundenkonto — in die eigene Verantwortung.
+	</p>
+	<p>
+		Für die KI-Sichtbarkeit ist die Architekturfrage weitgehend neutral, mit einer wichtigen
+		Ausnahme: Der Inhalt muss im ausgelieferten HTML stehen. Ein Headless-Frontend, das
+		Produktdaten erst im Browser nachlädt, ist für Crawler ohne JavaScript-Ausführung leer. Wer
+		Headless baut, braucht serverseitiges Rendering oder statische Generierung für alle
+		Produkt- und Kategorieseiten — sonst erkauft man sich mit dem Umbau genau den Nachteil, den
+		man vermeiden wollte.
+	</p>
+
+	<h2 id="technik">4. Technische Umsetzung: Feeds, Schema, Performance</h2>
+	<p>
+		Drei technische Bausteine entscheiden darüber, ob gepflegte Daten auch ankommen.
+	</p>
+
+	<h3>Strukturierte Daten auf der Produktseite</h3>
+	<p>
+		Das <code>Product</code>-Markup ist der direkteste Weg, Produktdaten maschinenlesbar
+		bereitzustellen. Entscheidend sind die Felder, die über die Pflichtangaben hinausgehen:
+	</p>
+	<pre tabindex="0" role="region" aria-label="Codebeispiel, horizontal scrollbar"><code>{`{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Umwälzpumpe XY-40",
+  "sku": "PMP-XY40-034",
+  "gtin13": "4012345678901",
+  "mpn": "XY40-34",
+  "brand": { "@type": "Brand", "name": "Beispielwerk" },
+  "isAccessoryOrSparePartFor": [
+    { "@type": "Product", "name": "Heizmodul H-2018" }
+  ],
+  "additionalProperty": [
+    { "@type": "PropertyValue", "name": "Anschluss",   "value": "3/4", "unitText": "Zoll" },
+    { "@type": "PropertyValue", "name": "Förderhöhe",  "value": 6,     "unitCode": "MTR" },
+    { "@type": "PropertyValue", "name": "Baujahr-Kompatibilität", "value": "2016–2021" }
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "189.00",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "priceValidUntil": "2026-12-31",
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "businessDays": { "@type": "OpeningHoursSpecification",
+                          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"] },
+        "transitTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 3, "unitCode": "DAY" }
+      }
+    },
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": 30
+    }
+  }
+}`}</code></pre>
+	<p>
+		Die drei Blöcke, die in der Praxis fehlen und den Unterschied machen, sind
+		<code>additionalProperty</code> für technische Eigenschaften mit Einheit,
+		<code>shippingDetails</code> für die tatsächliche Lieferzeit und
+		<code>hasMerchantReturnPolicy</code> für die Rückgabebedingungen. Genau danach wird in
+		natürlichsprachlichen Anfragen regelmäßig gefragt.
+	</p>
+
+	<h3>Feeds als zweiter Kanal</h3>
+	<p>
+		Ein gepflegter Produktdaten-Feed bleibt sinnvoll — nicht nur für Preisvergleiche, sondern weil
+		er zur Datendisziplin zwingt: Pflichtfelder sind Pflichtfelder, und fehlerhafte Werte fallen
+		bei der Validierung auf. Wichtig ist, dass Feed und Seitenmarkup aus derselben Quelle erzeugt
+		werden. Zwei getrennt gepflegte Datenstände driften garantiert auseinander, und die Abweichung
+		fällt erst auf, wenn Angebote aus Vergleichen verschwinden.
+	</p>
+
+	<h3>Performance</h3>
+	<p>
+		Ladegeschwindigkeit wirkt an zwei Stellen. Crawler mit begrenztem Zeitbudget erfassen bei
+		langsamen Seiten weniger Artikel — bei großen Katalogen entscheidet das darüber, ob der
+		Longtail überhaupt bekannt ist. Und Besucher, die aus einer KI-Empfehlung kommen, haben eine
+		überdurchschnittliche Kaufabsicht; eine Produktseite, die drei Sekunden braucht, verschenkt
+		genau die wertvollsten Sitzungen. Die üblichen Hebel — Bildformate, Caching,
+		serverseitiges Rendering, Verzicht auf überflüssige Skripte — sind unverändert wirksam.
+	</p>
+
+	<h2 id="vergleich">5. Vergleich: WooCommerce, Shopify, JTL-Shop</h2>
+	<div class="bl-table" tabindex="0" role="region" aria-label="Vergleichstabelle, horizontal scrollbar">
+		<table>
+			<caption>Einordnung für Shops im Mittelstand. Alle drei Systeme können die geforderte Datenqualität liefern — der Aufwand dafür unterscheidet sich.</caption>
+			<thead>
+				<tr><th>Kriterium</th><th>WooCommerce</th><th>Shopify</th><th>JTL-Shop</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Attributtiefe ab Werk</td><td>Frei erweiterbar, Pflege aufwendig</td><td>Metafelder, strukturiert nutzbar</td><td>Stark, auf Warenwirtschaft ausgelegt</td></tr>
+				<tr><td>Product-Markup</td><td>Über Plugin, oft unvollständig</td><td>Über Theme, meist Basisfelder</td><td>Über Template anpassbar</td></tr>
+				<tr><td>ERP-Anbindung</td><td>Frei, Eigenaufwand</td><td>Über Apps oder Middleware</td><td>Eingebaut über JTL-Wawi</td></tr>
+				<tr><td>Headless-Eignung</td><td>Über REST/GraphQL möglich</td><td>Storefront-API, ausgereift</td><td>Möglich, weniger verbreitet</td></tr>
+				<tr><td>Laufende Kosten</td><td>Hosting plus Plugins</td><td>Monatsgebühr plus Umsatzanteil</td><td>Lizenz plus Hosting</td></tr>
+				<tr><td>Datenhoheit</td><td>Vollständig</td><td>Beim Anbieter</td><td>Vollständig</td></tr>
+				<tr><td>Passt gut zu</td><td>Inhaltsstarken Shops, Sonderlogik</td><td>Schnellem Start, geringem Betriebsaufwand</td><td>Lagerhaltung, Multichannel, DACH-Fokus</td></tr>
+			</tbody>
+		</table>
+	</div>
+	<p>
+		Für die hier behandelte Frage ist die Systemwahl zweitrangig. Alle drei können vollständige,
+		maschinenlesbare Produktdaten ausliefern. Was sich unterscheidet, ist der Aufwand dafür und die
+		Frage, wo die Daten geführt werden. Ein Systemwechsel ist selten die Antwort auf schlechte
+		Datenqualität — er transportiert sie meist mit.
+	</p>
+
+	<h2 id="fehler">6. Fehler, die Shops unsichtbar machen</h2>
+	<p>
+		<strong>Eigenschaften nur im Fließtext.</strong> Der häufigste und folgenreichste Fehler.
+		Maße, Kompatibilität und Materialangaben stehen in der Beschreibung statt in Attributfeldern
+		und sind damit für die Auswahl praktisch nicht vorhanden.
+	</p>
+	<p>
+		<strong>Datenblätter ausschließlich als PDF.</strong> Technische Daten in einem verlinkten
+		Dokument sind für die meisten Auswertungen unerreichbar. Die wichtigsten Werte gehören
+		zusätzlich als HTML-Attribute auf die Seite — das PDF darf bleiben.
+	</p>
+	<p>
+		<strong>Abweichungen zwischen den Kanälen.</strong> Preis im Feed, Preis im Markup, Preis auf
+		der Seite: Weichen sie voneinander ab, wird das Angebot als unzuverlässig behandelt und fällt
+		aus Vergleichen heraus. Eine automatisierte tägliche Konsistenzprüfung über alle drei Quellen
+		ist mit geringem Aufwand einzurichten und deckt genau diesen Fall auf.
+	</p>
+	<p>
+		<strong>Varianten als getrennte Artikel ohne Beziehung.</strong> Fünf Größen als fünf
+		unabhängige Produkte ohne gemeinsame Elterneinheit erzeugen fünf schwache Einträge statt eines
+		vollständigen. Die Variantenbeziehung gehört ausgezeichnet.
+	</p>
+	<p>
+		<strong>Fehlende Kennungen.</strong> Ohne GTIN oder MPN ist ein Artikel nur über seinen Namen
+		identifizierbar — und Namen unterscheiden sich zwischen Händlern. Der Artikel taucht dann in
+		Vergleichen schlicht nicht als dasselbe Produkt auf.
+	</p>
+	<p>
+		<strong>Ausverkaufte Artikel entfernen.</strong> Eine gelöschte Produktseite verliert alle
+		aufgebauten Signale. Besser ist es, die Seite mit korrektem Verfügbarkeitsstatus, einem
+		erwarteten Datum und einem Verweis auf Alternativen bestehen zu lassen.
+	</p>
+
+	<h2 id="roadmap">7. Roadmap in fünf Schritten</h2>
+	<ol class="bl-steps">
+		<li>
+			<b>Attribut-Audit an den Top-Artikeln (Woche 1–2)</b>
+			Die fünfzig umsatzstärksten Artikel gegen die zwanzig häufigsten Kundenfragen prüfen:
+			Welche Frage ist aus den strukturierten Daten beantwortbar, welche nicht? Das Ergebnis ist
+			die Aufgabenliste für alles Weitere.
+		</li>
+		<li>
+			<b>Attributmodell festlegen (Woche 2–3)</b>
+			Fehlende Felder definieren, Einheiten und Wertelisten normieren, Zuständigkeit für die
+			Pflege benennen. Erst das Modell, dann die Massenpflege — umgekehrt wird zweimal gearbeitet.
+		</li>
+		<li>
+			<b>Markup und Feed aus einer Quelle (Woche 3–5)</b>
+			Product-Markup um additionalProperty, shippingDetails und Rückgabebedingungen erweitern.
+			Feed aus derselben Datenquelle erzeugen. Tägliche Konsistenzprüfung zwischen Seite, Markup
+			und Feed einrichten.
+		</li>
+		<li>
+			<b>Auslieferung prüfen (Woche 5–6)</b>
+			Sicherstellen, dass Produktdaten ohne JavaScript im HTML stehen, Ladezeiten der Produkt-
+			und Kategorieseiten messen und die größten Bremsen beseitigen. Crawler-Zugriffe in den
+			Server-Logs kontrollieren.
+		</li>
+		<li>
+			<b>Messen und ausrollen (ab Woche 6)</b>
+			Einen festen Satz produktnaher Fragen monatlich gegen mehrere KI-Systeme testen und
+			protokollieren, ob die eigenen Artikel genannt werden. Bei belegter Wirkung das
+			Attributmodell auf den restlichen Katalog ausrollen.
+		</li>
+	</ol>
+
+	<h2 id="fazit">8. Fazit und Quick-Check</h2>
+	<p>
+		Agentic Commerce klingt nach einer Zukunftsfrage und ist in Wahrheit eine Datenfrage der
+		Gegenwart. Der Teil, der heute schon über Umsatz entscheidet, ist nicht der autonome Kauf,
+		sondern die Vorauswahl — und die trifft ein System, das ausschließlich mit dem arbeiten kann,
+		was maschinenlesbar vorliegt.
+	</p>
+	<p>
+		Das Angenehme daran: Die Arbeit ist unstrittig sinnvoll, unabhängig davon, wie schnell sich
+		agentische Kaufprozesse durchsetzen. Vollständige, eindeutige und aktuelle Produktdaten
+		verbessern die Shop-Suche, senken die Retourenquote, entlasten den Kundenservice und wirken in
+		jedem Vergleichsdienst. Es gibt nur wenige Investitionen im E-Commerce, bei denen so viele
+		Kanäle gleichzeitig profitieren — und keine, die so zuverlässig aufgeschoben wird, weil sie
+		nach innen wirkt statt nach außen zu glänzen.
+	</p>
+	<div class="bl-note">
+		<div class="bl-note-title">Quick-Check</div>
+		<ul class="bl-check">
+			<li>Sind die zwanzig häufigsten Kundenfragen aus Ihren strukturierten Produktdaten beantwortbar?</li>
+			<li>Stehen Maße und Kompatibilität als eigene Felder statt im Beschreibungstext?</li>
+			<li>Tragen Ihre Artikel GTIN oder MPN?</li>
+			<li>Enthält Ihr Product-Markup Lieferzeit und Rückgabebedingungen?</li>
+			<li>Stammen Feed und Seitenmarkup aus derselben Datenquelle?</li>
+			<li>Prüft ein automatischer Abgleich täglich, ob Preis und Bestand in allen Kanälen übereinstimmen?</li>
+			<li>Sind Ihre Produktdaten ohne JavaScript im ausgelieferten HTML sichtbar?</li>
+		</ul>
+	</div>
+	<p>
+		Wer diese sieben Punkte erfüllt, ist für die maschinelle Vorauswahl vorbereitet — unabhängig
+		davon, welches Shopsystem darunter läuft und wie sich die Oberflächen in den nächsten Jahren
+		verändern.
+	</p>
+</BlogPost>

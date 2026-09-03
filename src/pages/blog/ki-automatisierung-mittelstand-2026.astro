@@ -1,0 +1,423 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+
+const toc = [
+	{ id: 'marktlage', label: 'Marktlage 2026: produktiv statt pilotiert' },
+	{ id: 'grundlagen', label: 'Die drei Bauformen: Workflow, RAG, Agent' },
+	{ id: 'architektur', label: 'Referenzarchitektur einer wartbaren Automatisierung' },
+	{ id: 'praxis', label: 'Praxis: den richtigen ersten Prozess wählen' },
+	{ id: 'vergleich', label: 'Vergleich: Cloud-SaaS, self-hosted n8n, Eigenbau' },
+	{ id: 'fehler', label: 'Sechs Fehler, die Projekte zuverlässig versenken' },
+	{ id: 'roadmap', label: 'Roadmap: in fünf Schritten in den Betrieb' },
+	{ id: 'fazit', label: 'Fazit und Quick-Check' },
+	{ id: 'faq', label: 'Häufige Fragen' },
+	{ id: 'glossar', label: 'Fachglossar' }
+];
+
+const faq = [
+	{
+		q: 'Was kostet eine erste produktive KI-Automatisierung im Mittelstand?',
+		a: 'Ein klar abgegrenzter erster Anwendungsfall — etwa Dokumentenextraktion oder eine Wissensdatenbank für den Support — liegt in der Umsetzung typischerweise im niedrigen fünfstelligen Bereich. Entscheidend sind nicht die Modellkosten, sondern die Anbindung an die Bestandssysteme. Laufend kommen Hosting und Modellnutzung hinzu, bei mittlerem Volumen meist ein zwei- bis dreistelliger Betrag pro Monat.'
+	},
+	{
+		q: 'Brauche ich eigene GPUs oder ein lokales LLM?',
+		a: 'In den meisten Fällen nein. Ein lokales Modell lohnt sich, wenn Daten das eigene Netz nicht verlassen dürfen, das Volumen sehr hoch und gleichmäßig ist oder eine Behörde beziehungsweise ein Konzernkunde es vertraglich verlangt. Sonst ist ein europäisch gehostetes API-Modell mit Auftragsverarbeitungsvertrag günstiger und deutlich schneller einsatzbereit.'
+	},
+	{
+		q: 'Wie messe ich den ROI einer Automatisierung seriös?',
+		a: 'Vor dem Start die Ist-Zeit für den Prozess über mindestens zwei Wochen messen, inklusive Nacharbeiten und Rückfragen. Nach dem Start dieselbe Messung wiederholen und die Kosten für Betrieb, Modellnutzung und Pflege gegenrechnen. Nur eingesparte Zeit, die tatsächlich für andere Wertschöpfung genutzt wird, ist eine Einsparung — theoretische Stunden zählen nicht.'
+	},
+	{
+		q: 'Was ist Shadow AI und warum ist sie ein Risiko?',
+		a: 'Shadow AI bezeichnet den unkontrollierten Einsatz privater KI-Tools durch Mitarbeitende ohne Freigabe der Geschäftsführung. Das Risiko sind unkontrollierte Datenabflüsse, fehlende Auftragsverarbeitungsverträge und Ergebnisse, die niemand prüft. Die wirksame Antwort ist nicht das Verbot, sondern ein freigegebenes, DSGVO-konformes Werkzeug plus Schulung.'
+	},
+	{
+		q: 'Wie lange dauert es vom Start bis zum produktiven Betrieb?',
+		a: 'Bei einem gut abgegrenzten Prozess sind vier bis acht Wochen realistisch: eine Woche Prozessaufnahme und Datensichtung, zwei bis drei Wochen Umsetzung, zwei Wochen Parallelbetrieb mit menschlicher Kontrolle, dann schrittweise Übergabe. Projekte, die länger als ein Quartal ohne Produktivnutzung laufen, sind fast immer zu breit geschnitten.'
+	},
+	{
+		q: 'Was passiert, wenn das Sprachmodell falsche Ergebnisse liefert?',
+		a: 'Das ist der Normalfall, nicht die Ausnahme — ein produktives System muss damit umgehen. Praktisch bedeutet das: strukturierte Ausgaben gegen ein Schema validieren, Konfidenzschwellen definieren, unsichere Fälle in eine menschliche Prüfung leiten und jede Entscheidung protokollieren. Ein Workflow ohne definierten Ausstiegspfad gehört nicht in den Betrieb.'
+	},
+	{
+		q: 'Wie vermeide ich Vendor Lock-in bei KI-Projekten?',
+		a: 'Modellzugriff über eine austauschbare Abstraktionsschicht statt direkt im Anwendungscode, Workflows in einem exportierbaren Format wie n8n-JSON, Vektordaten in einer selbst betriebenen Datenbank und Prompts unter Versionskontrolle im eigenen Repository. Dann ist ein Anbieterwechsel ein Konfigurations- und kein Neubauprojekt.'
+	}
+];
+
+const glossary = [
+	{ term: 'RAG (Retrieval Augmented Generation)', def: 'Verfahren, bei dem ein Sprachmodell vor der Antwort passende Ausschnitte aus einer eigenen Dokumentenbasis erhält. Das Modell antwortet damit auf Basis geprüfter Unternehmensinhalte statt aus dem Trainingsgedächtnis und kann Quellen nennen.' },
+	{ term: 'KI-Agent', def: 'Ein Sprachmodell, das nicht nur Text erzeugt, sondern in einer Schleife eigenständig Werkzeuge aufruft — Datenbankabfragen, API-Aufrufe, Dateizugriffe — bis eine Aufgabe erledigt ist. Braucht enge Werkzeugrechte, Iterationsgrenzen und lückenlose Protokollierung.' },
+	{ term: 'Human in the Loop', def: 'Bewusst eingebauter Kontrollpunkt, an dem ein Mensch ein Zwischenergebnis freigibt, korrigiert oder ablehnt, bevor der Prozess weiterläuft. Der übliche Weg, einen Automatisierungsgrad zu erhöhen, ohne die Fehlerquote mitzuerhöhen.' },
+	{ term: 'Idempotenz', def: 'Eigenschaft eines Workflow-Schritts, bei mehrfacher Ausführung mit denselben Eingabedaten dasselbe Ergebnis zu erzeugen. Voraussetzung dafür, dass ein Wiederholungsversuch nach einem Fehler keine doppelten Rechnungen, Tickets oder Bestellungen erzeugt.' },
+	{ term: 'Shadow AI', def: 'Nutzung nicht freigegebener KI-Werkzeuge durch Mitarbeitende an IT und Geschäftsführung vorbei. Erzeugt unkontrollierte Datenabflüsse und Compliance-Lücken, ist aber meist ein Symptom fehlender offizieller Werkzeuge.' },
+	{ term: 'Embedding', def: 'Numerische Repräsentation eines Textabschnitts, die semantische Ähnlichkeit messbar macht. Grundlage jeder Vektorsuche und damit jedes RAG-Systems — die Qualität der Segmentierung entscheidet über die Trefferqualität.' }
+];
+---
+
+<BlogPost slug="ki-automatisierung-mittelstand-2026" toc={toc} faq={faq} glossary={glossary}>
+	<div class="bl-summary" slot="summary">
+		<h2>Das Wichtigste in Kürze</h2>
+		<ul>
+			<li><strong>Der Engpass ist nicht die Technik.</strong> Sprachmodelle sind seit Jahren gut genug für die typischen Mittelstandsaufgaben. Was fehlt, ist der saubere Zugriff auf die eigenen Daten und ein definierter Umgang mit Fehlern.</li>
+			<li><strong>Pilotprojekte scheitern an der Übergabe, nicht an der Demo.</strong> Der Prototyp überzeugt in zwei Wochen; der Betrieb scheitert später an Rechten, Datenqualität, Zuständigkeit und Monitoring.</li>
+			<li><strong>Drei Bauformen decken fast alles ab:</strong> deterministischer Workflow, RAG-Wissenszugriff und Agent mit Werkzeugen. Die meisten Anwendungsfälle brauchen die einfachste dieser drei Formen — nicht die aufwendigste.</li>
+			<li><strong>ROI muss vor dem Start gemessen werden.</strong> Wer die Ist-Zeit nicht kennt, kann die Einsparung nicht belegen — und verliert die Diskussion im nächsten Budgetgespräch.</li>
+			<li><strong>Shadow AI ist bereits Realität.</strong> Ein freigegebenes, DSGVO-konformes Werkzeug ist wirksamer als jedes Verbot.</li>
+		</ul>
+	</div>
+
+	<div class="bl-stats">
+		<div class="bl-stat"><b>4–8 Wochen</b><span>realistische Dauer bis zum Produktivbetrieb bei einem klar abgegrenzten Prozess</span></div>
+		<div class="bl-stat"><b>3 Bauformen</b><span>Workflow, RAG und Agent decken den Großteil der Anwendungsfälle im Mittelstand ab</span></div>
+		<div class="bl-stat"><b>~70 %</b><span>des Aufwands entfallen erfahrungsgemäß auf Datenzugriff und Integration, nicht auf das Modell</span></div>
+	</div>
+
+	<h2 id="marktlage">1. Marktlage 2026: produktiv statt pilotiert</h2>
+	<p>
+		Die Debatte über künstliche Intelligenz im Mittelstand hat sich verschoben. Vor drei Jahren
+		ging es um die Frage, ob die Technologie überhaupt tauge. Heute ist die Frage, warum so viele
+		Unternehmen zwar ein KI-Projekt vorzeigen können, aber keinen Prozess, der ohne manuelle
+		Nacharbeit läuft. Der Anteil der deutschen Mittelständler, die KI produktiv einsetzen, wird
+		für 2026 auf rund vierzig Prozent geschätzt — gleichzeitig berichten Verbände wie der Bitkom,
+		dass die Nutzung sich stark auf drei Bereiche konzentriert: Kundenservice und Chatbots,
+		Prozessautomatisierung und Datenanalyse.
+	</p>
+	<p>
+		Diese Zahlen sind weniger eindeutig, als sie klingen. „Produktiv einsetzen“ umfasst in vielen
+		Erhebungen auch den Fall, dass einzelne Mitarbeitende ein Sprachmodell für Textentwürfe
+		verwenden. Das ist Werkzeugnutzung, keine Automatisierung. Der Unterschied ist entscheidend:
+		Werkzeugnutzung macht einzelne Menschen schneller und endet, sobald diese Menschen im Urlaub
+		sind. Automatisierung nimmt einen Prozessschritt vollständig aus dem Tagesgeschäft heraus und
+		wirkt weiter, wenn niemand hinschaut.
+	</p>
+	<p>
+		Parallel dazu ist ein Phänomen entstanden, das in vielen Häusern niemand offen anspricht:
+		<strong>Shadow AI</strong>. Mitarbeitende nutzen private Zugänge zu Chatdiensten, weil das
+		Unternehmen kein freigegebenes Werkzeug anbietet. Kundendaten, Angebotskalkulationen und
+		Vertragsentwürfe landen dabei in Diensten ohne Auftragsverarbeitungsvertrag. Erhebungen
+		verorten das in etwa jedem vierten deutschen Unternehmen. Wer darauf mit einem Verbot reagiert,
+		verlagert das Problem lediglich auf private Endgeräte. Wirksam ist nur das Gegenteil: ein
+		offiziell freigegebener, vertraglich abgesicherter Zugang, kombiniert mit einer kurzen
+		Schulung, was hineingehört und was nicht. Seit Februar 2025 ist eine solche Schulung ohnehin
+		keine Kür mehr — die KI-Kompetenzpflicht aus Artikel 4 des EU AI Act gilt für jedes
+		Unternehmen, das KI einsetzt, unabhängig von der Größe.
+	</p>
+
+	<h2 id="grundlagen">2. Die drei Bauformen: Workflow, RAG, Agent</h2>
+	<p>
+		Fast jede Automatisierung, die im Mittelstand tatsächlich in Betrieb geht, lässt sich einer von
+		drei Bauformen zuordnen. Die Wahl der Bauform ist die wichtigste Architekturentscheidung des
+		gesamten Projekts, und sie fällt fast immer zugunsten der einfachsten möglichen Variante aus.
+	</p>
+
+	<h3>Bauform 1: der deterministische Workflow mit KI-Baustein</h3>
+	<p>
+		Der Ablauf steht fest und ist als Kette definierter Schritte modelliert. Ein Sprachmodell
+		übernimmt genau einen Schritt darin — meist das Verstehen unstrukturierter Eingaben. Ein
+		typisches Beispiel: Eine Lieferantenrechnung trifft per E-Mail ein, das Modell extrahiert
+		Rechnungsnummer, Betrag, Steuersatz und Leistungszeitraum als strukturiertes JSON, ein
+		Validierungsschritt prüft die Werte gegen die Bestellung im ERP, bei Übereinstimmung wandert
+		der Beleg in die Buchhaltung, bei Abweichung in eine Prüfliste.
+	</p>
+	<p>
+		Diese Bauform ist unspektakulär und deckt trotzdem den größten Teil des wirtschaftlich
+		relevanten Automatisierungspotenzials ab. Sie ist testbar, nachvollziehbar und im Fehlerfall
+		reparierbar, weil der Ablauf selbst nicht vom Modell bestimmt wird. Wenn ein Anwendungsfall
+		hiermit lösbar ist, gibt es selten einen guten Grund für mehr.
+	</p>
+
+	<h3>Bauform 2: RAG — Antworten aus dem eigenen Wissen</h3>
+	<p>
+		Bei Retrieval Augmented Generation wird der Dokumentenbestand des Unternehmens in Abschnitte
+		zerlegt, in Vektoren überführt und in einer Datenbank abgelegt. Zu jeder Frage werden die
+		passendsten Abschnitte gesucht und dem Modell als Kontext mitgegeben. Das Modell antwortet
+		damit auf Basis der eigenen Dokumente und kann die Quelle nennen.
+	</p>
+	<p>
+		Sinnvoll ist das überall dort, wo Wissen existiert, aber schlecht auffindbar ist: technische
+		Dokumentation, Serviceanleitungen, Vertragsklauseln, interne Richtlinien, Angebotsbausteine.
+		Der Aufwand liegt fast vollständig in der Vorbereitung. Wie Dokumente segmentiert werden, wie
+		Metadaten wie Gültigkeitsdatum und Abteilung mitgeführt werden und wie veraltete Stände
+		aussortiert werden, entscheidet über die Qualität — nicht die Wahl des Modells. Ein RAG-System
+		auf einem ungepflegten Laufwerk erzeugt lediglich schnellere falsche Antworten.
+	</p>
+
+	<h3>Bauform 3: der Agent mit Werkzeugen</h3>
+	<p>
+		Ein Agent entscheidet selbst, welche Schritte er in welcher Reihenfolge ausführt, und ruft dazu
+		Werkzeuge auf: eine Datenbankabfrage, einen API-Aufruf, einen Dateizugriff. Das ist die
+		mächtigste und zugleich die am schwersten beherrschbare Bauform, weil der Ablauf nicht mehr
+		vorab feststeht.
+	</p>
+	<p>
+		In der Praxis ist sie dort angebracht, wo die Reihenfolge der Schritte tatsächlich vom
+		Einzelfall abhängt — etwa bei einer Recherche über mehrere Systeme hinweg, deren Verlauf sich
+		erst aus den Zwischenergebnissen ergibt. Dann gelten drei Regeln ohne Ausnahme: Werkzeuge
+		erhalten nur die minimal nötigen Rechte, die Schleife hat eine harte Iterationsgrenze, und
+		jeder Werkzeugaufruf wird protokolliert. Ein Agent mit Schreibrechten auf ein Produktivsystem
+		ohne diese drei Vorkehrungen ist kein Automatisierungsprojekt, sondern ein Betriebsrisiko.
+	</p>
+
+	<h2 id="architektur">3. Referenzarchitektur einer wartbaren Automatisierung</h2>
+	<p>
+		Der auffälligste Unterschied zwischen einem Prototyp und einem Produktivsystem liegt nicht im
+		Modell, sondern in allem, was drumherum steht. Eine Architektur, die sich im Mittelstand
+		bewährt hat, besteht aus fünf Schichten.
+	</p>
+	<p>
+		Die <strong>Auslöseschicht</strong> nimmt Ereignisse entgegen: ein Webhook aus dem Shop, eine
+		eingehende Mail, ein Zeitplan, eine Statusänderung im ERP. Wichtig ist, dass jedes Ereignis
+		eine eindeutige Kennung erhält, denn nur so lässt sich später feststellen, ob ein Vorgang
+		bereits verarbeitet wurde.
+	</p>
+	<p>
+		Die <strong>Orchestrierungsschicht</strong> hält den Ablauf. In den meisten Projekten übernimmt
+		das eine selbst betriebene n8n-Instanz: Die Workflows sind sichtbar, versionierbar und als JSON
+		exportierbar, und Fachabteilungen können einfache Anpassungen nachvollziehen, ohne Code zu
+		lesen. Für komplexere Logik werden aus n8n heraus eigene Dienste aufgerufen, statt die Logik in
+		Dutzende verkettete Knoten zu pressen.
+	</p>
+	<p>
+		Die <strong>Modellschicht</strong> ist bewusst austauschbar gehalten. Der Zugriff auf das
+		Sprachmodell läuft über eine dünne eigene Abstraktion, in der Modellname, Endpunkt und
+		Parameter konfiguriert sind. Ein Wechsel des Anbieters — oder der Umzug auf ein lokal
+		betriebenes Modell — ist damit eine Konfigurationsänderung.
+	</p>
+	<p>
+		Die <strong>Datenschicht</strong> umfasst die Vektordatenbank für RAG-Inhalte sowie eine
+		relationale Datenbank für Vorgangsstatus und Protokolle. Beide liegen auf eigener oder
+		europäischer Infrastruktur; die Vektordatenbank ist reproduzierbar aus den Quelldokumenten neu
+		aufbaubar und damit kein Datensilo.
+	</p>
+	<p>
+		Die <strong>Kontrollschicht</strong> ist die, die in Prototypen regelmäßig fehlt: strukturierte
+		Protokolle jedes Laufs, Alarmierung bei Fehlerhäufung, eine Warteschlange für Fälle, die eine
+		menschliche Entscheidung brauchen, und eine einfache Oberfläche, in der diese Fälle abgearbeitet
+		werden. Ohne sie merkt niemand, wenn eine Automatisierung seit drei Wochen falsch läuft.
+	</p>
+	<p>
+		Der wichtigste Einzelmechanismus in dieser Architektur ist die <strong>Validierung
+		strukturierter Ausgaben</strong>. Ein Sprachmodell liefert Text — ein Prozess braucht Daten. Die
+		Brücke dazwischen ist ein Schema, gegen das jede Antwort geprüft wird, bevor sie
+		weiterverarbeitet wird:
+	</p>
+	<pre tabindex="0" role="region" aria-label="Codebeispiel, horizontal scrollbar"><code>{`// Vereinfachtes Muster: Modellantwort validieren, statt ihr zu vertrauen
+const Rechnung = z.object({
+  rechnungsnummer: z.string().min(1),
+  netto:           z.number().positive(),
+  steuersatz:      z.union([z.literal(0), z.literal(7), z.literal(19)]),
+  leistungsdatum:  z.string().regex(/^\\d{4}-\\d{2}-\\d{2}$/)
+});
+
+const parsed = Rechnung.safeParse(JSON.parse(antwort));
+
+if (!parsed.success) {
+  await pruefliste.anlegen({ vorgangId, grund: 'schema', fehler: parsed.error });
+  return; // niemals ungeprüft weiterreichen
+}
+
+// Zweite Instanz: fachliche Plausibilität gegen die Bestellung im ERP
+if (Math.abs(parsed.data.netto - bestellung.netto) > 0.01) {
+  await pruefliste.anlegen({ vorgangId, grund: 'betragsabweichung' });
+  return;
+}
+
+await buchhaltung.uebergeben(parsed.data);`}</code></pre>
+	<p>
+		Dieses Muster ist unscheinbar, entscheidet aber darüber, ob eine Automatisierung im Betrieb
+		Vertrauen aufbaut. Es macht aus einem probabilistischen Baustein einen Prozessschritt mit
+		definiertem Verhalten in beide Richtungen: Er liefert ein verwertbares Ergebnis, oder er meldet
+		sich ab. Was er nie tut, ist stillschweigend Unsinn weiterzureichen.
+	</p>
+
+	<h2 id="praxis">4. Praxis: den richtigen ersten Prozess wählen</h2>
+	<p>
+		Die Auswahl des ersten Anwendungsfalls entscheidet häufiger über den Projekterfolg als jede
+		technische Entscheidung danach. Vier Kriterien haben sich als belastbar erwiesen.
+	</p>
+	<p>
+		<strong>Häufigkeit vor Komplexität.</strong> Ein Vorgang, der täglich vierzig Mal anfällt und je
+		fünf Minuten kostet, ist wirtschaftlich interessanter als ein monatlicher Sonderfall, der einen
+		halben Tag bindet. Häufige Vorgänge liefern außerdem schnell genug Fälle, um die Qualität
+		statistisch beurteilen zu können.
+	</p>
+	<p>
+		<strong>Eindeutig prüfbares Ergebnis.</strong> Wenn niemand objektiv sagen kann, ob das Ergebnis
+		richtig ist, lässt sich die Automatisierung weder testen noch verantworten. Extrahierte
+		Rechnungsdaten sind prüfbar. „Ein gut formulierter Angebotstext“ ist es nicht — dort gehört das
+		Modell in eine Assistenzrolle mit menschlicher Freigabe.
+	</p>
+	<p>
+		<strong>Erträgliche Fehlerkosten.</strong> Ein falsch kategorisiertes Support-Ticket wird
+		umsortiert. Eine falsch ausgelöste Zahlung nicht. Der erste Anwendungsfall gehört in die erste
+		Kategorie — nicht aus Ängstlichkeit, sondern weil eine Organisation den Umgang mit
+		KI-Fehlerbildern erst lernen muss.
+	</p>
+	<p>
+		<strong>Vorhandener Datenzugriff.</strong> Wenn die benötigten Daten nur als PDF-Ausdruck in
+		einem Ordner liegen oder das ERP keine Schnittstelle hat, wird das Projekt zu einem
+		Integrationsprojekt mit KI-Anteil. Das ist legitim, muss aber vorher gesagt und budgetiert
+		werden — es ist der häufigste Grund, warum Aufwandsschätzungen um den Faktor drei danebenliegen.
+	</p>
+	<div class="bl-note">
+		<div class="bl-note-title">Aus der Praxis</div>
+		<p>
+			Ein wiederkehrendes Muster: Die Fachabteilung beschreibt einen Prozess in vier Schritten. Bei
+			der Aufnahme vor Ort stellt sich heraus, dass es in Wahrheit vierzehn sind, weil sechs
+			Ausnahmen existieren, die nie dokumentiert wurden, und vier weitere Schritte aus reiner
+			Gewohnheit stammen. Ein bis zwei Tage Prozessaufnahme vor der ersten Zeile Code sparen
+			regelmäßig mehrere Wochen — und decken zusätzlich Schritte auf, die man einfach streichen
+			kann. Nicht jede Ineffizienz braucht KI; manche braucht nur eine Entscheidung.
+		</p>
+	</div>
+	<p>
+		Genauso wichtig ist die ehrliche ROI-Rechnung. Sie beginnt <em>vor</em> der Umsetzung mit einer
+		Messung der Ist-Zeit über mindestens zwei Wochen, inklusive Rückfragen und Nacharbeiten. Nach
+		dem Start wird dieselbe Messung wiederholt und um die tatsächlichen Kosten ergänzt: Hosting,
+		Modellnutzung, anteilige Pflege. Und es gilt eine unbequeme Regel: Eingesparte Zeit zählt nur
+		dann als Einsparung, wenn sie tatsächlich für andere Wertschöpfung genutzt wird. Alles andere
+		ist eine Zahl für die Präsentation, die im nächsten Budgetgespräch nicht standhält.
+	</p>
+
+	<h2 id="vergleich">5. Vergleich: Cloud-SaaS, self-hosted n8n, Eigenbau</h2>
+	<p>
+		Für die Orchestrierung stehen im Wesentlichen drei Wege offen. Die Entscheidung sollte an der
+		erwarteten Anzahl der Automatisierungen und am Schutzbedarf der Daten hängen, nicht am
+		Werkzeugkatalog eines Anbieters.
+	</p>
+	<div class="bl-table" tabindex="0" role="region" aria-label="Vergleichstabelle, horizontal scrollbar">
+		<table>
+			<caption>Einordnung für einen Mittelständler mit 20–250 Mitarbeitenden. Beträge sind Erfahrungswerte, keine Angebote.</caption>
+			<thead>
+				<tr><th>Kriterium</th><th>Cloud-iPaaS (Zapier, Make)</th><th>Self-hosted n8n</th><th>Eigenbau (Code)</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Zeit bis zum ersten Ergebnis</td><td>Stunden</td><td>Tage</td><td>Wochen</td></tr>
+				<tr><td>Laufende Kosten bei mittlerem Volumen</td><td>Steigen stark mit der Ausführungszahl</td><td>Server ab ca. 20 € / Monat, volumenunabhängig</td><td>Server plus Entwicklungszeit</td></tr>
+				<tr><td>Datenhaltung</td><td>Beim Anbieter, oft außerhalb der EU</td><td>Vollständig im eigenen Zugriff</td><td>Vollständig im eigenen Zugriff</td></tr>
+				<tr><td>Anbindung an Legacy-ERP</td><td>Nur mit vorhandenem Konnektor</td><td>Frei über HTTP, Datenbank, Dateien</td><td>Frei</td></tr>
+				<tr><td>Wartbarkeit durch die Fachabteilung</td><td>Hoch</td><td>Mittel bis hoch</td><td>Gering</td></tr>
+				<tr><td>Vendor Lock-in</td><td>Hoch — Workflows sind nicht portabel</td><td>Gering — JSON-Export, Fair-Code-Lizenz</td><td>Keiner</td></tr>
+				<tr><td>Sinnvoll ab</td><td>1–5 einfachen Automatisierungen</td><td>5+ Automatisierungen oder erhöhtem Schutzbedarf</td><td>Hohem Volumen oder besonderer Fachlogik</td></tr>
+			</tbody>
+		</table>
+	</div>
+	<p>
+		Für die meisten Häuser mit ernsthaften Automatisierungsabsichten ist eine selbst betriebene
+		n8n-Instanz der wirtschaftlich vernünftige Mittelweg: Die Kosten sind planbar und nicht an die
+		Ausführungszahl gekoppelt, die Daten bleiben im eigenen Zugriff, und die Workflows lassen sich
+		als JSON versionieren wie Quellcode. Der Eigenbau bleibt Sonderfällen vorbehalten — dort, wo
+		Fachlogik so speziell ist, dass ein Workflow-Werkzeug nur im Weg steht.
+	</p>
+
+	<h2 id="fehler">6. Sechs Fehler, die Projekte zuverlässig versenken</h2>
+	<p>
+		Die folgenden Muster tauchen quer durch Branchen und Unternehmensgrößen immer wieder auf. Sie
+		haben gemeinsam, dass sie in der Prototypphase nicht auffallen und im Betrieb teuer werden.
+	</p>
+	<p>
+		<strong>Erstens: mit dem schwierigsten Prozess anfangen.</strong> Häufig wird der Anwendungsfall
+		mit dem größten Leidensdruck gewählt — der ist meist auch der komplexeste, am schlechtesten
+		dokumentierte und politisch heikelste. Das Projekt scheitert dann nicht an der Technik, sondern
+		an der Organisation, und verbrennt gleichzeitig die Bereitschaft für den zweiten Versuch.
+	</p>
+	<p>
+		<strong>Zweitens: kein definierter Ausstiegspfad.</strong> Der Prototyp kennt nur den Erfolgsfall.
+		Im Betrieb sind fünf bis fünfzehn Prozent der Fälle unklar. Ohne Prüfliste und ohne
+		Zuständigkeit dafür stauen sich diese Fälle unsichtbar auf, bis jemand sie zufällig entdeckt.
+	</p>
+	<p>
+		<strong>Drittens: Prompts ohne Versionskontrolle.</strong> Prompts sind Konfiguration mit direkter
+		Wirkung auf das Ergebnis. Liegen sie nur in einem Textfeld der Oberfläche, kann niemand
+		nachvollziehen, warum sich die Qualität vergangene Woche geändert hat. Sie gehören ins
+		Repository, mit Änderungshistorie.
+	</p>
+	<p>
+		<strong>Viertens: keine Idempotenz.</strong> Ein Wiederholungsversuch nach einem Netzwerkfehler
+		erzeugt eine zweite Rechnung, ein zweites Ticket, eine zweite Bestellung. Jeder Vorgang braucht
+		eine eindeutige Kennung, und jeder schreibende Schritt muss prüfen, ob diese Kennung bereits
+		verarbeitet wurde.
+	</p>
+	<p>
+		<strong>Fünftens: Modellkosten ohne Obergrenze.</strong> Eine Schleife ohne Iterationsgrenze oder
+		ein versehentlich in einen Massenimport eingehängter Workflow kann über Nacht das Monatsbudget
+		verbrauchen. Ein Ausgabenlimit auf Anbieterseite und ein Zähler im eigenen System sind Pflicht,
+		nicht Kür.
+	</p>
+	<p>
+		<strong>Sechstens: niemand ist zuständig.</strong> Nach dem Projektabschluss verschwindet der
+		Dienstleister, die Fachabteilung hält sich für nicht verantwortlich und die IT weiß nichts von
+		der Existenz des Workflows. Eine benannte Person, eine dokumentierte Alarmierung und ein
+		Vierteljahresrhythmus für den Blick auf die Kennzahlen kosten fast nichts und entscheiden
+		darüber, ob die Automatisierung in zwei Jahren noch läuft.
+	</p>
+
+	<h2 id="roadmap">7. Roadmap: in fünf Schritten in den Betrieb</h2>
+	<ol class="bl-steps">
+		<li>
+			<b>Inventur und Auswahl (Woche 1)</b>
+			Alle Prozesse mit hoher Wiederholung sammeln und nach den vier Kriterien aus Abschnitt 4
+			bewerten. Parallel erfassen, welche KI-Werkzeuge bereits inoffiziell im Einsatz sind — das
+			ist zugleich der Einstieg in das nach EU AI Act geforderte KI-Inventar. Ergebnis: ein
+			ausgewählter Prozess mit gemessener Ist-Zeit.
+		</li>
+		<li>
+			<b>Prozessaufnahme und Datensichtung (Woche 1–2)</b>
+			Den Prozess mit den Menschen durchgehen, die ihn ausführen, inklusive aller Ausnahmen.
+			Prüfen, ob die benötigten Daten technisch erreichbar sind und in welcher Qualität. Hier
+			fällt die Entscheidung über die Bauform.
+		</li>
+		<li>
+			<b>Umsetzung mit Kontrollschicht (Woche 2–4)</b>
+			Workflow, Schema-Validierung, Prüfliste, Protokollierung und Alarmierung entstehen
+			gemeinsam — nicht die Automatisierung zuerst und die Kontrolle später. Prompts und
+			Workflow-Definitionen von Anfang an im Repository.
+		</li>
+		<li>
+			<b>Parallelbetrieb (Woche 4–6)</b>
+			Das System läuft mit, entscheidet aber nicht. Jedes Ergebnis wird gegen die menschliche
+			Bearbeitung geprüft. Das liefert die Fehlerquote, die Schwellenwerte für die automatische
+			Freigabe und die Belege für die ROI-Rechnung.
+		</li>
+		<li>
+			<b>Übergabe und Skalierung (ab Woche 6)</b>
+			Schrittweise Erhöhung des Automatisierungsgrads, beginnend mit den eindeutigen Fällen.
+			Zuständigkeit benennen, Kennzahlen im Vierteljahresrhythmus prüfen. Erst danach den zweiten
+			Prozess angehen — auf der Infrastruktur, die jetzt bereits steht.
+		</li>
+	</ol>
+
+	<h2 id="fazit">8. Fazit und Quick-Check</h2>
+	<p>
+		KI-Automatisierung im Mittelstand ist 2026 kein Technologieproblem mehr. Die Modelle sind
+		verfügbar, bezahlbar und für die typischen Aufgaben ausreichend gut. Was über Erfolg und
+		Misserfolg entscheidet, sind die unspektakulären Dinge: die Wahl eines Prozesses, dessen
+		Ergebnis prüfbar ist; eine Kontrollschicht, die unsichere Fälle sichtbar macht; eine
+		austauschbare Modellschicht, die den Anbieterwechsel offen hält; und eine ROI-Messung, die
+		vor dem Projektstart beginnt.
+	</p>
+	<p>
+		Der zweite Prozess kostet dann typischerweise nur noch einen Bruchteil des ersten, weil
+		Infrastruktur, Kontrollmechanismen und organisatorische Routine bereits stehen. Genau darin
+		liegt der eigentliche Wert des ersten Projekts — und der Grund, warum es klein und
+		vollständig sein sollte statt groß und halbfertig.
+	</p>
+	<div class="bl-note">
+		<div class="bl-note-title">Quick-Check</div>
+		<ul class="bl-check">
+			<li>Kennen Sie die Ist-Zeit des Prozesses, den Sie automatisieren wollen — gemessen, nicht geschätzt?</li>
+			<li>Ist das Ergebnis des Prozesses objektiv als richtig oder falsch bewertbar?</li>
+			<li>Existiert ein definierter Weg für Fälle, die das System nicht sicher entscheiden kann?</li>
+			<li>Liegen Prompts und Workflow-Definitionen unter Versionskontrolle?</li>
+			<li>Gibt es ein Ausgabenlimit für die Modellnutzung?</li>
+			<li>Ist eine namentlich benannte Person für den Betrieb zuständig?</li>
+			<li>Wissen Sie, welche KI-Werkzeuge im Haus bereits ohne Freigabe genutzt werden?</li>
+		</ul>
+	</div>
+	<p>
+		Wer diese sieben Punkte beantworten kann, hat den schwierigen Teil hinter sich. Der Rest ist
+		Handwerk — und deutlich besser planbar, als die Diskussion um künstliche Intelligenz
+		gemeinhin vermuten lässt.
+	</p>
+</BlogPost>

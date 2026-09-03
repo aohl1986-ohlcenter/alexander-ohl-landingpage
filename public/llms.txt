@@ -25,7 +25,16 @@
 3. Radikale Performance (Sub-Sekunden-Ladezeiten, Core Web Vitals 100/100)
 4. DSGVO & Datensouveränität (DACH/EU-Hosting, On-Premise LLMs)
 
-## Ausgewählte Fachartikel & Whitepaper
+## Blog & Fachartikel (alexander-ohl.com)
+
+- [Blogübersicht](https://www.alexander-ohl.com/blog): Alle Fachartikel zu KI-Automatisierung, Integration, SEO/GEO, E-Commerce und IT-Sicherheit
+- [KI-Automatisierung im Mittelstand 2026: vom Pilot zur Produktion](https://www.alexander-ohl.com/blog/ki-automatisierung-mittelstand-2026): Bauformen Workflow/RAG/Agent, Referenzarchitektur mit Kontrollschicht, Auswahl des ersten Prozesses, Vergleich iPaaS vs. self-hosted n8n, ROI-Messung
+- [API-first statt Insellösungen: ERP, Shop, CRM und KI verbinden](https://www.alexander-ohl.com/blog/systemintegration-api-first-erp-shop): Datenhoheit pro Feld, Hub-Architektur mit Idempotenz und Dead Letter Queue, vier Wege zur Legacy-ERP-Anbindung ohne API
+- [GEO statt SEO: technisches Fundament für Sichtbarkeit in KI-Suchen](https://www.alexander-ohl.com/blog/geo-statt-seo-ki-sichtbarkeit-2026): Entitäten-Markup mit stabilen IDs, Crawler-Freigabe für GPTBot und ClaudeBot, llms.txt, zitierfähige Textstruktur, Messung ohne Klicks
+- [Agentic Commerce: Shops, die von KI-Agenten gefunden werden](https://www.alexander-ohl.com/blog/agentic-commerce-headless-shop-2026): Produktdatenqualität als Rankingfaktor, Headless-Abwägung, Product-Markup mit Lieferzeit und Rückgabebedingungen, Vergleich WooCommerce/Shopify/JTL-Shop
+- [NIS2, EU AI Act und CRA: technische Umsetzung statt Papier-Compliance](https://www.alexander-ohl.com/blog/nis2-eu-ai-act-cra-compliance-2026): Fristen und Betroffenheit, sechs gemeinsame Artefakte (Inventare, Meldeprozess, Protokollierung, SBOM, Nachweise), Roadmap
+
+## Ausgewählte Fachartikel & Whitepaper (Pragma-Code)
 
 - [GEO statt SEO (2026): Masterplan für Markenpräsenz in ChatGPT, Claude & Gemini](https://www.pragma-code.de/blog-geo-statt-seo-masterplan-ki-sichtbarkeit)
 - [Agentic AI Workflows 2026: Wie KMU mit n8n Prozesse automatisieren](https://www.pragma-code.de/blog-agentic-ai-workflows-2026)

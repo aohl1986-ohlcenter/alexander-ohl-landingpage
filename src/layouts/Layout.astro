@@ -30,6 +30,13 @@ export interface Props {
 	ogImage?: string;
 	ogType?: string;
 	noindex?: boolean;
+	/** Nur für ogType="article": Artikel-Metadaten als og:article:*-Tags. */
+	articleMeta?: {
+		published: string;
+		modified: string;
+		section: string;
+		tags: string[];
+	};
 }
 
 const {
@@ -37,11 +44,18 @@ const {
 	description,
 	ogImage = '/assets/alexander-ohl-og.jpg',
 	ogType = 'profile',
-	noindex = false
+	noindex = false,
+	articleMeta
 } = Astro.props;
 
 const siteRoot = 'https://www.alexander-ohl.com';
-const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+// build.format 'file' erzeugt Pfade wie /en.html und /index.html. Ohne
+// Normalisierung landen sie in Canonical, hreflang und Sprachwahl — die
+// englische Seite wurde dadurch als lang="de" ausgeliefert.
+const pathname = Astro.url.pathname
+	.replace(/\.html$/, '')
+	.replace(/\/index$/, '')
+	.replace(/\/+$/, '') || '/';
 const canonical = pathname === '/' ? siteRoot : `${siteRoot}${pathname}`;
 
 const isEn = pathname === '/en' || pathname.startsWith('/en/');
@@ -87,6 +101,15 @@ const ogImageAbs = new URL(ogImage, siteRoot).toString();
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={ogImageAbs} />
 		<meta property="og:locale" content={isEn ? 'en_US' : 'de_DE'} />
+		{articleMeta && (
+			<>
+				<meta property="article:published_time" content={articleMeta.published} />
+				<meta property="article:modified_time" content={articleMeta.modified} />
+				<meta property="article:section" content={articleMeta.section} />
+				<meta property="article:author" content="Alexander Ohl" />
+				{articleMeta.tags.map(tag => <meta property="article:tag" content={tag} />)}
+			</>
+		)}
 
 		<!-- Twitter / X -->
 		<meta name="twitter:card" content="summary_large_image" />
