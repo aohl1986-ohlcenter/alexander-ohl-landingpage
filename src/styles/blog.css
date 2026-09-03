@@ -27,14 +27,17 @@
 .bl-hd-nav { display: flex; align-items: center; gap: 22px; font-size: 14px; }
 .bl-hd-nav a { text-decoration: none; color: var(--pc-fg-2); transition: color var(--pc-fast) var(--pc-ease); }
 .bl-hd-nav a:hover, .bl-hd-nav a[aria-current='page'] { color: var(--pc-fg); }
-.bl-hd-nav .bl-cta {
+/* Eigener Name statt .bl-cta: der CTA-Block am Artikelende trägt dieselbe
+   Klasse, und dessen margin/border/text-align sickerten in den Header-Button
+   durch — er hing dadurch 13px unter den übrigen Navigationslinks. */
+.bl-hd-nav .bl-hd-cta {
   color: var(--pc-navy-900);
   background: var(--pc-yellow);
   padding: 8px 16px;
   border-radius: var(--pc-r-pill);
   font-weight: 700;
 }
-.bl-hd-nav .bl-cta:hover { background: var(--pc-yellow-soft); color: var(--pc-navy-900); }
+.bl-hd-nav .bl-hd-cta:hover { background: var(--pc-yellow-soft); color: var(--pc-navy-900); }
 @media (max-width: 720px) {
   .bl-hd-nav { gap: 14px; font-size: 13px; }
   .bl-hd-nav .bl-hide-sm { display: none; }
