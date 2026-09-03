@@ -27,6 +27,10 @@ export interface Post {
 	updated: string;
 	readingMinutes: number;
 	ogImage: string;
+	/** Titelbild-Basisname unter /assets/blog/ — Varianten -400/-800/-1376.webp */
+	hero: string;
+	/** Kurzbeschreibung des Titelbilds für Screenreader */
+	heroAlt: string;
 	/** Slugs verwandter Artikel (2–3) */
 	related: string[];
 	/** passende Pragma-Code-Leistungsseite */
@@ -48,7 +52,9 @@ export const posts: Post[] = [
 		published: '2026-09-02',
 		updated: '2026-09-02',
 		readingMinutes: 14,
-		ogImage: '/assets/alexander-ohl-og.jpg',
+		ogImage: '/assets/blog/og-ki-automatisierung-mittelstand-2026.jpg',
+		hero: '/assets/blog/ki-automatisierung-mittelstand-2026',
+		heroAlt: 'Automatisierte Rechnungsprüfung: eingehende Belege laufen durch eine Validierungsstufe, geprüfte Datensätze gehen weiter an das Zielsystem.',
 		related: ['systemintegration-api-first-erp-shop', 'nis2-eu-ai-act-cra-compliance-2026'],
 		service: { label: 'KI-Automatisierung', url: 'https://www.pragma-code.de/ki-automatisierung' }
 	},
@@ -66,7 +72,9 @@ export const posts: Post[] = [
 		published: '2026-09-02',
 		updated: '2026-09-02',
 		readingMinutes: 15,
-		ogImage: '/assets/alexander-ohl-og.jpg',
+		ogImage: '/assets/blog/og-systemintegration-api-first-erp-shop.jpg',
+		hero: '/assets/blog/systemintegration-api-first-erp-shop',
+		heroAlt: 'Vier Systeme — Datenbank, Shop, KI-Dienst und CRM — sind sternförmig an eine zentrale Integrationsschicht angebunden statt untereinander.',
 		related: ['ki-automatisierung-mittelstand-2026', 'agentic-commerce-headless-shop-2026'],
 		service: { label: 'Webentwicklung', url: 'https://www.pragma-code.de/webentwicklung' }
 	},
@@ -84,7 +92,9 @@ export const posts: Post[] = [
 		published: '2026-09-02',
 		updated: '2026-09-02',
 		readingMinutes: 15,
-		ogImage: '/assets/alexander-ohl-og.jpg',
+		ogImage: '/assets/blog/og-geo-statt-seo-ki-sichtbarkeit-2026.jpg',
+		hero: '/assets/blog/geo-statt-seo-ki-sichtbarkeit-2026',
+		heroAlt: 'Eine KI-Antwort zitiert eine verifizierte Unternehmens-Entität, die aus einem strukturierten Wissensgraphen stammt; unstrukturierte Websites bleiben im Hintergrund.',
 		related: ['agentic-commerce-headless-shop-2026', 'ki-automatisierung-mittelstand-2026'],
 		service: { label: 'SEO & GEO', url: 'https://www.pragma-code.de/seo-content' }
 	},
@@ -102,7 +112,9 @@ export const posts: Post[] = [
 		published: '2026-09-02',
 		updated: '2026-09-02',
 		readingMinutes: 15,
-		ogImage: '/assets/alexander-ohl-og.jpg',
+		ogImage: '/assets/blog/og-agentic-commerce-headless-shop-2026.jpg',
+		hero: '/assets/blog/agentic-commerce-headless-shop-2026',
+		heroAlt: 'Ein KI-Agent liest die strukturierten Produktdaten eines Bauteils aus — Kennung, technische Daten, Kompatibilität und Verfügbarkeit — und löst darüber den Kauf aus.',
 		related: ['geo-statt-seo-ki-sichtbarkeit-2026', 'systemintegration-api-first-erp-shop'],
 		service: { label: 'E-Commerce', url: 'https://www.pragma-code.de/e-commerce' }
 	},
@@ -120,7 +132,9 @@ export const posts: Post[] = [
 		published: '2026-09-02',
 		updated: '2026-09-02',
 		readingMinutes: 16,
-		ogImage: '/assets/alexander-ohl-og.jpg',
+		ogImage: '/assets/blog/og-nis2-eu-ai-act-cra-compliance-2026.jpg',
+		hero: '/assets/blog/nis2-eu-ai-act-cra-compliance-2026',
+		heroAlt: 'Ein Serverschrank unter mehreren Schutzebenen, daneben eine Komponentenliste des Systems und ein laufender Countdown für die 24-Stunden-Meldefrist.',
 		related: ['ki-automatisierung-mittelstand-2026', 'systemintegration-api-first-erp-shop'],
 		service: { label: 'KI-Automatisierung', url: 'https://www.pragma-code.de/ki-automatisierung' }
 	}
