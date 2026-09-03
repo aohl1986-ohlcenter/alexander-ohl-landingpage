@@ -27,14 +27,17 @@
 .bl-hd-nav { display: flex; align-items: center; gap: 22px; font-size: 14px; }
 .bl-hd-nav a { text-decoration: none; color: var(--pc-fg-2); transition: color var(--pc-fast) var(--pc-ease); }
 .bl-hd-nav a:hover, .bl-hd-nav a[aria-current='page'] { color: var(--pc-fg); }
-.bl-hd-nav .bl-cta {
+/* Eigener Name statt .bl-cta: der CTA-Block am Artikelende trägt dieselbe
+   Klasse, und dessen margin/border/text-align sickerten in den Header-Button
+   durch — er hing dadurch 13px unter den übrigen Navigationslinks. */
+.bl-hd-nav .bl-hd-cta {
   color: var(--pc-navy-900);
   background: var(--pc-yellow);
   padding: 8px 16px;
   border-radius: var(--pc-r-pill);
   font-weight: 700;
 }
-.bl-hd-nav .bl-cta:hover { background: var(--pc-yellow-soft); color: var(--pc-navy-900); }
+.bl-hd-nav .bl-hd-cta:hover { background: var(--pc-yellow-soft); color: var(--pc-navy-900); }
 @media (max-width: 720px) {
   .bl-hd-nav { gap: 14px; font-size: 13px; }
   .bl-hd-nav .bl-hide-sm { display: none; }
@@ -85,6 +88,21 @@
   transition: transform var(--pc-base) var(--pc-ease), border-color var(--pc-base) var(--pc-ease), background var(--pc-base) var(--pc-ease);
 }
 .bl-card:hover { transform: translateY(-4px); border-color: var(--pc-line-2); background: var(--pc-navy-600); }
+/* Titelbild in der Karte: feste Seitenverhältnis-Box, damit beim Nachladen
+   nichts springt. Randlos an den Kartenrand, deshalb negatives Margin. */
+.bl-card-img {
+  width: calc(100% + 52px);
+  /* max-width: none hebt den globalen img-Reset auf, sonst wird die
+     randlose Breite auf die Kartenbreite zurückgekappt. */
+  max-width: none;
+  /* height: auto ist Pflicht — sonst gewinnt das height-Attribut (768) als
+     Presentational Hint und die aspect-ratio greift nicht. */
+  height: auto;
+  margin: -26px -26px 2px;
+  aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: var(--pc-r-lg) var(--pc-r-lg) 0 0;
+  background: var(--pc-navy-900);
+}
 .bl-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .bl-tag {
   font-family: var(--pc-font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
@@ -103,6 +121,17 @@
 .bl-article-inner { max-width: 820px; }
 
 .bl-hero { padding: 34px 0 30px; border-bottom: 1px solid var(--pc-line); }
+
+/* Titelbild des Artikels — LCP-Element, deshalb eager geladen und mit festen
+   Maßen ausgezeichnet. */
+.bl-hero-img { margin: 30px 0 0; }
+.bl-hero-img img {
+  width: 100%; height: auto;
+  aspect-ratio: 16 / 9; object-fit: cover;
+  border: 1px solid var(--pc-line);
+  border-radius: var(--pc-r-lg);
+  background: var(--pc-navy-900);
+}
 .bl-hero h1 { font-size: clamp(30px, 4.4vw, 46px); line-height: 1.14; letter-spacing: -0.02em; font-weight: 800; }
 .bl-hero .bl-lede { margin-top: 20px; color: var(--pc-fg-2); font-size: clamp(17px, 2.1vw, 19px); }
 .bl-byline {
