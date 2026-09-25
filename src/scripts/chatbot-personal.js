@@ -2,65 +2,32 @@
 // Fokus 1: Alexander Ohl als Person, Werdegang, Skills, Referenzen & Expertise.
 // Fokus 2: Pragma-Code als Gründer-Agentur mit Dienstleistungen, Paketen & Preisen.
 
-const TYPES = {
-  'landing-page': { 
-    label: { de: 'Landing Page (1–3 Seiten)', en: 'Landing Page (1-3 pages)' }, 
-    pMin: 800, pMax: 1850, wMin: 1, wMax: 2, pkg: 'A' 
-  },
-  'new-website': { 
-    label: { de: 'Neue Unternehmens-Website', en: 'New Corporate Website' }, 
-    pMin: 2300, pMax: 7400, wMin: 3, wMax: 6, pkg: 'B' 
-  },
-  'website-relaunch': { 
-    label: { de: 'Website-Relaunch', en: 'Website Relaunch' }, 
-    pMin: 2800, pMax: 12000, wMin: 4, wMax: 7, pkg: 'B' 
-  },
-  'online-shop': { 
-    label: { de: 'Online-Shop (Shopify/Woo)', en: 'Online Shop (Shopify/Woo)' }, 
-    pMin: 3700, pMax: 11000, wMin: 6, wMax: 12, pkg: 'D' 
-  },
-  'custom-app': { 
-    label: { de: 'Web-App / Custom Software', en: 'Web App / Custom Software' }, 
-    pMin: 7400, pMax: 23000, wMin: 8, wMax: 16, pkg: 'A' 
-  },
-  'automation': { 
-    label: { de: 'Automatisierung / Workflow', en: 'Automation / Workflow' }, 
-    pMin: 1900, pMax: 7400, wMin: 2, wMax: 5, pkg: 'C' 
+// ── Preise ──────────────────────────────────────────────────────────────────
+// Kommen zur Laufzeit von pragma-code.de: /chatbot-prices.json wird dort aus
+// derselben Quelle gebaut wie die Seite /pakete-preise (src/data/pricing.ts im
+// Repo modern-it-solutions-astro) und per CORS freigegeben. Bis 25.09.2026
+// standen die Preise hier als Text — und waren nach dem Preis-Update vom 23.09.
+// veraltet (Stundenkontingente, ein falscher KI-Sprint-Preis und ein Förderversprechen, das Pragma Code nicht geben darf).
+// Hier keine Euro-Beträge mehr eintragen.
+// Die frühere Rechner-Tabelle (TYPES/ADDONS/PKG) war nie angebunden und ist raus.
+const PRICES_URL = 'https://www.pragma-code.de/chatbot-prices.json';
+let pricesPromise = null;
+function loadPrices() {
+  if (!pricesPromise) {
+    pricesPromise = fetch(PRICES_URL)
+      .then(r => (r.ok ? r.json() : null))
+      .catch(() => null);
   }
-};
-
-const ADDONS = {
-  'design': { 
-    label: { de: 'Individuelles Design', en: 'Custom Design' }, 
-    minPct: 0.15, maxPct: 0.25, wMin: 1, wMax: 2 
-  },
-  'multilang': { 
-    label: { de: 'Mehrsprachigkeit', en: 'Multilingual' }, 
-    minPct: 0.10, maxPct: 0.20, wMin: 1, wMax: 1 
-  },
-  'integrations': { 
-    label: { de: 'Externe Integrationen', en: 'External Integrations' }, 
-    minPct: 0.15, maxPct: 0.30, wMin: 1, wMax: 3 
-  },
-  'content': { 
-    label: { de: 'Content & Texte von Alexander', en: 'Content & Texts by Alexander' }, 
-    minPct: 0.10, maxPct: 0.15, wMin: 1, wMax: 2 
-  },
-  'seo': { 
-    label: { de: 'SEO & GEO Optimierung', en: 'SEO & GEO Optimization' }, 
-    minPct: 0.10, maxPct: 0.20, wMin: 1, wMax: 2 
-  },
-  'maintenance': { 
-    label: { de: 'Laufende Wartung & Retainer', en: 'Ongoing Maintenance & Retainer' }, 
-    minPct: 0.05, maxPct: 0.10, wMin: 0, wMax: 0 
-  }
-};
-
-const PKG = {
-  'A': { name: { de: 'Web & Technik', en: 'Web & Tech' }, price: 390 },
-  'B': { name: { de: 'SEO & Content', en: 'SEO & Content' }, price: 890 },
-  'C': { name: { de: 'Automatisierung', en: 'Automation' }, price: 590 },
-  'D': { name: { de: 'E-Commerce', en: 'E-Commerce' }, price: 690 }
+  return pricesPromise;
+}
+const eD = n => `${n.toLocaleString('de-DE')} €`;
+const eE = n => `€${n.toLocaleString('en-US')}`;
+const fixedOf = (P, id) => P.fixed.find(f => f.id === id);
+const pkgD = x => x.price == null ? 'auf Anfrage' : `${x.from ? 'ab ' : ''}${eD(x.price)}`;
+const pkgE = x => x.price == null ? 'on request' : `${x.from ? 'from ' : ''}${eE(x.price)}`;
+const PRICES_UNAVAILABLE = {
+  de: 'Die aktuellen Preise finden Sie auf <a href="https://www.pragma-code.de/pakete-preise" target="_blank" rel="noopener">pragma-code.de/pakete-preise</a>.',
+  en: 'You can find the current prices at <a href="https://www.pragma-code.de/en/packages-pricing" target="_blank" rel="noopener">pragma-code.de/en/packages-pricing</a>.'
 };
 
 // ── Q&A Topics (Personal Branding Focus 1 + Pragma-Code Focus 2) ──────────────
@@ -188,68 +155,66 @@ The synergy of mechatronics, computer science, and engineering experience forms 
       'pragma code', 'pragma', 'agentur', 'firma', 'unternehmen', 'dienstleistungen',
       'services', 'dienstleister', 'beratung', 'consulting', 'agency'
     ],
-    de: `🏢 <b>Über Alexanders Agentur Pragma-Code:</b><br/><br/>
+    de: (P) => `🏢 <b>Über Alexanders Agentur Pragma-Code:</b><br/><br/>
 Alexander Ohl führt <b>Pragma-Code</b> als spezialisiertes IT-Consulting & Entwicklungs-Unternehmen für den DACH-Raum.<br/><br/>
 <b>Drei Kernsäulen:</b><br/>
-1. <b>KI & Automatisierung</b> (n8n-Workflows, RAG, KI-Sprint ab 690 €)<br/>
-2. <b>Sichtbarkeit (SEO & GEO)</b> (Google-Ranking, KI-Sichtbarkeits-Monitoring ab 149 €/Monat)<br/>
+1. <b>KI & Automatisierung</b> (n8n-Workflows, RAG, KI-Agenten — Prozess-Check ${pkgD(P.automation[0])}, KI-Sprint ${pkgD(P.automation[1])}, Agent-Betrieb ab ${eD(P.agent[0].price)}/Monat)<br/>
+2. <b>Sichtbarkeit (SEO & GEO)</b> (Google-Ranking, KI-Sichtbarkeits-Monitoring ab ${eD(P.monitoring[0].price)}/Monat)<br/>
 3. <b>Web & E-Commerce</b> (Astro, Next.js, WordPress-/TYPO3-Migrationen, Shopify, WooCommerce)<br/><br/>
-💡 Pragma-Code unterstützt KMU bei der Beantragung staatlicher <b>BAFA-Beratungszuschüsse</b> (50–80 % Förderquote).<br/><br/>
+Dazu: die <b>KI-Video-Fabrik</b> (Einrichtung ${pkgD(P.videoSetup[0])}) und <b>Rust-Entwicklung</b> (Performance-Audit ${eD(fixedOf(P, 'rust-audit').price)}).<br/><br/>
+💡 Festpreise statt Stundensätze: Scope und Preis werden vor Projektstart schriftlich vereinbart.<br/><br/>
 🔗 <a href="https://www.pragma-code.de" target="_blank" rel="noopener">www.pragma-code.de besuchen</a> | <a href="https://www.pragma-code.de/pakete-preise" target="_blank" rel="noopener">Pakete & Preise von Pragma-Code</a>`,
-    en: `🏢 <b>About Alexander's Agency Pragma-Code:</b><br/><br/>
+    en: (P) => `🏢 <b>About Alexander's Agency Pragma-Code:</b><br/><br/>
 Alexander Ohl operates <b>Pragma-Code</b> as a specialized IT consulting & engineering consultancy for the DACH region.<br/><br/>
 <b>Three Core Pillars:</b><br/>
-1. <b>AI & Automation</b> (n8n workflows, RAG, AI Sprint from €690)<br/>
-2. <b>Visibility (SEO & GEO)</b> (Google ranking, AI Visibility Monitoring from €149/mo)<br/>
+1. <b>AI & Automation</b> (n8n workflows, RAG, AI agents — Process Check ${pkgE(P.automation[0])}, AI Sprint ${pkgE(P.automation[1])}, Agent Operations from ${eE(P.agent[0].price)}/mo)<br/>
+2. <b>Visibility (SEO & GEO)</b> (Google ranking, AI Visibility Monitoring from ${eE(P.monitoring[0].price)}/mo)<br/>
 3. <b>Web & E-Commerce</b> (Astro, Next.js, WordPress/TYPO3 migrations, Shopify, WooCommerce)<br/><br/>
-💡 Pragma-Code supports SMEs in applying for German <b>BAFA consulting grants</b> (50–80% funding rate).<br/><br/>
+Plus: the <b>AI Video Factory</b> (setup ${pkgE(P.videoSetup[0])}) and <b>Rust development</b> (Performance Audit ${eE(fixedOf(P, 'rust-audit').price)}).<br/><br/>
+💡 Fixed prices instead of hourly rates: scope and price are agreed in writing before the project starts.<br/><br/>
 🔗 <a href="https://www.pragma-code.de/en" target="_blank" rel="noopener">Visit www.pragma-code.de</a> | <a href="https://www.pragma-code.de/en/packages-pricing" target="_blank" rel="noopener">Pragma-Code Packages & Pricing</a>`
   },
   {
     id: 'preise-pakete',
     keywords: [
-      'preise', 'kosten', 'pakete', 'retainer', 'tarif', 'tarife', 'festpreis', 'bafa',
-      'foerderung', 'zuschuss', 'stundensatz', 'budget', 'pricing', 'packages', 'rates',
+      'preise', 'kosten', 'pakete', 'retainer', 'tarif', 'tarife', 'festpreis',
+      'stundensatz', 'budget', 'pricing', 'packages', 'rates',
       'prototyp', 'prototype', 'pflichtenheft', 'wartung', 'care', 'maintenance',
       'ki sprint', 'ai sprint', 'prozess check', 'audit', 'bfsg', 'migration', 'was kostet'
     ],
-    de: `💰 <b>Preise & Betreuungstarife bei Pragma-Code:</b><br/><br/>
-<b>📦 Monatliche Umsetzungstarife</b> (6 Mt. Laufzeit, 2 Mt. gratis bei Jahreszahlung):<br/>
-• <b>Web & Technik</b> — 390 €/Monat (bis 4 h)<br/>
-• <b>SEO & Content</b> — 890 €/Monat (bis 8 h) ⭐ Beliebt<br/>
-• <b>Automatisierung</b> — 590 €/Monat (bis 6 h)<br/>
-• <b>E-Commerce</b> — 690 €/Monat (bis 6 h)<br/>
-• <b>Care-Only</b> (nur Wartung & Uptime) — ab 190 €/Monat (3 Mt.)<br/><br/>
+    de: (P) => `💰 <b>Preise & Betreuungstarife bei Pragma-Code:</b><br/><br/>
+Festpreise statt Stundensätze — Scope und Preis werden vor Projektstart schriftlich vereinbart.<br/><br/>
+<b>📦 Monatliche Umsetzungstarife</b> (${P.retainerMinMonths} Mt. Laufzeit, 2 Mt. gratis bei Jahreszahlung):<br/>
+${P.retainers.map(r => `• <b>${r.name.de}</b> — ${eD(r.monthly)}/Monat${r.popular ? ' ⭐ Beliebt' : ''}<br/>`).join('')}• <b>Care-Only</b> (nur Wartung & Uptime) — ab ${eD(P.careOnly.from)}/Monat (${P.careOnly.minMonths} Mt.)<br/><br/>
+<b>🔁 Laufende Produkte:</b><br/>
+• KI-Sichtbarkeits-Monitoring — ab ${eD(P.monitoring[0].price)}/Monat<br/>
+• Agent-Betrieb — ab ${eD(P.agent[0].price)}/Monat<br/>
+• KI-Video-Fabrik — Betrieb ab ${eD(P.videoOps[0].monthly)}/Monat (Einrichtung ${pkgD(P.videoSetup[0])})<br/><br/>
 <b>⚡ Einmal-Festpreise:</b><br/>
-• Website-Tiefenanalyse — ab 490 €<br/>
-• Der Prozess-Check — 690 € (wird beim Sprint angerechnet)<br/>
-• BFSG-Compliance-Check — 950 €<br/>
-• AI Visibility Audit — 1.200 €<br/>
-• Der KI-Sprint (n8n) — 2.900 €<br/>
-• WP / TYPO3 Migration — ab 3.500 €<br/>
-• Fokus-Prototyp (statt Pflichtenheft) — 4.900 €<br/>
-• Automation Scale — ab 5.900 €<br/>
-• Erweiterter Prototyp — 7.500 €<br/><br/>
-💡 <b>BAFA-Beratungszuschüsse</b> für KMU (50–80 % Förderquote) — Pragma-Code unterstützt bei der Beantragung.<br/><br/>
+• ${fixedOf(P, 'tiefenanalyse').name.de} — ab ${eD(fixedOf(P, 'tiefenanalyse').price)}<br/>
+• ${P.automation[0].name.de} — ${pkgD(P.automation[0])} (wird beim Sprint angerechnet)<br/>
+${['bfsg', 'ai-visibility-audit', 'ki-sprint', 'rust-audit'].map(id => `• ${fixedOf(P, id).name.de} — ${eD(fixedOf(P, id).price)}<br/>`).join('')}• Website-Assistent ohne LLM — Basis ${eD(fixedOf(P, 'assistent-basis').price)} · Plus ${eD(fixedOf(P, 'assistent-plus').price)}<br/>
+• ${fixedOf(P, 'migration').name.de} — ab ${eD(fixedOf(P, 'migration').price)}<br/>
+• ${fixedOf(P, 'fokus-prototyp').name.de} (statt Pflichtenheft) — ${eD(fixedOf(P, 'fokus-prototyp').price)}<br/>
+• ${P.automation[2].name.de} — ${pkgD(P.automation[2])}<br/>
+• ${fixedOf(P, 'erweiterter-prototyp').name.de} — ${eD(fixedOf(P, 'erweiterter-prototyp').price)}<br/><br/>
 🔗 <a href="https://www.pragma-code.de/pakete-preise" target="_blank" rel="noopener">Vollständige Preisliste ansehen</a>`,
-    en: `💰 <b>Pricing & Retainer Plans at Pragma-Code:</b><br/><br/>
-<b>📦 Monthly Retainer Plans</b> (6-mo minimum; 2 months free with annual billing):<br/>
-• <b>Web & Tech</b> — €390/mo (up to 4 h)<br/>
-• <b>SEO & Content</b> — €890/mo (up to 8 h) ⭐ Popular<br/>
-• <b>Automation</b> — €590/mo (up to 6 h)<br/>
-• <b>E-Commerce</b> — €690/mo (up to 6 h)<br/>
-• <b>Care-Only</b> (maintenance & uptime only) — from €190/mo (3-mo minimum)<br/><br/>
+    en: (P) => `💰 <b>Pricing & Retainer Plans at Pragma-Code:</b><br/><br/>
+Fixed prices instead of hourly rates — scope and price are agreed in writing before the project starts.<br/><br/>
+<b>📦 Monthly Retainer Plans</b> (${P.retainerMinMonths}-mo minimum; 2 months free with annual billing):<br/>
+${P.retainers.map(r => `• <b>${r.name.en}</b> — ${eE(r.monthly)}/mo${r.popular ? ' ⭐ Popular' : ''}<br/>`).join('')}• <b>Care-Only</b> (maintenance & uptime only) — from ${eE(P.careOnly.from)}/mo (${P.careOnly.minMonths}-mo minimum)<br/><br/>
+<b>🔁 Ongoing products:</b><br/>
+• AI Visibility Monitoring — from ${eE(P.monitoring[0].price)}/mo<br/>
+• Agent Operations — from ${eE(P.agent[0].price)}/mo<br/>
+• AI Video Factory — operation from ${eE(P.videoOps[0].monthly)}/mo (setup ${pkgE(P.videoSetup[0])})<br/><br/>
 <b>⚡ Fixed-Price Packages:</b><br/>
-• Website Deep Dive Analysis — from €490<br/>
-• The Process Check — €690 (credited towards the Sprint)<br/>
-• BFSG Accessibility Check — €950<br/>
-• AI Visibility Audit — €1,200<br/>
-• The AI Sprint (n8n) — €2,900<br/>
-• WP / TYPO3 Migration — from €3,500<br/>
-• Focus Prototype (instead of a spec document) — €4,900<br/>
-• Automation Scale — from €5,900<br/>
-• Extended Prototype — €7,500<br/><br/>
-💡 <b>BAFA consulting grants</b> for German SMEs (50–80% funding rate) — Pragma-Code assists with the application.<br/><br/>
+• ${fixedOf(P, 'tiefenanalyse').name.en} — from ${eE(fixedOf(P, 'tiefenanalyse').price)}<br/>
+• The Process Check — ${pkgE(P.automation[0])} (credited towards the Sprint)<br/>
+${['bfsg', 'ai-visibility-audit', 'ki-sprint', 'rust-audit'].map(id => `• ${fixedOf(P, id).name.en} — ${eE(fixedOf(P, id).price)}<br/>`).join('')}• Rule-based website assistant — Basis ${eE(fixedOf(P, 'assistent-basis').price)} · Plus ${eE(fixedOf(P, 'assistent-plus').price)}<br/>
+• ${fixedOf(P, 'migration').name.en} — from ${eE(fixedOf(P, 'migration').price)}<br/>
+• ${fixedOf(P, 'fokus-prototyp').name.en} (instead of a spec document) — ${eE(fixedOf(P, 'fokus-prototyp').price)}<br/>
+• Automation Scale — ${pkgE(P.automation[2])}<br/>
+• ${fixedOf(P, 'erweiterter-prototyp').name.en} — ${eE(fixedOf(P, 'erweiterter-prototyp').price)}<br/><br/>
 🔗 <a href="https://www.pragma-code.de/en/packages-pricing" target="_blank" rel="noopener">View complete pricing page</a>`
   },
   {
@@ -258,16 +223,16 @@ Alexander Ohl operates <b>Pragma-Code</b> as a specialized IT consulting & engin
       'kontakt', 'anfrage', 'termin', 'calendly', 'call', 'erstgespraech', 'mail',
       'email', 'schreiben', 'buchen', 'telefon', 'contact', 'book', 'discovery call'
     ],
-    de: `📅 <b>Kontakt & Erstgespräch mit Alexander Ohl:</b><br/><br/>
+    de: (P) => `📅 <b>Kontakt & Erstgespräch mit Alexander Ohl:</b><br/><br/>
 Sie möchten über ein Projekt, eine Automatisierung oder eine Zusammenarbeit sprechen?<br/><br/>
-• <b>Calendly:</b> <a href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">Kostenlosen 30-Min. Discovery-Call buchen</a><br/>
+• <b>Calendly:</b> <a href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">Kostenloses Erstgespräch${P ? ` (${P.firstCallMinutes} Min.)` : ''} buchen</a><br/>
 • <b>Formular:</b> Nutzen Sie das <a href="#kontakt">Kontaktformular</a> unten auf dieser Seite<br/>
 • <b>E-Mail:</b> <a href="mailto:info@pragma-code.de">info@pragma-code.de</a><br/>
 • <b>LinkedIn:</b> <a href="https://www.linkedin.com/in/alexander-ohl/" target="_blank" rel="noopener">Alexander Ohl auf LinkedIn</a><br/><br/>
 🔗 <a href="#kontakt">Zum Kontaktformular springen</a>`,
-    en: `📅 <b>Contact & Consultation with Alexander Ohl:</b><br/><br/>
+    en: (P) => `📅 <b>Contact & Consultation with Alexander Ohl:</b><br/><br/>
 Would you like to discuss a project, automation, or potential collaboration?<br/><br/>
-• <b>Calendly:</b> <a href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">Book a free 30-min discovery call</a><br/>
+• <b>Calendly:</b> <a href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">Book a free discovery call${P ? ` (${P.firstCallMinutes} min)` : ''}</a><br/>
 • <b>Form:</b> Use the <a href="#contact">contact form</a> at the bottom of this page<br/>
 • <b>Email:</b> <a href="mailto:info@pragma-code.de">info@pragma-code.de</a><br/>
 • <b>LinkedIn:</b> <a href="https://www.linkedin.com/in/alexander-ohl/" target="_blank" rel="noopener">Alexander Ohl on LinkedIn</a><br/><br/>
@@ -360,10 +325,21 @@ function findBestResponse(userInput, lang) {
     }
   }
 
-  if (maxMatches > 0 && best) {
-    return best[lang] || best['de'];
+  return maxMatches > 0 ? best : null;
+}
+
+// Topic-Texte sind entweder Strings oder Funktionen (P) => String. P kann null
+// sein (Preisdatei nicht erreichbar) — Funktionen, die Preise brauchen, werfen
+// dann, und der Bot verweist auf die Preisseite statt stumm zu bleiben.
+function responseTextOf(topic, lang, P) {
+  if (!topic) return null;
+  const text = topic[lang] || topic['de'];
+  if (typeof text !== 'function') return text;
+  try {
+    return text(P);
+  } catch (e) {
+    return PRICES_UNAVAILABLE[lang] || PRICES_UNAVAILABLE.de;
   }
-  return null;
 }
 
 function initChatbot() {
@@ -423,7 +399,6 @@ function initChatbot() {
   const firstBubble = messages.querySelector('.chat-bubble');
   if (firstBubble) firstBubble.textContent = welcomeText;
 
-  let calcState = { active: false, step: 0, type: null, addons: [] };
   let contactState = { active: false, step: 0, name: '', email: '', message: '' };
 
   const defaultChips = [
@@ -458,11 +433,52 @@ function initChatbot() {
       win.classList.add('active');
       win.removeAttribute('inert');
       if (triggerIcon) triggerIcon.className = 'ph ph-x';
-      input.focus();
+      document.body.classList.add('chatbot-open');
+      trackViewport(true);
+      loadPrices();
+      // Mobil nicht ins Eingabefeld fokussieren: das holt sofort die Tastatur
+      // und verdeckt die Themen-Chips. Der Fokus geht trotzdem in den Dialog,
+      // weil der Chat-Button im Vollbild ausgeblendet ist.
+      if (isMobileView()) {
+        (minimizeBtn || closeBtn || input).focus({ preventScroll: true });
+      } else {
+        input.focus();
+      }
     } else {
       win.classList.remove('active');
       win.setAttribute('inert', '');
       if (triggerIcon) triggerIcon.className = 'ph ph-chat-centered-text';
+      document.body.classList.remove('chatbot-open');
+      trackViewport(false);
+    }
+  }
+
+  // Mobil: Fenster an den sichtbaren Ausschnitt binden. iOS (und Chrome ab 108)
+  // verkleinern beim Einblenden der Tastatur nur den visualViewport; solange der
+  // Chat offen ist, übernimmt das Fenster dessen Höhe und Oberkante
+  // (--cb-vh/--cb-top, ausgewertet in chatbot.css ≤600px). Nicht auf /assistent:
+  // dort ist das Fenster position:relative, ein `top` würde es verschieben.
+  function isMobileView() {
+    return window.matchMedia('(max-width: 600px)').matches;
+  }
+  function syncViewport() {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    win.style.setProperty('--cb-vh', `${vv.height}px`);
+    win.style.setProperty('--cb-top', `${vv.offsetTop}px`);
+  }
+  function trackViewport(on) {
+    const vv = window.visualViewport;
+    if (!vv || window.__chatbotStandaloneMode) return;
+    if (on) {
+      syncViewport();
+      vv.addEventListener('resize', syncViewport);
+      vv.addEventListener('scroll', syncViewport);
+    } else {
+      vv.removeEventListener('resize', syncViewport);
+      vv.removeEventListener('scroll', syncViewport);
+      win.style.removeProperty('--cb-vh');
+      win.style.removeProperty('--cb-top');
     }
   }
 
@@ -520,10 +536,13 @@ function initChatbot() {
     return indicator;
   }
 
-  function showAppointmentOptions() {
+  async function showAppointmentOptions() {
+    const P = await loadPrices();
+    const minDe = P ? ` (${P.firstCallMinutes} Min.)` : '';
+    const minEn = P ? ` (${P.firstCallMinutes} min)` : '';
     const msg = lang === 'de'
-      ? `Sehr gerne! Einen <b>Discovery-Call</b> mit Alexander (30 Min.) buchen Sie direkt hier:<br/><br/>📅 <a href="${CALENDLY_URL}" target="_blank" rel="noopener">Termin bei Calendly auswählen</a><br/><br/>Alternativ können Sie auch direkt eine Nachricht im <a href="#kontakt">Kontaktformular</a> hinterlassen.`
-      : `Gladly! You can book a <b>discovery call</b> with Alexander (30 min) right here:<br/><br/>📅 <a href="${CALENDLY_URL}" target="_blank" rel="noopener">Select slot on Calendly</a><br/><br/>Alternatively, leave a message in the <a href="#contact">contact form</a>.`;
+      ? `Sehr gerne! Ein kostenloses <b>Erstgespräch</b> mit Alexander${minDe} buchen Sie direkt hier:<br/><br/>📅 <a href="${CALENDLY_URL}" target="_blank" rel="noopener">Termin bei Calendly auswählen</a><br/><br/>Alternativ können Sie auch direkt eine Nachricht im <a href="#kontakt">Kontaktformular</a> hinterlassen.`
+      : `Gladly! You can book a free <b>discovery call</b> with Alexander${minEn} right here:<br/><br/>📅 <a href="${CALENDLY_URL}" target="_blank" rel="noopener">Select slot on Calendly</a><br/><br/>Alternatively, leave a message in the <a href="#contact">contact form</a>.`;
     addMessage(msg, 'bot');
     renderQuickReplies([
       { query: lang === 'de' ? 'Werdegang' : 'Career', label: lang === 'de' ? '📜 Werdegang' : '📜 Career' },
@@ -537,7 +556,9 @@ function initChatbot() {
     const cleaned = cleanInput(text);
 
     if (cleaned.includes('termin') || cleaned.includes('buchen') || cleaned.includes('meeting') ||
-        cleaned.includes('calendly') || cleaned.includes('call') || cleaned.includes('erstgespraech')) {
+        cleaned.includes('calendly') || cleaned.includes('call') || cleaned.includes('erstgespraech') ||
+        cleaned.includes('anruf') || cleaned.includes('telefonat') || cleaned.includes('rueckruf') ||
+        cleaned.includes('appointment') || cleaned.includes('phone')) {
       const typing = showTypingIndicator();
       setTimeout(() => {
         if (typing && typing.parentNode) typing.parentNode.removeChild(typing);
@@ -547,14 +568,17 @@ function initChatbot() {
     }
 
     const typingIndicator = showTypingIndicator();
-    const matched = findBestResponse(text, lang);
+    const matchedTopic = findBestResponse(text, lang);
     const typingDelay = Math.max(600, Math.min(1400, text.length * 12));
 
-    setTimeout(() => {
+    Promise.all([
+      loadPrices(),
+      new Promise(resolve => setTimeout(resolve, typingDelay))
+    ]).then(([P]) => {
       if (typingIndicator && typingIndicator.parentNode) {
         typingIndicator.parentNode.removeChild(typingIndicator);
       }
-      const response = matched || fallbacks[lang];
+      const response = responseTextOf(matchedTopic, lang, P) || fallbacks[lang];
       addMessage(response, 'bot');
       renderQuickReplies([
         { query: lang === 'de' ? 'Über Pragma-Code' : 'About Pragma-Code', label: lang === 'de' ? '🏢 Pragma-Code' : '🏢 Pragma-Code' },
@@ -562,7 +586,7 @@ function initChatbot() {
         { query: 'book_appointment', label: lang === 'de' ? '📅 Termin buchen' : '📅 Book Call', isPrimary: true },
         { query: 'overview', label: lang === 'de' ? '← Übersicht' : '← Overview' }
       ]);
-    }, typingDelay);
+    });
   }
 
   form.addEventListener('submit', (e) => {

@@ -449,12 +449,48 @@
   box-shadow: 0 14px 40px rgba(255, 200, 41, 0.55);
 }
 
-@media (max-width: 480px) {
+/* Mobile (≤600px): Vollbild statt schwebendem Fenster.
+   Seit 25.09.2026 identisch mit pragma-code.de. Vorher Vollbild erst
+   ab 480px und ohne Tastatur-Nachfuehrung.
+
+   Hoehe/Oberkante kommen aus --cb-vh/--cb-top, die chatbot-personal.js aus
+   window.visualViewport setzt, solange der Chat offen ist: iOS verkleinert
+   beim Einblenden der Tastatur nur den sichtbaren Ausschnitt, nicht den
+   Layout-Viewport — ein `bottom: 0` laege sonst hinter der Tastatur.
+   Ohne JS-Werte greift 100dvh.
+
+   Bewusst ueber right + width statt left: /assistent und /en/assistant
+   binden dasselbe Markup inline ein (position: relative) und
+   neutralisieren dort right/width/bottom/height per !important. Ein `left`
+   wuerde diese Overrides umgehen. `top` setzt nur die JS-Variable, und die
+   wird im Standalone-Modus nie gesetzt (siehe chatbot-personal.js). */
+@media (max-width: 600px) {
   .chatbot-window {
     right: 0;
-    bottom: 0;
     width: 100%;
-    height: 100dvh;
+    top: var(--cb-top, 0px);
+    bottom: auto;
+    height: var(--cb-vh, 100dvh);
+    max-height: none;
+    border: 0;
     border-radius: 0;
+    box-shadow: none;
+  }
+  .chatbot-header {
+    padding-top: calc(1rem + env(safe-area-inset-top, 0px));
+  }
+  .chatbot-input-container {
+    padding-bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));
+  }
+  /* Unter 16px zoomt iOS Safari beim Antippen des Felds die ganze Seite. */
+  .chatbot-input-container input {
+    font-size: 16px;
+  }
+  /* Seite dahinter nicht mitscrollen, Chat-Button nicht ueber dem Chat. */
+  body.chatbot-open {
+    overflow: hidden;
+  }
+  body.chatbot-open .floating-chat-btn {
+    display: none !important;
   }
 }
