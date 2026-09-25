@@ -8,6 +8,11 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
     site: 'https://www.alexander-ohl.com',
     trailingSlash: 'never',
+    // HTML-Komprimierung AUS (25.09.2026), wie auf pragma-code.de: compressHTML
+    // loescht Leerraum ganz, wenn er einen Zeilenumbruch enthaelt und an ein Tag
+    // grenzt — im Blog stand dadurch u. a. "anspricht:<strong>Shadow AI</strong>"
+    // ohne Leerzeichen (58 Stellen). Kosten dort gemessen: ~1 KB gzip pro Seite.
+    compressHTML: false,
     build: {
         format: 'file'
     },
