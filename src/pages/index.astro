@@ -18,16 +18,23 @@ const stack: { label: string; url?: string }[] = [
 	{ label: 'n8n', url: 'https://n8n.io/' },
 	{ label: 'RAG' },
 	{ label: 'KI-Agenten' },
+	{ label: 'Claude', url: 'https://www.anthropic.com/claude' },
+	{ label: 'Gemini', url: 'https://ai.google.dev/' },
 	{ label: 'Docker', url: 'https://www.docker.com/' },
 	{ label: 'Git', url: 'https://git-scm.com/' },
 	{ label: 'SEO' },
 	{ label: 'GEO' },
 	{ label: 'Schema.org', url: 'https://schema.org/' },
+	{ label: 'Bright Data', url: 'https://brightdata.com/' },
 	{ label: 'Cloudflare', url: 'https://www.cloudflare.com/' },
+	{ label: 'Vercel', url: 'https://vercel.com/' },
 	{ label: 'AWS', url: 'https://aws.amazon.com/' },
+	{ label: 'Supabase', url: 'https://supabase.com/' },
+	{ label: 'Neon', url: 'https://neon.com/' },
 	{ label: 'Zapier', url: 'https://zapier.com/' },
 	{ label: 'Elementor', url: 'https://elementor.com/' },
 	{ label: 'Figma', url: 'https://www.figma.com/' },
+	{ label: 'Remotion', url: 'https://www.remotion.dev/' },
 	{ label: 'Ahrefs', url: 'https://ahrefs.com/' },
 ];
 const ticker = [...stack, ...stack];
@@ -302,7 +309,7 @@ const personSchema = {
 
 		<!-- TECH TICKER -->
 		<div class="ticker" aria-hidden="true">
-			<div class="ticker-track">
+			<div class="ticker-track" style={`--ticker-count: ${stack.length}`}>
 				{ticker.map(t => t.url
 					? <a class="ticker-item" href={t.url} target="_blank" rel="noopener noreferrer" tabindex="-1">{t.label}</a>
 					: <span class="ticker-item">{t.label}</span>
@@ -972,7 +979,7 @@ const personSchema = {
 			margin-top: clamp(40px, 6vw, 72px); border-block: 1px solid var(--pc-line);
 			overflow: hidden; background: var(--pc-navy-900); padding: 14px 0;
 		}
-		.ticker-track { display: flex; gap: 40px; width: max-content; animation: scroll 48s linear infinite; }
+		.ticker-track { display: flex; gap: 40px; width: max-content; animation: scroll calc(var(--ticker-count, 25) * 1.92s) linear infinite; } /* Tempo wie bisher (48s bei 25), unabhängig von der Anzahl */
 		@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
 		@keyframes scroll { to { transform: translateX(-50%); } }
 		.ticker-item {
