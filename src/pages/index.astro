@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { posts } from '../data/posts';
+import CareerChapters, { type CareerChapter } from '../components/CareerChapters.astro';
 
 // Tech-Stack: mit offiziellen Herstellerseiten verlinkt (Konzepte ohne URL bleiben Text).
 const stack: { label: string; url?: string }[] = [
@@ -90,6 +91,47 @@ const education: { year: string; title: string; org: string }[] = [
 	{ year: '2010–2013', title: 'Abitur (2. Bildungsweg)', org: 'Abendgymnasium Sophie Scholl' },
 	{ year: '2004', title: 'Berufsfachschule Informatik', org: 'BBS Bersenbrück' },
 	{ year: '2004', title: 'Realschulabschluss', org: 'Realschule Neuenkirchen' },
+];
+
+// Werdegang als Kapitel, chronologisch. Stationen kommen aus `timeline` (eine Quelle),
+// die Schulstationen von 2004 aus `education`. Bildunterschriften nur mit belegten Fakten
+// (Datum aus den Kamera-Metadaten, Ort aus dem Dateinamen bzw. vom Nutzer).
+const stationsBetween = (from: number, to: number) => timeline.filter(t => +t.year >= from && +t.year <= to).reverse();
+const careerChapters: CareerChapter[] = [
+	{
+		num: '01', span: '2004', title: 'Anfänge',
+		text: 'Als Jugendlicher nach Deutschland gekommen, direkt in die achte Klasse eingestiegen und den Realschulabschluss in zwei Jahren geschafft.',
+		photos: [
+			{ file: 'alexander-ohl-anfaenge-2000er', width: 960, height: 720, alt: 'Alexander Ohl als Jugendlicher am Schreibtisch mit Röhrenmonitor und Laptop', caption: 'Anfang der 2000er · Röhrenmonitor, Laptop, Poker-Hose' },
+		],
+		items: education.filter(e => e.year === '2004').reverse().map(e => ({ year: e.year, role: e.title, org: e.org })),
+	},
+	{
+		num: '02', span: '2005–2009', title: 'Marine',
+		text: 'Vier Jahre Soldat auf Zeit bei der Deutschen Marine.',
+		photos: [
+			{ file: 'alexander-ohl-marine-2006-kammer', width: 960, height: 720, alt: 'Alexander Ohl in weißer Marineuniform in der Mannschaftskammer an Bord', caption: 'Oktober 2006 · in der Kammer an Bord' },
+			{ file: 'alexander-ohl-marine-2007-abc-uebung', width: 960, height: 1280, alt: 'Alexander Ohl mit ABC-Schutzmaske bei einer Gefechtsübung', caption: 'Januar 2007 · Gefechtsübung auf der „Bayern“', position: '50% 35%' },
+			{ file: 'alexander-ohl-marine-2009-bruecke', width: 960, height: 720, alt: 'Alexander Ohl am Steuerrad auf der Brücke eines Zerstörers', caption: 'Januar 2009 · Brücke eines Zerstörers', position: '40% 50%' },
+		],
+		items: stationsBetween(2005, 2008),
+	},
+	{
+		num: '03', span: '2009–2013', title: 'Technik',
+		text: 'Vom Serverraum in den Schaltschrank und wieder zurück — und nebenher das Abitur auf dem zweiten Bildungsweg.',
+		photos: [
+			{ file: 'alexander-ohl-technik-2010-schaltschrank', width: 960, height: 720, alt: 'Alexander Ohl im Blaumann bei der Arbeit an einem Schaltschrank mit Steuerungstechnik', caption: 'November 2010 · am Schaltschrank bei EST' },
+		],
+		missing: 'Der IT-Schulungsraum der Jüdischen Gemeinde (2012) — ohne Personen im Bild und nur mit Zustimmung der Gemeinde.',
+		items: stationsBetween(2009, 2012),
+	},
+	{
+		num: '04', span: '2013–heute', title: 'Unternehmer',
+		text: 'Erst Vertrieb, dann eigene Agenturen, Freelancing und Agenturarbeit — bis zur Gründung von Pragma-Code.',
+		photos: [],
+		missing: 'Ein echtes Arbeitsfoto aus OHLcenter, Studio 360° oder Pragma-Code: Schreibtisch, Kundentermin, Workshop.',
+		items: stationsBetween(2013, 2099),
+	},
 ];
 
 // `metric` nur setzen, wenn die Zahl belegt ist (GSC-Export, Tracker-Messung).
@@ -379,24 +421,14 @@ const personSchema = {
 				<div class="sec-eyebrow pc-mono">03 — Werdegang</div>
 				<h2 class="sec-title">Vom Maschinenraum zur KI</h2>
 				<p class="sec-lede">Von der Fregatte „Bayern" über Systemadministration und Agenturarbeit zum selbstständigen IT-Generalisten — jede Station hat das Systemverständnis geschärft, das heute in jedes Projekt fließt.</p>
-				<ol class="tl">
-					{timeline.map(item => (
-						<li class="tl-item reveal">
-							<div class="tl-year pc-mono">{item.year}</div>
-							<div class="tl-body">
-								{item.orgUrl
-									? <a class="tl-org" href={item.orgUrl} target="_blank" rel="noopener noreferrer">{item.org} <span aria-hidden="true">↗</span></a>
-									: <span class="tl-org">{item.org}</span>}
-								<h3>{item.role}</h3>
-								<p>{item.text}</p>
-							</div>
-						</li>
-					))}
-				</ol>
+				<CareerChapters
+					chapters={careerChapters}
+					labels={{ chapter: 'Kapitel', missing: 'Foto gesucht', enlarge: 'Foto vergrößern', close: 'Schließen' }}
+				/>
 				<div class="edu reveal">
-					<div class="edu-label pc-mono">Ausbildung</div>
+					<div class="edu-label pc-mono">Weitere Ausbildung</div>
 					<div class="edu-chips">
-						{education.map(e => (
+						{education.filter(e => e.year !== '2004').map(e => (
 							<span class="edu-chip"><strong>{e.year}</strong> {e.title} · {e.org}</span>
 						))}
 					</div>
@@ -1052,31 +1084,6 @@ const personSchema = {
 		.principle-num { font-size: 14px; font-weight: 800; color: var(--pc-yellow); margin-bottom: 12px; }
 		.principle-card h3 { font-size: 16.5px; font-weight: 800; line-height: 1.35; margin-bottom: 10px; }
 		.principle-card p { font-size: 13.5px; color: var(--pc-fg-2); line-height: 1.55; }
-
-		/* Timeline */
-		.tl { list-style: none; padding: 0; position: relative; max-width: 760px; }
-		.tl::before {
-			content: ''; position: absolute; left: 74px; top: 8px; bottom: 8px; width: 2px;
-			background: linear-gradient(to bottom, var(--pc-yellow), rgba(255, 200, 41, 0.08));
-		}
-		.tl-item { display: grid; grid-template-columns: 56px 1fr; gap: 36px; padding: 0 0 34px; position: relative; }
-		.tl-item::before {
-			content: ''; position: absolute; left: 69px; top: 7px; width: 12px; height: 12px;
-			border-radius: 50%; background: var(--pc-navy-800); border: 2px solid var(--pc-yellow);
-		}
-		.tl-year { color: var(--pc-yellow); font-size: 13px !important; padding-top: 5px; text-align: right; }
-		.tl-body h3 { font-size: 17px; font-weight: 800; margin-top: 4px; }
-		.tl-org {
-			font-family: var(--pc-font-mono); font-size: 12.5px; color: var(--pc-yellow);
-			text-decoration: none; font-weight: 600;
-		}
-		.tl-body p { font-size: 14.5px; color: var(--pc-fg-2); max-width: 62ch; margin-top: 4px; }
-		@media (max-width: 560px) {
-			.tl::before { left: 5px; }
-			.tl-item { grid-template-columns: 1fr; gap: 6px; padding-left: 28px; }
-			.tl-item::before { left: 0; }
-			.tl-year { text-align: left; padding-top: 0; }
-		}
 
 		/* Education */
 		.edu { margin-top: clamp(28px, 4vw, 44px); border-top: 1px solid var(--pc-line); padding-top: 28px; }

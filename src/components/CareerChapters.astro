@@ -1,0 +1,236 @@
+---
+// src/components/CareerChapters.astro — Werdegang in Kapiteln, je Kapitel echte Fotos aus der Zeit.
+// Fotos liegen als WebP (480/960 px, ohne EXIF) unter public/assets/werdegang/,
+// Dateiname ohne Breiten-Suffix in `file`. Nur Belichtung und Farbstich korrigiert, keine KI-Retusche.
+
+export interface CareerPhoto {
+	file: string;
+	width: number;
+	height: number;
+	alt: string;
+	caption: string;
+	/** object-position für den Bildausschnitt, z. B. '50% 30%' */
+	position?: string;
+}
+export interface CareerItem { year: string; role: string; org: string; orgUrl?: string; text?: string }
+export interface CareerChapter {
+	num: string;
+	span: string;
+	title: string;
+	text: string;
+	photos: CareerPhoto[];
+	/** Welches Foto noch fehlt — erscheint nur im Dev-Server als Platzhalter, nie im Build. */
+	missing?: string;
+	items: CareerItem[];
+}
+
+interface Props {
+	chapters: CareerChapter[];
+	labels: { chapter: string; missing: string; enlarge: string; close: string };
+}
+
+const { chapters, labels } = Astro.props;
+const base = '/assets/werdegang/';
+const showMissing = import.meta.env.DEV;
+---
+
+<div class="cc">
+	{chapters.map((ch, i) => {
+		const hasMedia = ch.photos.length > 0 || (showMissing && !!ch.missing);
+		return (
+			<section
+				class:list={['cc-ch', 'reveal', { 'cc-flip': i % 2 === 1, 'cc-solo': !hasMedia }]}
+				aria-labelledby={`cc-${ch.num}`}
+			>
+				<div class="cc-text">
+					<header class="cc-head">
+						<div class="cc-num pc-mono">{labels.chapter} {ch.num} · {ch.span}</div>
+						<h3 id={`cc-${ch.num}`}>{ch.title}</h3>
+						<p>{ch.text}</p>
+					</header>
+					<ol class="cc-items">
+						{ch.items.map(item => (
+							<li class="cc-item">
+								<div class="cc-meta">
+									<span class="cc-year">{item.year}</span>
+									{item.orgUrl
+										? <a class="cc-org" href={item.orgUrl} target="_blank" rel="noopener noreferrer">{item.org} <span aria-hidden="true">↗</span></a>
+										: <span class="cc-org">{item.org}</span>}
+								</div>
+								<h4>{item.role}</h4>
+								{item.text && <p>{item.text}</p>}
+							</li>
+						))}
+					</ol>
+				</div>
+
+				{hasMedia && (
+					<div class="cc-media">
+						{ch.photos.map((p, k) => (
+							<figure class:list={['cc-print', k === 0 ? 'cc-main' : 'cc-small']}>
+								<button
+									type="button"
+									class="cc-zoom"
+									data-full={`${base}${p.file}-960.webp`}
+									data-alt={p.alt}
+									data-caption={p.caption}
+									aria-label={`${labels.enlarge}: ${p.caption}`}
+								>
+									<img
+										src={`${base}${p.file}-480.webp`}
+										srcset={`${base}${p.file}-480.webp 480w, ${base}${p.file}-960.webp 960w`}
+										sizes={k === 0 ? '(max-width: 860px) 92vw, 440px' : '(max-width: 860px) 45vw, 210px'}
+										alt={p.alt}
+										width={p.width}
+										height={p.height}
+										loading="lazy"
+										decoding="async"
+										style={p.position ? `object-position: ${p.position}` : undefined}
+									/>
+								</button>
+								<figcaption>{p.caption}</figcaption>
+							</figure>
+						))}
+						{showMissing && ch.missing && (
+							<div class:list={['cc-missing', { 'cc-missing-only': ch.photos.length === 0 }]}>
+								<span class="pc-mono">{labels.missing}</span>
+								<p>{ch.missing}</p>
+							</div>
+						)}
+					</div>
+				)}
+			</section>
+		);
+	})}
+</div>
+
+<dialog class="cc-lightbox" id="cc-lightbox">
+	<form method="dialog"><button class="cc-close" aria-label={labels.close}>×</button></form>
+	<img id="cc-lightbox-img" alt="" />
+	<p id="cc-lightbox-cap"></p>
+</dialog>
+
+<script>
+	const dlg = document.getElementById('cc-lightbox') as HTMLDialogElement | null;
+	const img = document.getElementById('cc-lightbox-img') as HTMLImageElement | null;
+	const cap = document.getElementById('cc-lightbox-cap');
+	if (dlg && img && cap) {
+		document.querySelectorAll<HTMLButtonElement>('.cc-zoom').forEach(btn => {
+			btn.addEventListener('click', () => {
+				img.src = btn.dataset.full ?? '';
+				img.alt = btn.dataset.alt ?? '';
+				cap.textContent = btn.dataset.caption ?? '';
+				dlg.showModal();
+			});
+		});
+		// Klick auf den abgedunkelten Hintergrund schließt
+		dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+	}
+</script>
+
+<style>
+	.cc { display: grid; gap: clamp(56px, 8vw, 104px); }
+
+	/* Kapitel: Fotos und Text im Wechsel links/rechts, Text vertikal mittig zum Foto */
+	.cc-ch {
+		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		grid-template-areas: "media text";
+		column-gap: clamp(32px, 5vw, 72px);
+		align-items: center;
+	}
+	.cc-flip { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-areas: "text media"; }
+	.cc-solo { grid-template-columns: minmax(0, 1fr); grid-template-areas: "text"; max-width: 760px; }
+	.cc-text { grid-area: text; display: grid; gap: 24px; }
+	.cc-media { grid-area: media; }
+
+	.cc-num { color: var(--pc-yellow); margin-bottom: 10px; }
+	.cc-head h3 { font-size: clamp(24px, 2.8vw, 32px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+	.cc-head p { color: var(--pc-fg-2); max-width: 56ch; margin-top: 10px; }
+
+	/* Abzüge: heller Rand wie ein Papierfoto, leicht schief, richtet sich beim Hover auf */
+	.cc-media { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; padding: 6px; }
+	.cc-main { grid-column: 1 / -1; }
+	.cc-print {
+		--tilt: -1.4deg;
+		background: var(--pc-fg);
+		padding: 9px 9px 11px;
+		border-radius: 3px;
+		box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+		transform: rotate(var(--tilt));
+		transition: transform var(--pc-base) var(--pc-ease), box-shadow var(--pc-base) var(--pc-ease);
+	}
+	.cc-flip .cc-main { --tilt: 1.2deg; }
+	.cc-small:nth-child(2) { --tilt: 1.8deg; }
+	.cc-small:nth-child(3) { --tilt: -1.1deg; }
+	.cc-print:hover { transform: rotate(0deg) translateY(-3px); box-shadow: 0 24px 54px rgba(0, 0, 0, 0.55); }
+	.cc-zoom { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+	.cc-print img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 1px; }
+	.cc-small img { aspect-ratio: 1 / 1; }
+	.cc-print figcaption {
+		font-family: var(--pc-font-mono); font-size: 11.5px; line-height: 1.4;
+		color: var(--pc-navy-800); margin-top: 9px; letter-spacing: 0.01em;
+	}
+
+	/* Platzhalter (nur Dev-Server) */
+	.cc-missing {
+		grid-column: 1 / -1;
+		border: 1.5px dashed rgba(255, 200, 41, 0.5); border-radius: var(--pc-r-md);
+		background: rgba(255, 200, 41, 0.04); padding: 18px 20px;
+		display: grid; gap: 6px; align-content: center;
+	}
+	.cc-missing-only { aspect-ratio: 4 / 3; text-align: center; }
+	.cc-missing span { color: var(--pc-yellow); }
+	.cc-missing p { font-size: 14px; color: var(--pc-fg-2); }
+
+	/* Stationen je Kapitel */
+	.cc-items { list-style: none; padding: 0; position: relative; }
+	.cc-items::before {
+		content: ''; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 2px;
+		background: linear-gradient(to bottom, var(--pc-yellow), rgba(255, 200, 41, 0.08));
+	}
+	.cc-item { position: relative; padding: 0 0 24px 32px; }
+	.cc-item:last-child { padding-bottom: 0; }
+	.cc-item::before {
+		content: ''; position: absolute; left: 0; top: 6px; width: 12px; height: 12px;
+		border-radius: 50%; background: var(--pc-navy-800); border: 2px solid var(--pc-yellow);
+	}
+	.cc-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+	.cc-year { font-family: var(--pc-font-mono); font-size: 13px; font-weight: 600; color: var(--pc-yellow); }
+	.cc-org { font-family: var(--pc-font-mono); font-size: 12.5px; color: var(--pc-fg-3); text-decoration: none; font-weight: 600; }
+	a.cc-org:hover { color: var(--pc-yellow); }
+	.cc-item h4 { font-size: 16.5px; font-weight: 800; margin-top: 3px; }
+	.cc-item p { font-size: 14.5px; color: var(--pc-fg-2); max-width: 62ch; margin-top: 4px; }
+
+	/* Mobil: Titel, dann Fotos, dann Stationen — der Text-Wrapper löst sich dafür auf */
+	@media (max-width: 860px) {
+		.cc-ch, .cc-flip { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "media" "items"; row-gap: 24px; }
+		.cc-text { display: contents; }
+		.cc-head { grid-area: head; }
+		.cc-items { grid-area: items; }
+		.cc-media { max-width: 480px; }
+	}
+
+	/* Lightbox */
+	.cc-lightbox {
+		/* margin: auto zentriert den Dialog — der globale Reset (* { margin: 0 }) nimmt es sonst weg */
+		margin: auto; border: 0; padding: 0; background: transparent; overflow: visible;
+		max-width: min(92vw, 1000px); max-height: 92vh;
+	}
+	.cc-lightbox::backdrop { background: rgba(5, 8, 20, 0.88); }
+	.cc-lightbox img {
+		display: block; margin: 0 auto; max-width: 100%; max-height: 80vh; width: auto; height: auto;
+		border: 10px solid var(--pc-fg); border-radius: 3px;
+	}
+	.cc-lightbox p { color: var(--pc-fg); font-family: var(--pc-font-mono); font-size: 13px; text-align: center; margin-top: 12px; }
+	.cc-close {
+		position: absolute; top: -16px; right: -16px; z-index: 1;
+		width: 38px; height: 38px; border-radius: 50%; border: 0; cursor: pointer;
+		background: var(--pc-yellow); color: var(--pc-navy-900); font-size: 24px; font-weight: 800; line-height: 1;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cc-print { transition: none; }
+		.cc-print:hover { transform: rotate(var(--tilt)); }
+	}
+</style>
