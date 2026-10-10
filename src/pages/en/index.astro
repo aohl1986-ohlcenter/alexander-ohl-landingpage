@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import CareerChapters, { type CareerChapter } from '../../components/CareerChapters.astro';
 
 // Tech stack: linked to official vendor sites where applicable.
 const stack: { label: string; url?: string }[] = [
@@ -89,6 +90,49 @@ const education: { year: string; title: string; org: string }[] = [
 	{ year: '2010–2013', title: 'Abitur (second-chance education)', org: 'Abendgymnasium Sophie Scholl' },
 	{ year: '2004', title: 'Vocational College of Computer Science', org: 'BBS Bersenbrück' },
 	{ year: '2004', title: 'Secondary School Certificate', org: 'Realschule Neuenkirchen' },
+];
+
+// Background as chapters, chronological — mirrors the German page (src/pages/index.astro).
+// Stations come from `timeline`, the 2004 school stations from `education`.
+const stationsBetween = (from: number, to: number) => timeline.filter(t => +t.year >= from && +t.year <= to).reverse();
+const careerChapters: CareerChapter[] = [
+	{
+		num: '01', span: 'until 2004', title: 'Beginnings',
+		text: 'Came to Germany as a teenager, went straight into eighth grade and finished secondary school in two years.',
+		photos: [
+			{ file: 'alexander-ohl-anfaenge-2000er', width: 960, height: 720, alt: 'Alexander Ohl as a school student (2002/03) at his desk with a CRT monitor and laptop', caption: '2002/03 · CRT monitor, laptop, poker-card trousers' },
+		],
+		items: education.filter(e => e.year === '2004').reverse().map(e => ({ year: e.year, role: e.title, org: e.org })),
+	},
+	{
+		num: '02', span: '2005–2009', title: 'Navy',
+		text: 'Four years as an enlisted sailor in the German Navy.',
+		photos: [
+			{ file: 'alexander-ohl-marine-2006-kammer', width: 960, height: 720, alt: 'Alexander Ohl in 2006 as a German Navy sailor in white uniform, cabin of an accommodation ship', caption: 'October 2006 · accommodation ship while the “Bayern” was in the shipyard' },
+			{ file: 'alexander-ohl-marine-2007-abc-uebung', width: 960, height: 1280, alt: 'Alexander Ohl in 2007 wearing a CBRN gas mask during a combat drill aboard the frigate “Bayern”', caption: 'January 2007 · combat drill aboard the “Bayern”', position: '50% 35%' },
+			{ file: 'alexander-ohl-marine-2009-bruecke', width: 960, height: 720, alt: 'Alexander Ohl in 2009 at the helm on the bridge of a museum destroyer', caption: 'January 2009 · bridge of a museum destroyer', position: '40% 50%' },
+		],
+		items: stationsBetween(2005, 2008),
+	},
+	{
+		num: '03', span: '2009–2013', title: 'Technology',
+		text: 'From the server room to the control cabinet and back — while earning the Abitur at evening school.',
+		photos: [
+			{ file: 'alexander-ohl-technik-2010-schaltschrank', width: 960, height: 720, alt: 'Alexander Ohl in 2010 as an automation electronics technician at EST, working on a control cabinet', caption: 'November 2010 · at the control cabinet at EST' },
+		],
+		missing: 'The IT training room of the Jewish Community (2012) — no people in the picture, and only with the community’s consent.',
+		items: stationsBetween(2009, 2012),
+	},
+	{
+		num: '04', span: '2013–today', title: 'Entrepreneur',
+		text: 'First sales, then my own agencies, freelancing and agency work — up to founding Pragma-Code. Almost always remote, on a laptop: in cafés, in hotels, on the road.',
+		photos: [
+			{ file: 'alexander-ohl-unternehmer-2024-arbeitsplatz', width: 960, height: 720, alt: 'Alexander Ohl, founder of Pragma-Code, in 2024 at his workspace with laptop and monitor', caption: 'May 2024 · founding year of Pragma-Code', position: '30% 50%' },
+			{ file: 'alexander-ohl-unternehmer-2014-hardwarelager', width: 960, height: 720, alt: 'Hardware storeroom with network rack and shipping boxes, 2014 — photo by Alexander Ohl', caption: 'July 2014 · hardware storeroom with network rack' },
+			{ file: 'alexander-ohl-unternehmer-2014-laptop-zerlegt', width: 960, height: 720, alt: 'Disassembled laptop with the mainboard removed and tools, 2014 — photo by Alexander Ohl', caption: 'April 2014 · a laptop in pieces' },
+		],
+		items: stationsBetween(2013, 2099),
+	},
 ];
 
 // Case studies & client projects
@@ -377,24 +421,14 @@ const personSchema = {
 				<div class="sec-eyebrow pc-mono">03 — Background</div>
 				<h2 class="sec-title">From the engine room to AI systems</h2>
 				<p class="sec-lede">From the frigate "Bayern" through hands-on system administration and agency leadership to independent IT engineering — each milestone sharpened the deep architectural thinking behind every project.</p>
-				<ol class="tl">
-					{timeline.map(item => (
-						<li class="tl-item reveal">
-							<div class="tl-year pc-mono">{item.year}</div>
-							<div class="tl-body">
-								{item.orgUrl
-									? <a class="tl-org" href={item.orgUrl} target="_blank" rel="noopener noreferrer">{item.org} <span aria-hidden="true">↗</span></a>
-									: <span class="tl-org">{item.org}</span>}
-								<h3>{item.role}</h3>
-								<p>{item.text}</p>
-							</div>
-						</li>
-					))}
-				</ol>
+				<CareerChapters
+					chapters={careerChapters}
+					labels={{ chapter: 'Chapter', missing: 'Photo wanted', enlarge: 'Enlarge photo', close: 'Close' }}
+				/>
 				<div class="edu reveal">
-					<div class="edu-label pc-mono">Education</div>
+					<div class="edu-label pc-mono">Further education</div>
 					<div class="edu-chips">
-						{education.map(e => (
+						{education.filter(e => e.year !== '2004').map(e => (
 							<span class="edu-chip"><strong>{e.year}</strong> {e.title} · {e.org}</span>
 						))}
 					</div>
@@ -1035,31 +1069,6 @@ Overview: https://www.pragma-code.de/en/packages-pricing`,
 		.principle-num { font-size: 14px; font-weight: 800; color: var(--pc-yellow); margin-bottom: 12px; }
 		.principle-card h3 { font-size: 16.5px; font-weight: 800; line-height: 1.35; margin-bottom: 10px; }
 		.principle-card p { font-size: 13.5px; color: var(--pc-fg-2); line-height: 1.55; }
-
-		/* Timeline */
-		.tl { list-style: none; padding: 0; position: relative; max-width: 760px; }
-		.tl::before {
-			content: ''; position: absolute; left: 74px; top: 8px; bottom: 8px; width: 2px;
-			background: linear-gradient(to bottom, var(--pc-yellow), rgba(255, 200, 41, 0.08));
-		}
-		.tl-item { display: grid; grid-template-columns: 56px 1fr; gap: 36px; padding: 0 0 34px; position: relative; }
-		.tl-item::before {
-			content: ''; position: absolute; left: 69px; top: 7px; width: 12px; height: 12px;
-			border-radius: 50%; background: var(--pc-navy-800); border: 2px solid var(--pc-yellow);
-		}
-		.tl-year { color: var(--pc-yellow); font-size: 13px !important; padding-top: 5px; text-align: right; }
-		.tl-body h3 { font-size: 17px; font-weight: 800; margin-top: 4px; }
-		.tl-org {
-			font-family: var(--pc-font-mono); font-size: 12.5px; color: var(--pc-yellow);
-			text-decoration: none; font-weight: 600;
-		}
-		.tl-body p { font-size: 14.5px; color: var(--pc-fg-2); max-width: 62ch; margin-top: 4px; }
-		@media (max-width: 560px) {
-			.tl::before { left: 5px; }
-			.tl-item { grid-template-columns: 1fr; gap: 6px; padding-left: 28px; }
-			.tl-item::before { left: 0; }
-			.tl-year { text-align: left; padding-top: 0; }
-		}
 
 		/* Education */
 		.edu { margin-top: clamp(28px, 4vw, 44px); border-top: 1px solid var(--pc-line); padding-top: 28px; }
