@@ -78,6 +78,9 @@ const texte = {
 	}
 }[lang];
 
+// Terminal-Befehl je Sprache — die System-IDs im JSON bleiben deutsch.
+const befehl = lang === 'de' ? 'maschinenraum' : 'engine-room';
+
 const initialStand = lang === 'de'
 	? 'Live-Status: stündlich automatisch aus den Systemen.'
 	: 'Live status: generated hourly from the systems themselves.';
@@ -85,10 +88,10 @@ const initialStand = lang === 'de'
 
 <div class="mr" data-mr data-lang={lang}>
 	<div class="mr-bar pc-mono" aria-hidden="true">
-		<span class="mr-dots"><i></i><i></i><i></i></span>alexander@ohl — maschinenraum
+		<span class="mr-dots"><i></i><i></i><i></i></span>alexander@ohl — {befehl}
 	</div>
 	<div class="mr-body">
-		<p class="mr-cmd" aria-hidden="true"><span class="mr-prompt">alexander@ohl</span>:~$ maschinenraum status</p>
+		<p class="mr-cmd" aria-hidden="true"><span class="mr-prompt">alexander@ohl</span>:~$ {befehl} status</p>
 		<ul class="mr-list">
 			{systeme.map(s => (
 				<li class="mr-row" data-id={s.id} data-zustand="unbekannt">
