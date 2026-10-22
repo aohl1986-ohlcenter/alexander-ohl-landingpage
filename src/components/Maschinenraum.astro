@@ -1,0 +1,278 @@
+---
+// Maschinenraum — Live-Status der eigenen Systeme (Konzept 22.10.2026).
+// Daten: GET /api/maschinenraum (functions/api/maschinenraum.js liest das
+// R2-Objekt, das der lokale Publisher ~/.claude/skills/maschinenraum schreibt).
+// Beschriftungen stehen nur hier: Das JSON enthält IDs, Zustände, Daten und
+// Zahlen, aber keinen Text. Ohne JavaScript oder Daten bleiben die festen
+// Beschreibungen stehen — nie ein erfundenes Grün.
+export interface Props { lang: 'de' | 'en' }
+const { lang } = Astro.props;
+
+const systeme = [
+	{ id: 'morgen-briefing', name: { de: 'morgen-briefing', en: 'morning-briefing' }, rhythmus: { de: 'täglich', en: 'daily' },
+	  desc: { de: 'Tagesbriefing aus Mail, Kalender und Aufgaben, als Sprachnachricht.', en: 'Daily briefing from mail, calendar and tasks, delivered as a voice message.' } },
+	{ id: 'website-monitoring', name: { de: 'website-monitoring', en: 'website-monitoring' }, rhythmus: { de: 'täglich', en: 'daily' },
+	  desc: { de: 'Uptime, Kontaktformular, PageSpeed und Besucherzahlen meiner Websites.', en: 'Uptime, contact form, PageSpeed and visitor stats for my websites.' } },
+	{ id: 'datensicherung', name: { de: 'datensicherung', en: 'backups' }, rhythmus: { de: 'laufend', en: 'continuous' },
+	  desc: { de: 'Sicherung von Rechner und Dokumentenablage.', en: 'Backups of my machine and document archive.' } },
+	{ id: 'pagespeed-wache', name: { de: 'pagespeed-wache', en: 'pagespeed-watch' }, rhythmus: { de: 'wöchentlich', en: 'weekly' },
+	  desc: { de: 'Misst die Ladezeit der Websites, die ich betreue.', en: 'Measures load times of the websites I look after.' } },
+	{ id: 'gsc-wochenbericht', name: { de: 'gsc-wochenbericht', en: 'gsc-weekly-report' }, rhythmus: { de: 'wöchentlich', en: 'weekly' },
+	  desc: { de: 'Search-Console-Bericht für pragma-code.de.', en: 'Search Console report for pragma-code.de.' } },
+	{ id: 'citation-tracker', name: { de: 'citation-tracker', en: 'citation-tracker' }, rhythmus: { de: 'täglich', en: 'daily' },
+	  desc: { de: 'Eigenes SaaS: misst, ob Marken in KI-Antworten zitiert werden.', en: 'My own SaaS: tracks whether brands are cited in AI answers.' } },
+	{ id: 'lead-agent', name: { de: 'lead-agent', en: 'lead-agent' }, rhythmus: { de: 'bei Eingang', en: 'on arrival' },
+	  desc: { de: 'Sortiert Anfragen vor und entwirft Antworten; gesendet wird nie automatisch.', en: 'Triages inquiries and drafts replies; nothing is ever sent automatically.' } },
+	{ id: 'reels-radar', name: { de: 'reels-radar', en: 'reels-radar' }, rhythmus: { de: 'nächtlich', en: 'nightly' },
+	  desc: { de: 'Beobachtet Social-Media-Wettbewerber über Bright Data.', en: 'Watches social media competitors via Bright Data.' } }
+];
+
+const texte = {
+	de: {
+		zustand: { aktiv: 'aktiv', teilweise: 'teilweise', bei_bedarf: 'bei Bedarf', pausiert: 'pausiert',
+			im_aufbau: 'im Aufbau', ueberfaellig: 'überfällig', fehler: 'Fehler', unbekannt: 'keine Daten' },
+		heute: 'heute', gestern: 'gestern', vorTagen: 'vor {n} Tagen', zuletzt: 'zuletzt {rel}', seit: 'seit {monat}',
+		wert: {
+			'morgen-briefing': '{ok}/{von} Tage erstellt',
+			'website-monitoring': '{ok}/{von} Läufe erfolgreich',
+			'datensicherung': '{ok}/{von} Sicherungen aktuell',
+			'pagespeed-wache': '{seiten} Seiten · diese Seite mobil {mobil}',
+			'pagespeed-wache-ohne': '{seiten} Seiten',
+			'gsc-wochenbericht:aktiv': 'erstellt und zugestellt',
+			'gsc-wochenbericht:teilweise': 'erstellt, Zustellung gestört',
+			'citation-tracker:aktiv': 'Zitationen abgefragt',
+			'citation-tracker:pausiert': 'Wiederanlauf mit dem nächsten Mandanten',
+			'lead-agent:aktiv': 'läuft gerade',
+			'lead-agent:bei_bedarf': 'wird von Hand gestartet',
+			'reels-radar:im_aufbau': 'Testlauf erfolgreich, Nachtlauf folgt'
+		},
+		standMin: 'Stand: vor {n} Min.', standStd: 'Stand: vor {n} Std.', standTage: 'Stand: vor {n} Tagen',
+		standZusatz: ' · automatisch erzeugt, nicht nachbearbeitet',
+		nichtAbrufbar: 'Live-Status gerade nicht abrufbar.',
+		footer: { neutral: 'Systemstatus ansehen', aktiv: '{n} Systeme aktiv', warn1: ' · 1 braucht Aufmerksamkeit',
+			warnN: ' · {w} brauchen Aufmerksamkeit', bad1: ' · 1 mit Fehler', badN: ' · {b} mit Fehler' }
+	},
+	en: {
+		zustand: { aktiv: 'running', teilweise: 'partial', bei_bedarf: 'on demand', pausiert: 'paused',
+			im_aufbau: 'in development', ueberfaellig: 'overdue', fehler: 'failed', unbekannt: 'no data' },
+		heute: 'today', gestern: 'yesterday', vorTagen: '{n} days ago', zuletzt: 'last {rel}', seit: 'since {monat}',
+		wert: {
+			'morgen-briefing': '{ok}/{von} days delivered',
+			'website-monitoring': '{ok}/{von} runs successful',
+			'datensicherung': '{ok}/{von} backups current',
+			'pagespeed-wache': '{seiten} pages · this site mobile {mobil}',
+			'pagespeed-wache-ohne': '{seiten} pages',
+			'gsc-wochenbericht:aktiv': 'created and delivered',
+			'gsc-wochenbericht:teilweise': 'created, delivery failing',
+			'citation-tracker:aktiv': 'citations checked',
+			'citation-tracker:pausiert': 'restarts with the next client',
+			'lead-agent:aktiv': 'running right now',
+			'lead-agent:bei_bedarf': 'started manually',
+			'reels-radar:im_aufbau': 'test run successful, nightly run next'
+		},
+		standMin: 'Updated {n} min ago', standStd: 'Updated {n} h ago', standTage: 'Updated {n} days ago',
+		standZusatz: ' · generated automatically, not edited',
+		nichtAbrufbar: 'Live status is currently unavailable.',
+		footer: { neutral: 'View system status', aktiv: '{n} systems running', warn1: ' · 1 needs attention',
+			warnN: ' · {w} need attention', bad1: ' · 1 failed', badN: ' · {b} failed' }
+	}
+}[lang];
+
+const initialStand = lang === 'de'
+	? 'Live-Status: stündlich automatisch aus den Systemen.'
+	: 'Live status: generated hourly from the systems themselves.';
+---
+
+<div class="mr" data-mr data-lang={lang}>
+	<div class="mr-bar pc-mono" aria-hidden="true">
+		<span class="mr-dots"><i></i><i></i><i></i></span>alexander@ohl — maschinenraum
+	</div>
+	<div class="mr-body">
+		<p class="mr-cmd" aria-hidden="true"><span class="mr-prompt">alexander@ohl</span>:~$ maschinenraum status</p>
+		<ul class="mr-list">
+			{systeme.map(s => (
+				<li class="mr-row" data-id={s.id} data-zustand="unbekannt">
+					<span class="mr-dot" aria-hidden="true"></span>
+					<span class="mr-name">{s.name[lang]}</span>
+					<span class="mr-status"><span data-mr-zustand>—</span><span class="mr-wann" data-mr-wann></span></span>
+					<span class="mr-desc"><span class="mr-rhythmus">{s.rhythmus[lang]}</span> · {s.desc[lang]}</span>
+					<span class="mr-wert" data-mr-wert></span>
+				</li>
+			))}
+		</ul>
+		<p class="mr-stand" data-mr-stand aria-live="polite">{initialStand}</p>
+	</div>
+	<script type="application/json" data-mr-texte set:html={JSON.stringify(texte)} />
+</div>
+
+<script>
+	type Sys = { id: string; zustand: string; zuletzt?: string | null; seit?: string | null; werte?: Record<string, number> };
+
+	const root = document.querySelector<HTMLElement>('[data-mr]');
+	if (root) void laden(root);
+
+	function fuelle(tpl: string, werte: Record<string, string | number>) {
+		return tpl.replace(/\{(\w+)\}/g, (_, k) => String(werte[k] ?? ''));
+	}
+
+	// Kalenderdaten kommen in Europe/Berlin; verglichen wird mit dem heutigen
+	// Datum dort, damit „heute“ für DACH-Besucher stimmt.
+	function tageSeit(datum: string) {
+		const heute = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin' }).format(new Date());
+		return Math.round((Date.parse(heute) - Date.parse(datum)) / 86_400_000);
+	}
+
+	function relDatum(datum: string, T: any, lang: string) {
+		const n = tageSeit(datum);
+		if (n <= 0) return T.heute;
+		if (n === 1) return T.gestern;
+		if (n <= 30) return fuelle(T.vorTagen, { n });
+		return new Date(datum + 'T12:00:00Z').toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-GB',
+			{ day: 'numeric', month: 'short', year: 'numeric' });
+	}
+
+	function monat(seit: string, lang: string) {
+		return new Date(seit + '-15T12:00:00Z').toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-GB',
+			{ month: 'short', year: 'numeric' });
+	}
+
+	function wann(s: Sys, T: any, lang: string) {
+		if ((s.zustand === 'pausiert' || s.zustand === 'im_aufbau') && s.seit) return fuelle(T.seit, { monat: monat(s.seit, lang) });
+		if (!s.zuletzt) return '';
+		const rel = relDatum(s.zuletzt, T, lang);
+		return s.zustand === 'bei_bedarf' ? fuelle(T.zuletzt, { rel }) : rel;
+	}
+
+	function wert(s: Sys, T: any) {
+		const w = s.werte ?? {};
+		if (s.id === 'pagespeed-wache') return fuelle(w.mobil != null ? T.wert[s.id] : T.wert['pagespeed-wache-ohne'], w);
+		const tpl = T.wert[`${s.id}:${s.zustand}`] ?? (Object.keys(w).length ? T.wert[s.id] : undefined);
+		return tpl ? fuelle(tpl, w) : '';
+	}
+
+	function stand(iso: string, T: any) {
+		const min = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60_000));
+		const basis = min < 120 ? fuelle(T.standMin, { n: min })
+			: min < 48 * 60 ? fuelle(T.standStd, { n: Math.round(min / 60) })
+			: fuelle(T.standTage, { n: Math.round(min / 1440) });
+		return basis + T.standZusatz;
+	}
+
+	function footer(systeme: Sys[], T: any) {
+		const el = document.querySelector<HTMLElement>('[data-mr-footer]');
+		const text = el?.querySelector('[data-mr-footer-text]');
+		if (!el || !text) return;
+		const n = systeme.filter(s => s.zustand === 'aktiv').length;
+		const w = systeme.filter(s => s.zustand === 'teilweise' || s.zustand === 'ueberfaellig').length;
+		const b = systeme.filter(s => s.zustand === 'fehler').length;
+		let t = fuelle(T.footer.aktiv, { n });
+		if (b) t += b === 1 ? T.footer.bad1 : fuelle(T.footer.badN, { b });
+		if (w) t += w === 1 ? T.footer.warn1 : fuelle(T.footer.warnN, { w });
+		text.textContent = t;
+		el.dataset.zustand = b ? 'bad' : w ? 'warn' : 'ok';
+	}
+
+	async function laden(root: HTMLElement) {
+		const lang = root.dataset.lang ?? 'de';
+		const T = JSON.parse(root.querySelector('[data-mr-texte]')?.textContent ?? '{}');
+		const standEl = root.querySelector('[data-mr-stand]');
+		let doc: { stand: string; systeme: Sys[] } | null = null;
+		try {
+			const r = await fetch('/api/maschinenraum', { headers: { Accept: 'application/json' } });
+			if (r.ok) doc = await r.json();
+		} catch { /* bleibt null */ }
+		if (!doc || !Array.isArray(doc.systeme)) {
+			if (standEl) standEl.textContent = T.nichtAbrufbar;
+			return;
+		}
+		for (const s of doc.systeme) {
+			const row = root.querySelector<HTMLElement>(`.mr-row[data-id="${CSS.escape(s.id)}"]`);
+			if (!row) continue;
+			row.dataset.zustand = s.zustand;
+			const z = row.querySelector('[data-mr-zustand]');
+			const wa = row.querySelector('[data-mr-wann]');
+			const we = row.querySelector('[data-mr-wert]');
+			if (z) z.textContent = T.zustand[s.zustand] ?? T.zustand.unbekannt;
+			if (wa) wa.textContent = wann(s, T, lang);
+			if (we) we.textContent = wert(s, T);
+		}
+		if (standEl) standEl.textContent = stand(doc.stand, T);
+		footer(doc.systeme, T);
+	}
+</script>
+
+<style>
+	.mr {
+		--mr-red: #ff6b6b;
+		background: var(--pc-navy-900);
+		border: 1px solid var(--pc-line-2);
+		border-radius: var(--pc-r-lg);
+		overflow: hidden;
+	}
+	.mr-bar {
+		display: flex; align-items: center; gap: 12px;
+		padding: 11px 16px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+		color: var(--pc-fg-3); border-bottom: 1px solid var(--pc-line); background: var(--pc-navy-800);
+	}
+	.mr-dots { display: inline-flex; gap: 6px; }
+	.mr-dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--pc-line-2); }
+	.mr-dots i:nth-child(1) { background: #ff5f57; }
+	.mr-dots i:nth-child(2) { background: #febc2e; }
+	.mr-dots i:nth-child(3) { background: #28c840; }
+	.mr-body { padding: clamp(16px, 3vw, 26px); }
+	/* Eigene Mono-Angabe statt .pc-mono: die setzt Versalien, hier sollen
+	   IDs und Werte wie im Terminal klein und lesbar bleiben. */
+	.mr-cmd, .mr-name, .mr-wert, .mr-stand { font-family: var(--pc-font-mono); }
+	.mr-cmd { font-size: 13px; color: var(--pc-fg-2); margin-bottom: 14px; }
+	.mr-prompt { color: var(--pc-yellow); font-weight: 600; }
+
+	.mr-list { list-style: none; margin: 0; padding: 0; }
+	.mr-row {
+		display: grid;
+		grid-template-columns: 14px minmax(0, 1fr) auto;
+		grid-template-areas:
+			"dot name status"
+			".   desc wert";
+		column-gap: 12px; row-gap: 4px;
+		padding: 12px 0; border-top: 1px solid var(--pc-line);
+	}
+	.mr-row:first-child { border-top: 0; }
+	.mr-dot { grid-area: dot; align-self: center; width: 9px; height: 9px; border-radius: 50%; background: var(--pc-fg-3); }
+	.mr-name { grid-area: name; font-size: 14px; font-weight: 600; color: var(--pc-fg); }
+	.mr-status { grid-area: status; justify-self: end; font-size: 13px; font-weight: 700; color: var(--pc-fg-3); white-space: nowrap; }
+	.mr-wann { font-weight: 500; color: var(--pc-fg-3); }
+	.mr-wann:not(:empty)::before { content: ' · '; }
+	.mr-desc { grid-area: desc; font-size: 13.5px; color: var(--pc-fg-2); }
+	.mr-rhythmus { color: var(--pc-fg-3); }
+	.mr-wert { grid-area: wert; justify-self: end; align-self: start; font-size: 12.5px; color: var(--pc-fg-2); text-align: right; }
+
+	/* Zustände: Punkt und Statusfarbe */
+	.mr-row[data-zustand="aktiv"] .mr-dot { background: var(--pc-green); box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.15); }
+	.mr-row[data-zustand="aktiv"] .mr-status { color: var(--pc-green); }
+	.mr-row[data-zustand="teilweise"] .mr-dot,
+	.mr-row[data-zustand="ueberfaellig"] .mr-dot { background: var(--pc-orange); }
+	.mr-row[data-zustand="teilweise"] .mr-status,
+	.mr-row[data-zustand="ueberfaellig"] .mr-status { color: var(--pc-orange); }
+	.mr-row[data-zustand="fehler"] .mr-dot { background: var(--mr-red); }
+	.mr-row[data-zustand="fehler"] .mr-status { color: var(--mr-red); }
+	.mr-row[data-zustand="bei_bedarf"] .mr-dot { background: transparent; border: 2px solid var(--pc-blue); width: 10px; height: 10px; }
+	.mr-row[data-zustand="bei_bedarf"] .mr-status { color: var(--pc-blue); }
+	.mr-row[data-zustand="pausiert"] .mr-dot,
+	.mr-row[data-zustand="im_aufbau"] .mr-dot { background: transparent; border: 2px dashed var(--pc-fg-3); width: 10px; height: 10px; }
+	.mr-row[data-zustand="pausiert"] .mr-status,
+	.mr-row[data-zustand="im_aufbau"] .mr-status { color: var(--pc-fg-2); }
+
+	.mr-stand { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--pc-line); font-size: 12px; color: var(--pc-fg-3); }
+
+	@media (max-width: 640px) {
+		.mr-row {
+			grid-template-columns: 14px minmax(0, 1fr);
+			grid-template-areas:
+				"dot name"
+				".   status"
+				".   desc"
+				".   wert";
+		}
+		.mr-status, .mr-wert { justify-self: start; text-align: left; }
+	}
+</style>

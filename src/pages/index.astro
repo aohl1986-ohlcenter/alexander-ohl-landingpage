@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { posts } from '../data/posts';
 import { PERSON_ID, jobTitle, personSameAs, pragmaCodeOrganization } from '../data/person';
+import Maschinenraum from '../components/Maschinenraum.astro';
 import CareerChapters, { type CareerChapter } from '../components/CareerChapters.astro';
 
 // Tech-Stack: mit offiziellen Herstellerseiten verlinkt (Konzepte ohne URL bleiben Text).
@@ -231,6 +232,7 @@ const personSchema = {
 				<a href="#prinzipien">Prinzipien</a>
 				<a href="#werdegang">Werdegang</a>
 				<a href="#referenzen">Referenzen</a>
+				<a href="#maschinenraum">Maschinenraum</a>
 				<a href="/blog">Blog</a>
 				<a href="#fachartikel">Fachartikel</a>
 				<a href="#kontakt" class="hd-cta">Kontakt</a>
@@ -244,6 +246,7 @@ const personSchema = {
 				<a href="#prinzipien">Prinzipien</a>
 				<a href="#werdegang">Werdegang</a>
 				<a href="#referenzen">Referenzen</a>
+				<a href="#maschinenraum">Maschinenraum</a>
 				<a href="/blog">Blog</a>
 				<a href="#fachartikel">Fachartikel</a>
 			</nav>
@@ -465,10 +468,20 @@ const personSchema = {
 			</div>
 		</section>
 
-		<!-- 05 — FACHARTIKEL & ANALYSEN -->
-		<section class="sec" id="fachartikel">
+		<!-- 05 — MASCHINENRAUM (Live-Status, siehe components/Maschinenraum.astro) -->
+		<section class="sec" id="maschinenraum">
 			<div class="pc-container">
-				<div class="sec-eyebrow pc-mono">05 — Analysen &amp; Fachartikel</div>
+				<div class="sec-eyebrow pc-mono">05 — Maschinenraum</div>
+				<h2 class="sec-title">Systeme, die gerade für mich arbeiten.</h2>
+				<p class="sec-lede">Was ich für Kunden baue, betreibe ich auch selbst. Der Status kommt automatisch aus den Systemen: stündlich aktualisiert, nicht nachbearbeitet, ohne Kunden- oder Personendaten.</p>
+				<Maschinenraum lang="de" />
+			</div>
+		</section>
+
+		<!-- 06 — FACHARTIKEL & ANALYSEN -->
+		<section class="sec sec-alt" id="fachartikel">
+			<div class="pc-container">
+				<div class="sec-eyebrow pc-mono">06 — Analysen &amp; Fachartikel</div>
 				<h2 class="sec-title">Ausgewählte Leitfäden &amp; technische Deep-Dives</h2>
 				<p class="sec-lede">Praxiswissen aus echten Implementierungen: Von generativer Suchmaschinenoptimierung (GEO) über autonome Agenten bis zu modernen Web-Architekturen. Die ausführlichen Leitfäden erscheinen hier im <a href="/blog">Blog</a>.</p>
 				<div class="articles-grid">
@@ -505,10 +518,10 @@ const personSchema = {
 		</section>
 
 		<!-- 06 — KONTAKT -->
-		<section class="sec sec-alt" id="kontakt" data-chat-fab-hide>
+		<section class="sec" id="kontakt" data-chat-fab-hide>
 			<div class="pc-container">
 				<div class="contact reveal">
-					<div class="sec-eyebrow pc-mono">06 — Kontakt</div>
+					<div class="sec-eyebrow pc-mono">07 — Kontakt</div>
 					<h2 class="sec-title">Lassen Sie uns sprechen.</h2>
 					<p class="sec-lede">Kurze Frage, konkretes Projekt oder erst einmal unverbindlich sondieren — ich antworte in der Regel innerhalb von 24 Stunden.</p>
 					<div class="contact-actions">
@@ -526,7 +539,7 @@ const personSchema = {
 	<!-- FOOTER -->
 	<footer class="ft" data-chat-fab-hide>
 		<div class="pc-container ft-social-row">
-			<div class="ft-status"><span class="live-dot"></span>Alle Systeme funktional</div>
+			<a class="ft-status" href="#maschinenraum" data-mr-footer><span class="live-dot"></span><span data-mr-footer-text>Systemstatus ansehen</span></a>
 			<nav class="ft-social" aria-label="Profile">
 				<a href="https://www.linkedin.com/in/alexander-ohl/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
 				<a href="https://www.xing.com/profile/AlexanderOhl_PragmaCode" target="_blank" rel="noopener noreferrer">Xing</a>
@@ -866,7 +879,9 @@ const personSchema = {
 			border: 1px solid var(--pc-line-2); padding: 5px 9px; border-radius: var(--pc-r-sm);
 			font-family: var(--pc-font-mono); font-size: 11.5px !important;
 		}
-		@media (max-width: 820px) {
+		/* 1080 statt 820 px, seit der Punkt „Maschinenraum“ dazukam: darunter lief
+		   die Desktop-Navigation über den Rand (840 px: 918 px Seitenbreite). */
+		@media (max-width: 1080px) {
 			.hd-nav a:not(.hd-cta):not(.hd-lang) { display: none; }
 			.hd-logo { font-size: 13.5px; }
 			/* fast deckend: bei 0.82 schien Text unter dem Kopf durch */
@@ -877,11 +892,11 @@ const personSchema = {
 			.hd-nav { gap: 8px; }
 			.hd-cta { padding: 7px 12px; }
 		}
-		@media (min-width: 821px) {
+		@media (min-width: 1081px) {
 			.hd .hd-menu:popover-open { display: none; }
 		}
 
-		/* ===== Mobiles Menü (Popover, unter 820 px) =====
+		/* ===== Mobiles Menü (Popover, unter 1080 px) =====
 		   Natives popover-Attribut: Öffnen, Escape und Tippen daneben regelt der
 		   Browser. Ohne Popover-Unterstützung bleibt das Panel verborgen, weil die
 		   :popover-open-Regel dann ungültig ist — die Seite verhält sich wie vorher. */
@@ -1199,11 +1214,23 @@ const personSchema = {
 			justify-content: space-between; padding-bottom: 20px; margin-bottom: 20px;
 			border-bottom: 1px solid var(--pc-line);
 		}
+		/* Systemstatus aus dem Maschinenraum (data-zustand setzt Maschinenraum.astro).
+		   Ohne Daten neutral — vorher stand hier fest "Alle Systeme funktional". */
 		.ft-status {
-			display: inline-flex; align-items: center; gap: 9px;
-			font-size: 13px; font-weight: 700; color: var(--pc-green);
-			padding: 8px 16px; border: 1px solid rgba(74, 222, 128, 0.25);
-			border-radius: var(--pc-r-pill); background: rgba(74, 222, 128, 0.06);
+			display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
+			font-size: 13px; font-weight: 700; color: var(--pc-fg-2);
+			padding: 8px 16px; border: 1px solid var(--pc-line-2);
+			border-radius: var(--pc-r-pill); background: rgba(255, 255, 255, 0.03);
+		}
+		.ft-status:not([data-zustand="ok"]) .live-dot { background: currentColor; animation: none; box-shadow: none; }
+		.ft-status[data-zustand="ok"] {
+			color: var(--pc-green); border-color: rgba(74, 222, 128, 0.25); background: rgba(74, 222, 128, 0.06);
+		}
+		.ft-status[data-zustand="warn"] {
+			color: var(--pc-orange); border-color: rgba(255, 157, 47, 0.3); background: rgba(255, 157, 47, 0.06);
+		}
+		.ft-status[data-zustand="bad"] {
+			color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3); background: rgba(255, 107, 107, 0.06);
 		}
 		.ft-social { display: flex; flex-wrap: wrap; gap: 8px; }
 		.ft-social a {

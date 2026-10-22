@@ -62,6 +62,18 @@ Vollständige deutsche und englische Fassung (`/` und `/en`) mit korrekter
 `getProfile`-Tool bereit, das KI-Agenten strukturierte Profildaten liefert,
 statt sie aus dem HTML raten zu lassen.
 
+### Maschinenraum (Live-Status)
+Der Abschnitt „Maschinenraum“ zeigt den Status der eigenen Systeme
+(Briefing, Monitoring, Datensicherung, PageSpeed-Wache u. a.). Ein lokaler
+Publisher schreibt stündlich ein kleines JSON in einen R2-Bucket; die Pages
+Function [`functions/api/maschinenraum.js`](functions/api/maschinenraum.js)
+liefert es unter `/api/maschinenraum` aus und prüft es gegen eine feste
+Whitelist: nur IDs, Zustände, Kalenderdaten und Zähler, keine Uhrzeiten, kein
+Freitext, keine Kunden- oder Personendaten. Beschriftungen stehen in
+[`src/components/Maschinenraum.astro`](src/components/Maschinenraum.astro).
+Braucht das R2-Binding `MASCHINENRAUM` im Pages-Projekt; ohne Daten zeigt der
+Abschnitt „nicht abrufbar“.
+
 ## Struktur
 
 ```
