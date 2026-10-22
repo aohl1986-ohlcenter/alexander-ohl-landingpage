@@ -68,6 +68,19 @@ const t = langConfig[currentLang];
     visibility: hidden !important;
     pointer-events: none !important;
   }
+  /* Ausgeblendet, solange ein Bereich mit eigenen Kontaktwegen sichtbar ist
+     (siehe tuckFabNearContact). ID-Selektor, damit chatbot.css — wird spaeter
+     geladen und mit pragma-code.de geteilt — die Transition nicht ueberschreibt. */
+  #chatbot-trigger {
+    transition: opacity 0.2s ease, transform 0.25s ease, box-shadow 0.25s ease, visibility 0s;
+  }
+  #chatbot-trigger.is-tucked {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(16px) scale(0.9);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+  }
 </style>
 
 <!-- Trigger Button -->
@@ -160,7 +173,23 @@ const t = langConfig[currentLang];
     ready = true;
   }
 
+  // Chat-Button ausblenden, solange ein Bereich mit eigenen Kontaktwegen
+  // sichtbar ist (Attribut data-chat-fab-hide): Mobil verdeckte er im
+  // Kontaktbereich sonst Buttons wie „LinkedIn“.
+  function tuckFabNearContact() {
+    const trigger = document.getElementById('chatbot-trigger');
+    const zones = document.querySelectorAll('[data-chat-fab-hide]');
+    if (!trigger || !zones.length || !('IntersectionObserver' in window)) return;
+    const visible = new Set();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+      trigger.classList.toggle('is-tucked', visible.size > 0);
+    });
+    zones.forEach((z) => io.observe(z));
+  }
+
   function scheduleChatbot() {
+    tuckFabNearContact();
     const trigger = document.getElementById('chatbot-trigger');
     if (trigger) {
       trigger.addEventListener('pointerenter', bootChatbot, { once: true });

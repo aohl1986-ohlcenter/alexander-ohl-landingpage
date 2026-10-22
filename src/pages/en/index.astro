@@ -74,7 +74,7 @@ const principles: { num: string; title: string; desc: string }[] = [
 
 // orgUrl: company website of each milestone (E-E-A-T trust signal).
 const timeline: { year: string; role: string; org: string; orgUrl?: string; text: string }[] = [
-	{ year: '2024', role: 'Founder & IT Generalist', org: 'Pragma-Code', orgUrl: 'https://www.pragma-code.de/en', text: 'IT consulting for SMEs: AI automation (RAG, n8n), full-stack web development, SEO and e-commerce.' },
+	{ year: '2024', role: 'Founder & AI Automation Engineer', org: 'Pragma-Code', orgUrl: 'https://www.pragma-code.de/en', text: 'IT consulting for SMEs: AI automation (RAG, n8n), full-stack web development, SEO and e-commerce.' },
 	{ year: '2023', role: 'PPC Manager / User Acquisition', org: 'Next Choice Agency', orgUrl: 'https://next-choice.de/', text: 'Paid media and data-driven funnel optimization. Supported agency clients alongside Studio 360° — including Alando in Osnabrück (hotel, bar & event venue).' },
 	{ year: '2020', role: 'Digital Agency Founder', org: 'Studio 360°', text: 'International digital agency for web development and online marketing.' },
 	{ year: '2018', role: 'IT Freelancer', org: 'Freelance · Remote', text: 'Remote projects in IT, web, SEO and marketing for clients across Germany — managing up to seven concurrently.' },
@@ -232,9 +232,28 @@ const personSchema = {
 				<a href="#articles">Articles</a>
 				<a href="#contact" class="hd-cta">Contact</a>
 				<a href="/" class="hd-lang" lang="de" aria-label="Auf Deutsch wechseln">DE</a>
+				<button type="button" class="hd-menu-btn" popovertarget="hd-menu" aria-label="Menu"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path class="i-open" d="M4 7h16M4 12h16M4 17h16" /><path class="i-close" d="M6 6l12 12M18 6L6 18" /></svg></button>
+			</nav>
+		</div>
+		<div id="hd-menu" class="hd-menu" popover>
+			<nav aria-label="Sections">
+				<a href="#expertise">Expertise</a>
+				<a href="#principles">Principles</a>
+				<a href="#background">Background</a>
+				<a href="#references">References</a>
+				<a href="#articles">Articles</a>
 			</nav>
 		</div>
 	</header>
+
+	<script>
+		// Mobiles Menü: nach Auswahl eines Abschnitts schließen — ein Popover
+		// schließt sonst erst beim Tippen daneben.
+		const hdMenu = document.getElementById('hd-menu');
+		hdMenu?.querySelectorAll('a').forEach(a => {
+			a.addEventListener('click', () => hdMenu.hidePopover?.());
+		});
+	</script>
 
 	<main>
 		<!-- HERO -->
@@ -466,7 +485,7 @@ const personSchema = {
 		</section>
 
 		<!-- 06 — CONTACT -->
-		<section class="sec sec-alt" id="contact">
+		<section class="sec sec-alt" id="contact" data-chat-fab-hide>
 			<div class="pc-container">
 				<div class="contact reveal">
 					<div class="sec-eyebrow pc-mono">06 — Contact</div>
@@ -485,7 +504,7 @@ const personSchema = {
 	</main>
 
 	<!-- FOOTER -->
-	<footer class="ft">
+	<footer class="ft" data-chat-fab-hide>
 		<div class="pc-container ft-social-row">
 			<div class="ft-status"><span class="live-dot"></span>All systems functional</div>
 			<nav class="ft-social" aria-label="Profiles">
@@ -515,7 +534,7 @@ const personSchema = {
 	<script>
 		// Terminal-Typing with authentic character-by-character timing and interactive CLI
 		const initialLines = [
-			{ cmd: 'whoami', out: 'Alexander Ohl — IT Generalist & AI Engineer' },
+			{ cmd: 'whoami', out: 'Alexander Ohl — AI Automation Engineer & Full-Stack Developer' },
 			{ cmd: 'cat stack.txt', out: 'Web · SEO/GEO · AI Automation · E-Commerce' },
 			{ cmd: './verfuegbarkeit.sh', out: '● available for projects — DACH · Remote' }
 		];
@@ -831,7 +850,48 @@ Overview: https://www.pragma-code.de/en/packages-pricing`,
 		@media (max-width: 820px) {
 			.hd-nav a:not(.hd-cta):not(.hd-lang) { display: none; }
 			.hd-logo { font-size: 13.5px; }
+			/* fast deckend: bei 0.82 schien Text unter dem Kopf durch */
+			.hd { background: rgba(15, 20, 48, 0.96); }
+			.hd-nav .hd-menu-btn { display: inline-flex; }
 		}
+		@media (max-width: 380px) {
+			.hd-nav { gap: 8px; }
+			.hd-cta { padding: 7px 12px; }
+		}
+		@media (min-width: 821px) {
+			.hd .hd-menu:popover-open { display: none; }
+		}
+
+		/* ===== Mobiles Menü (Popover, unter 820 px) =====
+		   Natives popover-Attribut: Öffnen, Escape und Tippen daneben regelt der
+		   Browser. Ohne Popover-Unterstützung bleibt das Panel verborgen, weil die
+		   :popover-open-Regel dann ungültig ist — die Seite verhält sich wie vorher. */
+		.hd-menu-btn {
+			display: none; align-items: center; justify-content: center;
+			width: 36px; height: 36px; padding: 0; cursor: pointer;
+			color: var(--pc-fg); background: transparent;
+			border: 1px solid var(--pc-line-2); border-radius: var(--pc-r-sm);
+		}
+		.hd-menu-btn svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+		.hd-menu-btn .i-close { display: none; }
+		.hd:has(.hd-menu:popover-open) .hd-menu-btn .i-open { display: none; }
+		.hd:has(.hd-menu:popover-open) .hd-menu-btn .i-close { display: inline; }
+		.hd-menu { display: none; }
+		.hd-menu:popover-open {
+			display: block; position: fixed; inset: 64px 0 auto 0;
+			width: auto; max-width: none; margin: 0;
+			padding: 4px var(--pc-gutter) 16px;
+			color: var(--pc-fg); background: rgb(15, 20, 48);
+			border: 0; border-bottom: 1px solid var(--pc-line-2);
+		}
+		.hd-menu::backdrop { top: 64px; background: rgba(5, 8, 22, 0.6); }
+		.hd-menu nav { display: flex; flex-direction: column; }
+		.hd-menu a {
+			padding: 14px 0; text-decoration: none; font-size: 16px; font-weight: 600;
+			color: var(--pc-fg-2); border-bottom: 1px solid var(--pc-line);
+		}
+		.hd-menu a:last-child { border-bottom: 0; }
+		.hd-menu a:hover, .hd-menu a:focus-visible { color: var(--pc-yellow); }
 
 		/* ===== Hero ===== */
 		.hero { position: relative; overflow: hidden; padding: clamp(56px, 9vw, 110px) 0; }

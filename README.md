@@ -7,8 +7,8 @@
 [![Cloudflare Pages](https://img.shields.io/badge/Cloudflare_Pages-F38020?logo=cloudflare&logoColor=white)](https://pages.cloudflare.com)
 [![Deploy](https://github.com/aohl1986-ohlcenter/alexander-ohl-landingpage/actions/workflows/deploy.yml/badge.svg)](https://github.com/aohl1986-ohlcenter/alexander-ohl-landingpage/actions/workflows/deploy.yml)
 
-Personal-Branding- und Entity-SEO-Landingpage für **Alexander Ohl** — Freelance
-IT-Consultant, KI-Automatisierung und Webentwicklung, Gründer von
+Personal-Branding- und Entity-SEO-Landingpage für **Alexander Ohl** —
+KI-Automatisierungs-Engineer & Full-Stack-Entwickler, Gründer von
 [Pragma Code](https://www.pragma-code.de).
 
 **Live:** [alexander-ohl.com](https://www.alexander-ohl.com)
