@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { PERSON_ID, jobTitle, personSameAs, pragmaCodeOrganization } from '../../data/person';
 import CareerChapters, { type CareerChapter } from '../../components/CareerChapters.astro';
 
 // Tech stack: linked to official vendor sites where applicable.
@@ -189,33 +190,14 @@ const personSchema = {
 	"dateModified": buildDate,
 	"mainEntity": {
 		"@type": "Person",
-		"@id": "https://www.alexander-ohl.com/#person",
+		"@id": PERSON_ID,
 		"name": "Alexander Ohl",
-		"jobTitle": "AI Automation Engineer",
+		"jobTitle": jobTitle.en,
 		"url": "https://www.alexander-ohl.com/en",
 		"image": "https://www.alexander-ohl.com/assets/alexander-ohl-portrait.webp",
 		"email": "mailto:info@pragma-code.de",
-		"sameAs": [
-			"https://www.linkedin.com/in/alexander-ohl/",
-			"https://www.xing.com/profile/AlexanderOhl_PragmaCode",
-			"https://github.com/aohl1986-ohlcenter",
-			"https://g.dev/alexanderohl",
-			"https://www.gulp.de/gulp2/g/spezialisten/profil/alexander.ohl",
-			"https://www.pragma-code.de/alexander-ohl",
-			"https://www.facebook.com/alexander.ohl1986/",
-			"https://www.instagram.com/alexander.ohl",
-			"https://de.pinterest.com/alexander_ohl_/",
-			"https://www.youtube.com/channel/UCcnYJ9p6KOQML5FaYyzl2uQ",
-			"https://www.behance.net/alexander-ohl",
-			"https://vk.com/ohlcenter",
-			"https://winfuture.de/mywf/174860/",
-			"https://taplink.cc/alexander.ohl"
-		],
-		"worksFor": {
-			"@type": "Organization",
-			"name": "Pragma-Code",
-			"url": "https://www.pragma-code.de"
-		},
+		"sameAs": personSameAs,
+		"worksFor": pragmaCodeOrganization,
 		"knowsAbout": ["AI Automation", "Web Development", "SEO", "Generative Engine Optimization", "E-Commerce", "React", "Next.js", "Astro", "n8n", "RAG"],
 		"knowsLanguage": ["de", "en", "ru"],
 		"alumniOf": [
@@ -232,7 +214,7 @@ const personSchema = {
 	lang="en"
 >
 	<Fragment slot="head">
-		<link rel="preload" as="image" href="/assets/alexander-ohl-buero-1200.webp" fetchpriority="high" />
+		<link rel="preload" as="image" href="/assets/alexander-ohl-buero-1200.webp" imagesrcset="/assets/alexander-ohl-buero-800.webp 800w, /assets/alexander-ohl-buero-1200.webp 1200w, /assets/alexander-ohl-buero-1600.webp 1600w" imagesizes="(max-width: 1200px) 100vw, 1104px" fetchpriority="high" />
 		<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 	</Fragment>
 
@@ -491,7 +473,7 @@ const personSchema = {
 					<h2 class="sec-title">Let's talk.</h2>
 					<p class="sec-lede">A quick question, a concrete project or just an exploratory chat — I usually reply within 24 hours.</p>
 					<div class="contact-actions">
-						<a class="btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">Book 30-Min. Discovery Call</a>
+						<a class="btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">Book 20-Min. Discovery Call</a>
 						<a class="btn-ghost" href="mailto:info@pragma-code.de">info@pragma-code.de</a>
 						<a class="btn-ghost" href="https://www.pragma-code.de/projektanfrage" target="_blank" rel="noopener">Project request at Pragma-Code ↗</a>
 						<a class="btn-ghost" href="https://www.pragma-code.de/en/packages-pricing" target="_blank" rel="noopener">Packages & Pricing ↗</a>
@@ -557,7 +539,7 @@ const personSchema = {
   skills       - Tech stack, languages & frameworks
   principles   - 4 core engineering & architecture principles
   projects     - Featured client projects & SaaS products
-  call         - Schedule a 30-min discovery call
+  call         - Schedule a 20-min discovery call
   pricing      - Packages, fixed prices & retainers
   contact      - Contact options (Email, quote request)
   clear        - Clear terminal screen`,
@@ -585,7 +567,7 @@ const personSchema = {
 • Physiotherapie Osnabrück: Website & local SEO
 • Shooting Solutions (shooting-solutions.de): 6-month SEO sprint`,
 
-			call: `📅 Book a free 30-min discovery call with Alexander:
+			call: `📅 Book a free 20-min discovery call with Alexander:
 👉 https://calendly.com/pragma-code-info/discovery-call`,
 
 			pricing: `💰 Packages & Pricing at Pragma-Code:

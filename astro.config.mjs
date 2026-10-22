@@ -14,7 +14,11 @@ export default defineConfig({
     // ohne Leerzeichen (58 Stellen). Kosten dort gemessen: ~1 KB gzip pro Seite.
     compressHTML: false,
     build: {
-        format: 'file'
+        format: 'file',
+        // CSS direkt ins HTML (22.10.2026): Je Seite sind es nur ~5 KB gzip, als
+        // Dateien waren es zwei render-blockierende Requests vor dem ersten
+        // Rendern (FCP mobil 1,7 s laut PageSpeed).
+        inlineStylesheets: 'always'
     },
     integrations: [sitemap({
         filter: (page) => {

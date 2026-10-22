@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { posts } from '../data/posts';
+import { PERSON_ID, jobTitle, personSameAs, pragmaCodeOrganization } from '../data/person';
 import CareerChapters, { type CareerChapter } from '../components/CareerChapters.astro';
 
 // Tech-Stack: mit offiziellen Herstellerseiten verlinkt (Konzepte ohne URL bleiben Text).
@@ -192,33 +193,14 @@ const personSchema = {
 	"dateModified": buildDate,
 	"mainEntity": {
 		"@type": "Person",
-		"@id": "https://www.alexander-ohl.com/#person",
+		"@id": PERSON_ID,
 		"name": "Alexander Ohl",
-		"jobTitle": "KI-Automatisierungs-Engineer",
+		"jobTitle": jobTitle.de,
 		"url": "https://www.alexander-ohl.com/",
 		"image": "https://www.alexander-ohl.com/assets/alexander-ohl-portrait.webp",
 		"email": "mailto:info@pragma-code.de",
-		"sameAs": [
-			"https://www.linkedin.com/in/alexander-ohl/",
-			"https://www.xing.com/profile/AlexanderOhl_PragmaCode",
-			"https://github.com/aohl1986-ohlcenter",
-			"https://g.dev/alexanderohl",
-			"https://www.gulp.de/gulp2/g/spezialisten/profil/alexander.ohl",
-			"https://www.pragma-code.de/alexander-ohl",
-			"https://www.facebook.com/alexander.ohl1986/",
-			"https://www.instagram.com/alexander.ohl",
-			"https://de.pinterest.com/alexander_ohl_/",
-			"https://www.youtube.com/channel/UCcnYJ9p6KOQML5FaYyzl2uQ",
-			"https://www.behance.net/alexander-ohl",
-			"https://vk.com/ohlcenter",
-			"https://winfuture.de/mywf/174860/",
-			"https://taplink.cc/alexander.ohl"
-		],
-		"worksFor": {
-			"@type": "Organization",
-			"name": "Pragma-Code",
-			"url": "https://www.pragma-code.de"
-		},
+		"sameAs": personSameAs,
+		"worksFor": pragmaCodeOrganization,
 		"knowsAbout": ["KI-Automatisierung", "Webentwicklung", "SEO", "Generative Engine Optimization", "E-Commerce", "React", "Next.js", "Astro", "n8n", "RAG"],
 		"knowsLanguage": ["de", "en", "ru"],
 		"alumniOf": [
@@ -234,7 +216,7 @@ const personSchema = {
 	description="Alexander Ohl — KI-Automatisierungs-Engineer und Gründer von Pragma-Code: 15+ Jahre Erfahrung in KI-Automatisierung, Webentwicklung, SEO/GEO und E-Commerce. Remote im DACH-Raum."
 >
 	<Fragment slot="head">
-		<link rel="preload" as="image" href="/assets/alexander-ohl-buero-1200.webp" fetchpriority="high" />
+		<link rel="preload" as="image" href="/assets/alexander-ohl-buero-1200.webp" imagesrcset="/assets/alexander-ohl-buero-800.webp 800w, /assets/alexander-ohl-buero-1200.webp 1200w, /assets/alexander-ohl-buero-1600.webp 1600w" imagesizes="(max-width: 1200px) 100vw, 1104px" fetchpriority="high" />
 		<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 	</Fragment>
 
@@ -510,7 +492,7 @@ const personSchema = {
 					<h2 class="sec-title">Lassen Sie uns sprechen.</h2>
 					<p class="sec-lede">Kurze Frage, konkretes Projekt oder erst einmal unverbindlich sondieren — ich antworte in der Regel innerhalb von 24 Stunden.</p>
 					<div class="contact-actions">
-						<a class="btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">30-Min. Discovery-Call buchen</a>
+						<a class="btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">20-Min. Discovery-Call buchen</a>
 						<a class="btn-ghost" href="mailto:info@pragma-code.de">info@pragma-code.de</a>
 						<a class="btn-ghost" href="https://www.pragma-code.de/projektanfrage" target="_blank" rel="noopener">Projektanfrage bei Pragma-Code ↗</a>
 						<a class="btn-ghost" href="https://www.pragma-code.de/pakete-preise" target="_blank" rel="noopener">Pakete & Preise ↗</a>
@@ -575,7 +557,7 @@ const personSchema = {
   skills       - Tech-Stack, Sprachen & Frameworks
   principles   - 4 unverrückbare Arbeits- & Architektur-Prinzipien
   projects     - Ausgewählte Kundenprojekte & SaaS-Produkte
-  call         - 30-Min. Discovery-Call vereinbaren
+  call         - 20-Min. Discovery-Call vereinbaren
   pricing      - Pakete, Festpreise & monatliche Retainer
   contact      - Kontaktmöglichkeiten (E-Mail, Projektanfrage)
   clear        - Terminalausgabe leeren`,
@@ -603,7 +585,7 @@ const personSchema = {
 • Physiotherapie Osnabrück: Webdesign & Local SEO
 • Shooting Solutions (shooting-solutions.de): 6-Monate SEO-Sprint`,
 
-			call: `📅 Kostenlosen 30-Min. Discovery-Call mit Alexander buchen:
+			call: `📅 Kostenlosen 20-Min. Discovery-Call mit Alexander buchen:
 👉 https://calendly.com/pragma-code-info/discovery-call`,
 
 			pricing: `💰 Pakete & Preise von Pragma-Code:

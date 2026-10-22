@@ -21,9 +21,9 @@ import Layout from '../layouts/Layout.astro';
 
 			<h2>2. Allgemeines zur Datenverarbeitung</h2>
 			<p>
-				Diese Website ist eine statische Informationsseite. Es werden <strong>keine Cookies</strong> gesetzt,
-				keine Tracking- oder Analyse-Tools eingesetzt und keine Kontaktformulare betrieben.
-				Eine Registrierung ist nicht möglich.
+				Diese Website ist eine statische Informationsseite. Es werden <strong>keine Cookies</strong> gesetzt
+				und keine Kontaktformulare betrieben. Eine Registrierung ist nicht möglich. Zur Reichweitenmessung
+				setzen wir Cloudflare Web Analytics ein (Abschnitt 4), das ohne Cookies arbeitet.
 			</p>
 
 			<h2>3. Server-Logfiles &amp; Content Delivery (Cloudflare)</h2>
@@ -37,14 +37,41 @@ import Layout from '../layouts/Layout.astro';
 				Weitere Informationen: <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">cloudflare.com/privacypolicy</a>
 			</p>
 
-			<h2>4. Kontaktaufnahme per E-Mail</h2>
+			<h2>4. Reichweitenmessung (Cloudflare Web Analytics)</h2>
+			<p>
+				Um zu verstehen, wie diese Website genutzt wird und wie schnell sie lädt, nutzen wir Cloudflare
+				Web Analytics (Anbieter: Cloudflare, Inc., siehe oben). Dabei wird ein kleines Skript von
+				static.cloudflareinsights.com geladen, das die aufgerufene Seite, die Herkunftsseite, Browser,
+				Gerätetyp, das aus der IP-Adresse abgeleitete Land sowie Ladezeit-Messwerte an Cloudflare
+				übermittelt. Nach Angaben von Cloudflare werden dafür keine Cookies oder sonstigen
+				Speichertechniken im Browser eingesetzt, und Besucher werden nicht über IP-Adresse,
+				Browserkennung oder andere Merkmale wiedererkannt („Fingerprinting“). Die Auswertung erfolgt
+				ausschließlich in zusammengefasster Form.
+			</p>
+			<p>
+				Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse liegt darin, die
+				Reichweite und die technische Qualität dieser Website zu messen und zu verbessern. Sie können
+				der Verarbeitung widersprechen, indem Sie das Skript von static.cloudflareinsights.com in Ihrem
+				Browser blockieren (z. B. mit einem Inhaltsblocker).
+			</p>
+
+			<h2>5. KI-Assistent</h2>
+			<p>
+				Der Assistent unter <a href="/assistent">/assistent</a> arbeitet vollständig in Ihrem Browser:
+				Ihre Eingaben werden weder übertragen noch gespeichert. Im Browser gespeichert wird nur Ihre
+				Wahl zwischen hellem und dunklem Design. Fragen Sie nach Preisen, lädt Ihr Browser die aktuelle
+				Preisliste von www.pragma-code.de, der Website desselben Verantwortlichen; dabei wird technisch
+				bedingt Ihre IP-Adresse an diesen Server übermittelt (Art. 6 Abs. 1 lit. f DSGVO).
+			</p>
+
+			<h2>6. Kontaktaufnahme per E-Mail</h2>
 			<p>
 				Wenn Sie per E-Mail Kontakt aufnehmen, werden Ihre Angaben (E-Mail-Adresse, Inhalt der
 				Nachricht) zur Bearbeitung der Anfrage verarbeitet (Art. 6 Abs. 1 lit. b DSGVO) und
 				gelöscht, sobald sie für die Bearbeitung nicht mehr erforderlich sind.
 			</p>
 
-			<h2>5. Ihre Rechte</h2>
+			<h2>7. Ihre Rechte</h2>
 			<p>
 				Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO),
 				Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO),
@@ -53,7 +80,7 @@ import Layout from '../layouts/Layout.astro';
 				Datenschutz-Aufsichtsbehörde (Art. 77 DSGVO).
 			</p>
 
-			<h2>6. Externe Links</h2>
+			<h2>8. Externe Links</h2>
 			<p>
 				Diese Website verlinkt auf externe Angebote (z. B. LinkedIn, GitHub, pragma-code.de).
 				Beim Aufruf dieser Links gelten die Datenschutzbestimmungen der jeweiligen Anbieter.
@@ -68,6 +95,7 @@ import Layout from '../layouts/Layout.astro';
 		h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 28px; }
 		h2 { font-size: 18px; font-weight: 800; margin: 32px 0 10px; }
 		p { color: var(--pc-fg-2); font-size: 15px; }
+		p + p { margin-top: 12px; }
 		p a { color: var(--pc-yellow); text-decoration: none; border-bottom: 1px solid rgba(255,200,41,.35); }
 	</style>
 </Layout>

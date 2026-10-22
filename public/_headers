@@ -5,7 +5,13 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 # Statische Assets: 1 Jahr immutable cachen (Dateinamen sind stabil/versioniert)
 /assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Astro-Build-Dateien tragen einen Inhalts-Hash im Namen; ohne diese Regel
+# lieferte Pages sie nur mit max-age=14400 (4 h) aus.
+/_astro/*
   Cache-Control: public, max-age=31536000, immutable

@@ -2,6 +2,7 @@
 import Layout from './Layout.astro';
 import '../styles/blog.css';
 import { bySlug, formatDate, type Post } from '../data/posts';
+import { PERSON_ID, jobTitle, personSameAs } from '../data/person';
 
 export interface FaqItem { q: string; a: string }
 export interface GlossaryItem { term: string; def: string }
@@ -21,28 +22,15 @@ const related: Post[] = post.related.map(bySlug);
 const siteRoot = 'https://www.alexander-ohl.com';
 const url = `${siteRoot}/blog/${post.slug}`;
 
-// Autoren-Entität: identisch zu den Profil-Links im Footer der Landingpage,
-// damit LLMs und Suchmaschinen dieselbe Person über alle Seiten hinweg auflösen.
-const authorSameAs = [
-	'https://www.pragma-code.de/alexander-ohl',
-	'https://www.linkedin.com/in/alexander-ohl/',
-	'https://www.xing.com/profile/AlexanderOhl_PragmaCode',
-	'https://github.com/aohl1986-ohlcenter',
-	'https://www.gulp.de/gulp2/g/spezialisten/profil/alexander.ohl',
-	'https://g.dev/alexanderohl',
-	'https://www.provenexpert.com/pragma-code-llc/',
-	'https://www.behance.net/alexander-ohl'
-];
-
+// Autoren-Entität: dieselbe Person wie auf der Startseite (src/data/person.ts),
+// damit LLMs und Suchmaschinen sie über alle Seiten hinweg auflösen.
 const author = {
 	'@type': 'Person',
-	'@id': `${siteRoot}/#person`,
+	'@id': PERSON_ID,
 	name: 'Alexander Ohl',
 	url: siteRoot,
-	jobTitle: 'KI-Automatisierungs-Engineer & Full-Stack-Entwickler',
-	knowsLanguage: ['de', 'en'],
-	areaServed: ['DE', 'AT', 'CH'],
-	sameAs: authorSameAs
+	jobTitle: jobTitle.de,
+	sameAs: personSameAs
 };
 
 const publisher = {
@@ -255,11 +243,11 @@ const glossarySchema = {
 			<section class="bl-cta">
 				<h2>Passt das Thema zu Ihrem Vorhaben?</h2>
 				<p>
-					30 Minuten, konkrete Einschätzung, keine Verkaufspräsentation. Sie erfahren, was in Ihrem
+					20 Minuten, konkrete Einschätzung, keine Verkaufspräsentation. Sie erfahren, was in Ihrem
 					Fall realistisch ist — und was Sie sich sparen können.
 				</p>
 				<div class="bl-cta-actions">
-					<a class="bl-btn bl-btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">30-Min. Discovery-Call buchen</a>
+					<a class="bl-btn bl-btn-primary" href="https://calendly.com/pragma-code-info/discovery-call" target="_blank" rel="noopener">20-Min. Discovery-Call buchen</a>
 					<a class="bl-btn bl-btn-ghost" href="mailto:info@pragma-code.de">info@pragma-code.de</a>
 					<a class="bl-btn bl-btn-ghost" href={post.service.url} target="_blank" rel="noopener">{post.service.label} ↗</a>
 				</div>
