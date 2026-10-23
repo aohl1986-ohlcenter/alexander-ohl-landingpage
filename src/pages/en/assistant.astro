@@ -1,6 +1,7 @@
 ---
 // src/pages/en/assistant.astro — Standalone AI Assistant for Alexander Ohl
 // Shareable chatbot page without header/footer for personal branding.
+import '../../styles/icons.css';
 ---
 <!DOCTYPE html>
 <html lang="en" data-theme="auto">
@@ -69,10 +70,17 @@
         }
       },
       {
-        "@type": "SoftwareApplication",
+        "@type": "WebApplication",
         "name": "Alexander Ohl AI Assistant",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web",
+        "description": "Rule-based assistant in the browser: answers questions about Alexander Ohl's background and services and estimates project scope, price range and duration.",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR"
+        },
         "url": "https://www.alexander-ohl.com/en/assistant",
         "provider": {
           "@type": "Person",
@@ -84,11 +92,6 @@
   }</script>
 
   <link rel="preload" href="/assets/fonts/manrope-var-latin.woff2" as="font" type="font/woff2" crossorigin />
-
-  <!-- Phosphor Icons -->
-  <link rel="preload" href="/assets/phosphor/phosphor.css?v=75527284" as="style"
-    onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="/assets/phosphor/phosphor.css?v=75527284" /></noscript>
 
   <!-- Globaler Reset: bewusst NICHT im scoped <style> unten. Astro haengt scoped
        Styles ans Head-Ende und wuerde den Reset (als [data-astro-cid]-Selektor
@@ -280,7 +283,7 @@
         <div class="chatbot-header">
           <div class="chatbot-profile">
             <div class="chatbot-avatar-container">
-              <img src="/assets/alexander-ohl-portrait.webp" alt="Alexander Ohl" class="chatbot-avatar" width="42" height="42" loading="eager" />
+              <img src="/assets/alexander-ohl-portrait-84.webp" srcset="/assets/alexander-ohl-portrait-84.webp 2x, /assets/alexander-ohl-portrait-128.webp 3x" alt="Alexander Ohl" class="chatbot-avatar" width="42" height="42" loading="eager" />
               <span class="chatbot-status-dot"></span>
             </div>
             <div class="chatbot-info">

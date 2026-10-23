@@ -1,5 +1,23 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { execFileSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+
+// lastmod für die Sitemap: Datum des letzten Commits, der die Seite selbst oder das
+// gemeinsame Layout geändert hat. Kein Build-Datum — das wäre bei jedem Deploy „neu“,
+// und Google ignoriert lastmod, das erkennbar nicht stimmt. Braucht die volle
+// Git-Historie (deploy.yml: fetch-depth 0); ohne Treffer bleibt lastmod weg.
+const lastmod = (url) => {
+    const path = new URL(url).pathname.replace(/\/+$/, '') || '/index';
+    const file = [`src/pages${path}.astro`, `src/pages${path}/index.astro`].find(existsSync);
+    if (!file) return undefined;
+    try {
+        const date = execFileSync('git', ['log', '-1', '--format=%cI', '--', file, 'src/layouts'], { encoding: 'utf8' }).trim();
+        return date || undefined;
+    } catch {
+        return undefined;
+    }
+};
 
 // Gleiche URL-Konventionen wie pragma-code.de (keine Trailing-Slashes).
 // build.format 'file' statt 'directory': Cloudflare Pages liefert /en.html
@@ -29,6 +47,7 @@ export default defineConfig({
             if (item.url !== 'https://www.alexander-ohl.com' && item.url !== 'https://www.alexander-ohl.com/') {
                 item.url = item.url.replace(/\/+$/, '');
             }
+            item.lastmod = lastmod(item.url);
             return item;
         }
     })]
