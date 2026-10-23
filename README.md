@@ -48,7 +48,12 @@ Frontend-Framework und ohne externe Requests zur Laufzeit.
 - Zweisprachige Wissensbasis in [`src/scripts/chatbot-personal.js`](src/scripts/chatbot-personal.js)
 
 ### Design und UX
-- **Terminal-Card** im Hero — animierte `whoami`-Ausgabe mit Typewriter-Effekt
+- **Terminal-Card** im Hero — animierte `whoami`-Ausgabe mit Typewriter-Effekt,
+  danach interaktiv: `git log` zeigt den Werdegang als Commit-Historie
+  (`git show <hash>` für Details), `stack --json` den Tech-Stack. Die Commits
+  erzeugt [`src/data/werdegang-git.ts`](src/data/werdegang-git.ts) beim Build aus
+  denselben Stationen wie der Abschnitt Werdegang; die Ausgabe setzt
+  [`src/scripts/terminal-git.ts`](src/scripts/terminal-git.ts)
 - **Tech-Ticker** mit laufenden Technologie-Badges
 - Scroll-basierte Reveal-Animationen über CSS `animation-timeline: view()`
 - Responsives Spacing über `clamp()`, Dark-First im Pragma-Code-Farbschema
