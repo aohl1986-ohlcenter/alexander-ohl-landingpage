@@ -1,0 +1,119 @@
+---
+// Kundenstimmen im Abschnitt Referenzen (23.10.2026).
+// Quelle: Repo pragma-code-website — src/data/reviews-data.js (IDs kuehltau, esen),
+// EN-Fassungen aus public/assets/i18n/reviews-en.json; ImkerPur aus der
+// Videobewertung vom 16.09.2026 (CaseStudyImkerpurKundenstimme.astro, Freigabe für
+// Name und Verlinkung am 17.09.2026).
+// Nur Stimmen mit Namen, Link und Freigabe. Wortlaut nicht umschreiben, Kürzungen
+// nur mit […]. Bewusst ohne Sterne und ohne Review-Schema: Eigenbewertungen auf der
+// eigenen Seite wertet Google nicht, und es gibt keinen Prüfweg, der sie belegt.
+export interface Props { lang: 'de' | 'en' }
+const { lang } = Astro.props;
+
+const stimmen = [
+	{
+		id: 'imkerpur', featured: true,
+		person: 'Mihail Maron', role: { de: 'Inhaber', en: 'Owner' }, company: 'ImkerPur', url: 'https://imkerpur.de/',
+		date: { de: 'September 2026 · Videobewertung', en: 'September 2026 · video testimonial' },
+		quote: {
+			de: 'Man merkt auf jeden Fall, dass Alexander nicht nur bei seinem eigenen Unternehmen Pragma Code alles gut aufgesetzt hat, sondern er beherrscht die unterschiedlichen KIs und prüft ausgiebig und sehr gründlich […]. Wir sehen regelmäßig bei Search Console die Statistiken, dass die Seiten Traffic aufbauen, Traffic zum Shop lenken. […] Da kann ich Alexander sehr, sehr gut empfehlen.',
+			en: 'You can definitely tell that Alexander has not only set everything up well in his own company, Pragma Code — he masters the different AIs and checks thoroughly and very carefully […]. We regularly see in Search Console that the pages are building traffic and directing traffic to the shop. […] I can highly recommend Alexander.'
+		},
+		video: { de: 'https://www.pragma-code.de/case-study-imkerpur#kundenstimme', en: 'https://www.pragma-code.de/en/case-study-imkerpur#kundenstimme' }
+	},
+	{
+		id: 'kuehltau',
+		person: 'Alexander Kühltau', role: { de: 'Inhaber & Geschäftsführer', en: 'Owner & Managing Director' }, company: 'K&K Bau GbR', url: 'https://k-kbau.de/',
+		date: { de: 'März 2026', en: 'March 2026' },
+		quote: {
+			de: 'Pragma-Code hat unsere Webseite für K&K Bau professionell umgesetzt. Das Design spiegelt unsere Qualitätsarbeit wider und bringt uns regelmäßig neue Kundenanfragen über Google. Absolut empfehlenswert!',
+			en: 'Pragma-Code professionally built our website for K&K Bau. The design reflects our quality workmanship and regularly brings us new customer inquiries via Google. Highly recommended!'
+		}
+	},
+	{
+		id: 'esen',
+		person: 'Ali Esen', role: { de: 'Geschäftsführer', en: 'Managing Director' }, company: 'EsenTrans', url: 'https://esentrans.de/',
+		date: { de: 'März 2026', en: 'March 2026' },
+		quote: {
+			de: '173 Landingpages, SEO-Optimierung und Google Ads – Pragma-Code hat unsere Online-Sichtbarkeit auf ein völlig neues Level gehoben. Wir bekommen jetzt Anfragen aus ganz Deutschland. Absolute Profis!',
+			en: '173 landing pages, SEO optimization and Google Ads – Pragma-Code lifted our online visibility to a whole new level. We now receive inquiries from all over Germany. Absolute professionals!'
+		}
+	}
+];
+
+const t = {
+	de: {
+		title: 'Was Kunden sagen',
+		video: 'Videobewertung ansehen ↗',
+		note: 'Ausgewählte Kundenstimmen. Der Wortlaut ist von den Kunden zur Veröffentlichung freigegeben, Kürzungen sind mit […] markiert.',
+		open: '„', close: '“'
+	},
+	en: {
+		title: 'What clients say',
+		video: 'Watch the video testimonial ↗',
+		note: 'Selected client testimonials, translated from German. The wording is approved for publication by the clients; omissions are marked […].',
+		open: '“', close: '”'
+	}
+}[lang];
+---
+
+<div class="kv">
+	<h3 class="kv-title">{t.title}</h3>
+	<div class="kv-grid">
+		{stimmen.map(s => (
+			<figure class:list={['kv-card', 'reveal', { 'kv-featured': s.featured }]}>
+				<blockquote class="kv-quote" cite={s.video?.[lang] ?? s.url}>
+					<p>{t.open}{s.quote[lang]}{t.close}</p>
+				</blockquote>
+				<figcaption class="kv-cap">
+					<span class="kv-person">{s.person}</span>
+					<span class="kv-role">{s.role[lang]}, <a href={s.url} target="_blank" rel="noopener">{s.company}</a></span>
+					<span class="kv-date">{s.date[lang]}</span>
+				</figcaption>
+				{s.video && <a class="kv-video" href={s.video[lang]} target="_blank" rel="noopener">{t.video}</a>}
+			</figure>
+		))}
+	</div>
+	<p class="kv-note">{t.note}</p>
+</div>
+
+<style>
+	.kv { margin-top: clamp(44px, 6vw, 72px); }
+	.kv-title { font-size: clamp(20px, 2.4vw, 26px); font-weight: 800; letter-spacing: -0.01em; margin-bottom: clamp(18px, 3vw, 28px); }
+	.kv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+	.kv-card {
+		position: relative; margin: 0; display: flex; flex-direction: column; gap: 18px;
+		background: var(--pc-navy-700); border: 1px solid var(--pc-line);
+		border-radius: var(--pc-r-lg); padding: 26px 26px 24px;
+	}
+	/* Großes Anführungszeichen als Schmuck, für Screenreader unsichtbar */
+	.kv-card::before {
+		content: '“'; content: '“' / ''; position: absolute; top: 6px; right: 20px;
+		font-size: 72px; line-height: 1; font-weight: 800; color: var(--pc-yellow); opacity: 0.18;
+		pointer-events: none;
+	}
+	.kv-featured { grid-column: 1 / -1; border-color: rgba(255, 200, 41, 0.3); }
+	.kv-quote { margin: 0; }
+	.kv-quote p { font-size: 15.5px; line-height: 1.65; color: var(--pc-fg); }
+	.kv-featured .kv-quote p { font-size: clamp(16.5px, 1.8vw, 19px); line-height: 1.6; max-width: 78ch; }
+	.kv-cap { display: flex; flex-direction: column; gap: 2px; margin-top: auto; }
+	.kv-person { font-weight: 800; font-size: 15px; color: var(--pc-fg); }
+	.kv-role { font-size: 13.5px; color: var(--pc-fg-2); }
+	.kv-role a { color: var(--pc-yellow); text-decoration: none; border-bottom: 1px solid rgba(255, 200, 41, 0.35); }
+	.kv-role a:hover { border-bottom-color: var(--pc-yellow); }
+	.kv-date { font-family: var(--pc-font-mono); font-size: 12px; color: var(--pc-fg-3); margin-top: 4px; }
+	.kv-video {
+		align-self: flex-start; font-size: 14px; font-weight: 700; color: var(--pc-navy-900);
+		background: var(--pc-yellow); padding: 9px 16px; border-radius: var(--pc-r-md); text-decoration: none;
+		transition: background var(--pc-fast) var(--pc-ease);
+	}
+	.kv-video:hover { background: var(--pc-yellow-soft); }
+	.kv-note { margin-top: 18px; font-size: 13px; color: var(--pc-fg-3); max-width: 80ch; }
+
+	@media (max-width: 720px) {
+		.kv-grid { grid-template-columns: 1fr; }
+		.kv-card { padding: 22px 20px 20px; }
+		/* Auf schmalen Karten läge das Zeichen über der ersten Zeile */
+		.kv-card::before { display: none; }
+	}
+</style>

@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { posts } from '../data/posts';
 import { PERSON_ID, jobTitle, personSameAs, pragmaCodeOrganization } from '../data/person';
 import Maschinenraum from '../components/Maschinenraum.astro';
+import Kundenstimmen from '../components/Kundenstimmen.astro';
 import CareerChapters, { type CareerChapter } from '../components/CareerChapters.astro';
 import { werdegangCommits, jsonForScript } from '../data/werdegang-git';
 
@@ -470,6 +471,7 @@ const personSchema = {
 						);
 					})}
 				</div>
+				<Kundenstimmen lang="de" />
 				<p class="refs-more">Ausführliche Fallstudien mit Zahlen und Vorgehen: <a href="https://www.pragma-code.de/" target="_blank" rel="noopener">pragma-code.de</a></p>
 			</div>
 		</section>

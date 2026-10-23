@@ -67,6 +67,13 @@ Vollständige deutsche und englische Fassung (`/` und `/en`) mit korrekter
 `getProfile`-Tool bereit, das KI-Agenten strukturierte Profildaten liefert,
 statt sie aus dem HTML raten zu lassen.
 
+### Kundenstimmen
+Drei freigegebene Stimmen mit Name, Firma und Link (ImkerPur mit Videobewertung,
+K&K Bau, EsenTrans) im Abschnitt Referenzen, DE und EN aus
+[`src/components/Kundenstimmen.astro`](src/components/Kundenstimmen.astro).
+Quelle sind die Kundenstimmen von pragma-code.de; neue nur mit Namen, Link und
+Freigabe des Wortlauts. Bewusst ohne Sterne und ohne Review-Schema.
+
 ### Maschinenraum (Live-Status)
 Der Abschnitt „Maschinenraum“ zeigt den Status der eigenen Systeme
 (Briefing, Monitoring, Datensicherung, PageSpeed-Wache u. a.). Ein lokaler
