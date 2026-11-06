@@ -24,7 +24,10 @@ const WERTE = {
 	'gsc-wochenbericht': {},
 	'citation-tracker': {},
 	'lead-agent': {},
-	'reels-radar': {}
+	'reels-radar': {},
+	// Zustand aus der Quellen-Wache (nur zustand/zuletzt, keine Zahlen)
+	'akquise': {},
+	'career-ops': {}
 };
 
 const DATUM = /^\d{4}-\d{2}-\d{2}$/;
