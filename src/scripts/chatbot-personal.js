@@ -11,6 +11,7 @@
 // Hier keine Euro-Beträge mehr eintragen.
 // Die frühere Rechner-Tabelle (TYPES/ADDONS/PKG) war nie angebunden und ist raus.
 const PRICES_URL = 'https://www.pragma-code.de/chatbot-prices.json';
+const PC = 'https://www.pragma-code.de';
 let pricesPromise = null;
 function loadPrices() {
   if (!pricesPromise) {
@@ -162,6 +163,7 @@ Alexander Ohl führt <b>Pragma-Code</b> als spezialisiertes IT-Consulting & Entw
 2. <b>Sichtbarkeit (SEO & GEO)</b> (Google-Ranking, KI-Sichtbarkeits-Monitoring ab ${eD(P.monitoring[0].price)}/Monat)<br/>
 3. <b>Web & E-Commerce</b> (Astro, Next.js, WordPress-/TYPO3-Migrationen, Shopify, WooCommerce)<br/><br/>
 Dazu: die <b>KI-Video-Fabrik</b> (Einrichtung ${pkgD(P.videoSetup[0])}) und <b>Rust-Entwicklung</b> (Performance-Audit ${eD(fixedOf(P, 'rust-audit').price)}).<br/><br/>
+<b>Neu:</b> der <b>KI-Telefonassistent</b> (ab ${eD(fixedOf(P, 'telefonassistent-basis').price)}), die <b>Buchhaltungs- & ERP-Anbindung</b> (DATEV, sevDesk, Odoo), die automatisierte <b>Belegverarbeitung</b> und der <b>KI-Produktberater</b> für Shops — fragen Sie einfach nach einem davon.<br/><br/>
 💡 Festpreise statt Stundensätze: Scope und Preis werden vor Projektstart schriftlich vereinbart.<br/><br/>
 🔗 <a href="https://www.pragma-code.de" target="_blank" rel="noopener">www.pragma-code.de besuchen</a> | <a href="https://www.pragma-code.de/pakete-preise" target="_blank" rel="noopener">Pakete & Preise von Pragma-Code</a>`,
     en: (P) => `🏢 <b>About Alexander's Agency Pragma-Code:</b><br/><br/>
@@ -171,8 +173,31 @@ Alexander Ohl operates <b>Pragma-Code</b> as a specialized IT consulting & engin
 2. <b>Visibility (SEO & GEO)</b> (Google ranking, AI Visibility Monitoring from ${eE(P.monitoring[0].price)}/mo)<br/>
 3. <b>Web & E-Commerce</b> (Astro, Next.js, WordPress/TYPO3 migrations, Shopify, WooCommerce)<br/><br/>
 Plus: the <b>AI Video Factory</b> (setup ${pkgE(P.videoSetup[0])}) and <b>Rust development</b> (Performance Audit ${eE(fixedOf(P, 'rust-audit').price)}).<br/><br/>
+<b>New:</b> the <b>AI Phone Assistant</b> (from ${eE(fixedOf(P, 'telefonassistent-basis').price)}), <b>accounting & ERP integration</b> (DATEV, sevDesk, Odoo), automated <b>invoice processing</b> and the <b>AI Product Advisor</b> for shops — just ask about any of them.<br/><br/>
 💡 Fixed prices instead of hourly rates: scope and price are agreed in writing before the project starts.<br/><br/>
 🔗 <a href="https://www.pragma-code.de/en" target="_blank" rel="noopener">Visit www.pragma-code.de</a> | <a href="https://www.pragma-code.de/en/packages-pricing" target="_blank" rel="noopener">Pragma-Code Packages & Pricing</a>`
+  },
+  {
+    id: 'pragma-loesungen',
+    keywords: [
+      'telefonassistent', 'telefon assistent', 'ki telefon', 'telefonzentrale', 'anrufe', 'anrufannahme',
+      'voicebot', 'voice bot', 'voice agent', 'phone assistant', 'ai phone',
+      'erp', 'datev', 'sevdesk', 'lexoffice', 'odoo', 'e-rechnung', 'xrechnung', 'zugferd', 'erp integration',
+      'beleg', 'belege', 'belegverarbeitung', 'eingangsrechnung', 'eingangsrechnungen', 'buchhaltung', 'bookkeeping', 'invoice processing',
+      'produktberater', 'kaufberatung', 'kaufberater', 'produktfinder', 'product advisor'
+    ],
+    de: (P) => `🧩 <b>Fertige Lösungen von Pragma-Code</b> — jeweils zum Festpreis:<br/><br/>
+📞 <b>KI-Telefonassistent</b> — nimmt Anrufe auf Ihrer bestehenden Nummer an, beantwortet Fragen und schickt eine Rückrufnotiz. Basis ${eD(fixedOf(P, 'telefonassistent-basis').price)} · Plus mit Terminbuchung ${eD(fixedOf(P, 'telefonassistent-plus').price)}. <a href="${PC}/ki-telefonassistent" target="_blank" rel="noopener">Details</a><br/><br/>
+🔗 <b>Buchhaltungs- & ERP-Anbindung</b> — Buchhaltung, ERP, Shop und DATEV per API verbunden, E-Rechnung nach EN 16931 inklusive.${P.erp ? ` Start mit dem ${P.erp[0].name.de.replace(/^Der /, '')} für ${pkgD(P.erp[0])}, danach Festpreis für die Umsetzung.` : ''} <a href="${PC}/buchhaltung-erp-anbindung" target="_blank" rel="noopener">Details</a><br/><br/>
+🧾 <b>Belegverarbeitung</b> — Belegeingang, KI-Erfassung und Zahlungs-Zuordnung; die Kontierung bleibt bei der Steuerkanzlei.${P.belege ? ` ${P.belege.map(b => `${b.name.de} ${pkgD(b)}`).join(' · ')}.` : ''} <a href="${PC}/belegverarbeitung-automatisieren" target="_blank" rel="noopener">Details</a><br/><br/>
+🛍️ <b>KI-Produktberater</b> — führt Shop-Kunden zum passenden Produkt. Prototyp ${eD(fixedOf(P, 'produktberater-prototyp').price)} · Pilot ${eD(fixedOf(P, 'produktberater-pilot').price)}. <a href="${PC}/ki-produktberater" target="_blank" rel="noopener">Details</a><br/><br/>
+🔗 <a href="${PC}/pakete-preise" target="_blank" rel="noopener">Alle Pakete & Preise</a>`,
+    en: (P) => `🧩 <b>Ready-made solutions from Pragma-Code</b> — each at a fixed price:<br/><br/>
+📞 <b>AI Phone Assistant</b> — answers calls on your existing number, responds to questions and sends a callback note. Basis ${eE(fixedOf(P, 'telefonassistent-basis').price)} · Plus with appointment booking ${eE(fixedOf(P, 'telefonassistent-plus').price)}. <a href="${PC}/en/ai-phone-assistant" target="_blank" rel="noopener">Details</a><br/><br/>
+🔗 <b>Accounting & ERP Integration</b> — accounting, ERP, shop and DATEV connected via API, e-invoicing to EN 16931 included.${P.erp ? ` Starts with ${P.erp[0].name.en} at ${pkgE(P.erp[0])}, then a fixed price for implementation.` : ''} <a href="${PC}/en/accounting-erp-integration" target="_blank" rel="noopener">Details</a><br/><br/>
+🧾 <b>Invoice Processing</b> — document intake, AI capture and payment matching; ledger posting stays with your tax advisor.${P.belege ? ` ${P.belege.map(b => `${b.name.en} ${pkgE(b)}`).join(' · ')}.` : ''} <a href="${PC}/en/invoice-processing-automation" target="_blank" rel="noopener">Details</a><br/><br/>
+🛍️ <b>AI Product Advisor</b> — guides shoppers to the right product. Prototype ${eE(fixedOf(P, 'produktberater-prototyp').price)} · Pilot ${eE(fixedOf(P, 'produktberater-pilot').price)}. <a href="${PC}/en/ai-product-advisor" target="_blank" rel="noopener">Details</a><br/><br/>
+🔗 <a href="${PC}/en/packages-pricing" target="_blank" rel="noopener">All packages & pricing</a>`
   },
   {
     id: 'preise-pakete',
@@ -194,7 +219,9 @@ ${P.retainers.map(r => `• <b>${r.name.de}</b> — ${eD(r.monthly)}/Monat${r.po
 • ${fixedOf(P, 'tiefenanalyse').name.de} — ab ${eD(fixedOf(P, 'tiefenanalyse').price)}<br/>
 • ${P.automation[0].name.de} — ${pkgD(P.automation[0])} (wird beim Sprint angerechnet)<br/>
 ${['bfsg', 'ai-visibility-audit', 'ki-sprint', 'rust-audit'].map(id => `• ${fixedOf(P, id).name.de} — ${eD(fixedOf(P, id).price)}<br/>`).join('')}• Website-Assistent ohne LLM — Basis ${eD(fixedOf(P, 'assistent-basis').price)} · Plus ${eD(fixedOf(P, 'assistent-plus').price)}<br/>
-• ${fixedOf(P, 'migration').name.de} — ab ${eD(fixedOf(P, 'migration').price)}<br/>
+• KI-Telefonassistent — Basis ${eD(fixedOf(P, 'telefonassistent-basis').price)} · Plus ${eD(fixedOf(P, 'telefonassistent-plus').price)}<br/>
+• KI-Produktberater — Prototyp ${eD(fixedOf(P, 'produktberater-prototyp').price)} · Pilot ${eD(fixedOf(P, 'produktberater-pilot').price)}<br/>
+${P.belege ? `• ${P.belege[0].name.de} (Belegverarbeitung) — ${pkgD(P.belege[0])}<br/>` : ''}${P.erp ? `• ${P.erp[0].name.de} (Buchhaltungs- & ERP-Anbindung) — ${pkgD(P.erp[0])}<br/>` : ''}${P.wpMigration && P.typo3Migration ? `• Migration — WordPress ab ${eD(P.wpMigration[0].price)} · TYPO3 ab ${eD(P.typo3Migration[0].price)}<br/>` : `• ${fixedOf(P, 'migration').name.de} — ab ${eD(fixedOf(P, 'migration').price)}<br/>`}
 • ${fixedOf(P, 'fokus-prototyp').name.de} (statt Pflichtenheft) — ${eD(fixedOf(P, 'fokus-prototyp').price)}<br/>
 • ${P.automation[2].name.de} — ${pkgD(P.automation[2])}<br/>
 • ${fixedOf(P, 'erweiterter-prototyp').name.de} — ${eD(fixedOf(P, 'erweiterter-prototyp').price)}<br/><br/>
@@ -211,7 +238,9 @@ ${P.retainers.map(r => `• <b>${r.name.en}</b> — ${eE(r.monthly)}/mo${r.popul
 • ${fixedOf(P, 'tiefenanalyse').name.en} — from ${eE(fixedOf(P, 'tiefenanalyse').price)}<br/>
 • The Process Check — ${pkgE(P.automation[0])} (credited towards the Sprint)<br/>
 ${['bfsg', 'ai-visibility-audit', 'ki-sprint', 'rust-audit'].map(id => `• ${fixedOf(P, id).name.en} — ${eE(fixedOf(P, id).price)}<br/>`).join('')}• Rule-based website assistant — Basis ${eE(fixedOf(P, 'assistent-basis').price)} · Plus ${eE(fixedOf(P, 'assistent-plus').price)}<br/>
-• ${fixedOf(P, 'migration').name.en} — from ${eE(fixedOf(P, 'migration').price)}<br/>
+• AI phone assistant — Basis ${eE(fixedOf(P, 'telefonassistent-basis').price)} · Plus ${eE(fixedOf(P, 'telefonassistent-plus').price)}<br/>
+• AI Product Advisor — Prototype ${eE(fixedOf(P, 'produktberater-prototyp').price)} · Pilot ${eE(fixedOf(P, 'produktberater-pilot').price)}<br/>
+${P.belege ? `• ${P.belege[0].name.en} (invoice processing) — ${pkgE(P.belege[0])}<br/>` : ''}${P.erp ? `• ${P.erp[0].name.en} (accounting & ERP integration) — ${pkgE(P.erp[0])}<br/>` : ''}${P.wpMigration && P.typo3Migration ? `• Migration — WordPress from ${eE(P.wpMigration[0].price)} · TYPO3 from ${eE(P.typo3Migration[0].price)}<br/>` : `• ${fixedOf(P, 'migration').name.en} — from ${eE(fixedOf(P, 'migration').price)}<br/>`}
 • ${fixedOf(P, 'fokus-prototyp').name.en} (instead of a spec document) — ${eE(fixedOf(P, 'fokus-prototyp').price)}<br/>
 • Automation Scale — ${pkgE(P.automation[2])}<br/>
 • ${fixedOf(P, 'erweiterter-prototyp').name.en} — ${eE(fixedOf(P, 'erweiterter-prototyp').price)}<br/><br/>
@@ -555,10 +584,14 @@ function initChatbot() {
 
     const cleaned = cleanInput(text);
 
-    if (cleaned.includes('termin') || cleaned.includes('buchen') || cleaned.includes('meeting') ||
+    // Fragen zum KI-Telefonassistenten enthalten oft "Anruf" oder "phone" — sie
+    // gehören zur Produktantwort, nicht zur Terminbuchung (07.11.2026).
+    const aboutPhoneProduct = /telefon ?assistent|ki telefon|phone assistant|ai phone|voice ?(bot|agent)|anrufannahme|telefonzentrale/.test(cleaned);
+
+    if (!aboutPhoneProduct && (cleaned.includes('termin') || cleaned.includes('buchen') || cleaned.includes('meeting') ||
         cleaned.includes('calendly') || cleaned.includes('call') || cleaned.includes('erstgespraech') ||
         cleaned.includes('anruf') || cleaned.includes('telefonat') || cleaned.includes('rueckruf') ||
-        cleaned.includes('appointment') || cleaned.includes('phone')) {
+        cleaned.includes('appointment') || cleaned.includes('phone'))) {
       const typing = showTypingIndicator();
       setTimeout(() => {
         if (typing && typing.parentNode) typing.parentNode.removeChild(typing);
