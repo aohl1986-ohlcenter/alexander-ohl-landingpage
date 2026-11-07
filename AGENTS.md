@@ -130,6 +130,9 @@ gemeinsame Profil-Daten); CV-Inhalte stammen aus dem Werdegang des Inhabers.
   Pragma-Repo) — dort ändern, nicht im Bot; `prebuild`-Gate
   (`scripts/check-chatbot-prices.mjs`) sperrt €-Beträge, BAFA- und Stundenangaben.
   Apex→www per 301 über `functions/_middleware.js` (Pages Function).
+  `/termin` → persönliche Google-Buchungsseite per 302 in derselben Middleware
+  (Konstante `TERMIN_ZIEL`, seit 07.11.2026). Wird der Terminplan in Google neu
+  angelegt, nur dort den Kurzlink tauschen.
   `compressHTML: false` wie auf pragma-code.de (sonst fehlen Leerzeichen neben Tags).
 - Cloudflare-Einstellungen **23.10.2026 (per Chrome):** E-Mail-Verschleierung aus (live
   geprüft), kein KI-Crawler gesperrt (AI Crawl Control, Bot fight mode und AI Labyrinth
