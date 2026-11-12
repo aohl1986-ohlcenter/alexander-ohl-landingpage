@@ -217,6 +217,21 @@ gemeinsame Profil-Daten); CV-Inhalte stammen aus dem Werdegang des Inhabers.
 - Live geprüft: Abschnitt DE/EN und Footer-Status, PSI mobil danach 99/99/99, Best
   Practices 100. EN-Fix (Terminal-Leiste „engine-room“, a8d7bd4) am 22.10. gepusht.
 
+- **Schaltbild (Branch `feat/maschinenraum-schaltbild`, 13.11.2026):** über der Terminal-Liste
+  je System eine Bahn Quelle → System → Ergebnis, reines CSS + Inline-SVG, keine Bibliothek.
+  Bewegung folgt dem gemeldeten Zustand (Pakete/Zahnrad nur bei aktiv/teilweise; pausiert,
+  im Aufbau, unbekannt stehen still), nur Raster und Lichtband laufen immer (Entscheidung
+  Inhaber: „echt plus Grundbewegung“). Läuft nur im Bild (`.mr-laeuft` per
+  IntersectionObserver) und nicht bei `prefers-reduced-motion`.
+- **`leer: true`** in der Systemliste blendet Bahn und Zeile aus, solange das System
+  „unbekannt“ meldet oder im JSON fehlt (akquise, career-ops, content-fabrik).
+- **content-fabrik** (= `~/AntiGravity/content-bot`, nicht das Kundenprojekt gleichen
+  Namens): Zustand, Datum und nur der Zähler `beitraege` (30 Tage, ohne privates Profil).
+  Reihenfolge beim Ausrollen: erst diese Function deployen, dann im Skill
+  `content_fabrik_live: true` setzen.
+- **Lokal testen:** Dev-Server leitet `/api/maschinenraum` an die Live-Seite weiter;
+  `MR_API=http://127.0.0.1:8799` zeigt auf eine lokale Datei (Publisher-Trockenlauf).
+
 ## Fallen beim Testen
 
 - Browser-Pane: Ist der Bereich ausgeblendet, rendert die Seite keine Frames —

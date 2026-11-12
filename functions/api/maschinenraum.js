@@ -24,6 +24,8 @@ const WERTE = {
 	'gsc-wochenbericht': {},
 	'citation-tracker': {},
 	'lead-agent': {},
+	// Nur die Zahl veröffentlichter Beiträge (30 Tage), keine Inhalte
+	'content-fabrik': { beitraege: 2000 },
 	'reels-radar': {},
 	// Zustand aus der Quellen-Wache (nur zustand/zuletzt, keine Zahlen)
 	'akquise': {},

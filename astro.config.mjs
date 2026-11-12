@@ -38,6 +38,16 @@ export default defineConfig({
         // Rendern (FCP mobil 1,7 s laut PageSpeed).
         inlineStylesheets: 'always'
     },
+    // Nur Dev-Server: /api/maschinenraum ist eine Pages Function und fehlt lokal.
+    // Standard ist der Live-Stand; MR_API=http://127.0.0.1:8799 zeigt auf eine
+    // lokale Testdatei (z. B. die Ausgabe des Publisher-Trockenlaufs).
+    vite: {
+        server: {
+            proxy: {
+                '/api/maschinenraum': { target: process.env.MR_API ?? 'https://www.alexander-ohl.com', changeOrigin: true }
+            }
+        }
+    },
     integrations: [sitemap({
         filter: (page) => {
             const url = new URL(page);
